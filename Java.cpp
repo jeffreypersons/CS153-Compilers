@@ -114,17 +114,17 @@ Java::~Java()
 const string Java::SOURCE_LINE_FORMAT = "%03d %s\n";
 
 const string Java::PARSER_SUMMARY_FORMAT =
-    string("\n%,20d source lines.\n%,20d syntax errors.\n") +
-    string("%,20.2f seconds total parsing time.\n");
+    string("\n%20d source lines.\n%20d syntax errors.\n") +
+    string("%20.2f seconds total parsing time.\n");
 
 const string Java::INTERPRETER_SUMMARY_FORMAT =
-    string("\n%,20d statements executed.\n") +
-    string("%,20d runtime errors.\n") +
-    string("%,20.2f seconds total execution time.\n");
+    string("\n%20d statements executed.\n") +
+    string("%20d runtime errors.\n") +
+    string("%20.2f seconds total execution time.\n");
 
 const string Java::COMPILER_SUMMARY_FORMAT =
-    string("\n%,20d instructions generated.\n") +
-    string("%,20.2f seconds total code generation time.\n");
+    string("\n%20d instructions generated.\n") +
+    string("%20.2f seconds total code generation time.\n");
 
 const string Java::TOKEN_FORMAT =
     ">>> %-15s line=%03d, pos=%2d, text=\"%s\"\n";
