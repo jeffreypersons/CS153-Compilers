@@ -85,17 +85,17 @@ void JavaScanner::skip_white_space() throw (string)
         if (current_ch == '/')
         {
             if(peek_char() == '*'){
+                current_ch = next_char(); // consume *
                 do
                 {
                     current_ch = next_char();  // consume comment characters
-                } while ((current_ch != '*') &&
-                         (current_ch != Source::END_OF_FILE));
-
-                // Found closing '}'?
-                if (current_ch == '*' && peek_char() == '/') {
-                    current_ch = next_char();  // consume the '*'
-                    current_ch = next_char(); // consume the /
-                }
+                    // Found closing '}'?
+                    if (current_ch == '*' && peek_char() == '/') {
+                        current_ch = next_char();  // consume the '*'
+                        current_ch = next_char(); // consume the /
+                        break; // get out of while loop
+                    }
+                } while ((current_ch != Source::END_OF_FILE));
             }
             else if(peek_char() == '/'){
                 while(current_ch != '\n') current_ch = next_char();
