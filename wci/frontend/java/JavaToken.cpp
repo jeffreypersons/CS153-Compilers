@@ -98,30 +98,60 @@ void JavaToken::initialize()
     vector<JavaTokenType> ss_keys =
     {
         JavaTokenType::UNARY,
+        JavaTokenType::NOT,
+        JavaTokenType::OVERRIDE,
+        JavaTokenType::REMIND,
+        JavaTokenType::XOR,
+        JavaTokenType::BIT_AND,
+        JavaTokenType::MULTI,
         JavaTokenType::MINUS,
-        JavaTokenType::STAR,
-        JavaTokenType::SLASH,
-        JavaTokenType::COLON_EQUALS,
+        JavaTokenType::PLUS,
+        JavaTokenType::ASSIGN,
+        
+        JavaTokenType::BIT_OR,
+        JavaTokenType::DIVID,
+        JavaTokenType::COLON,
+        JavaTokenType::SEMICOLON,
+        JavaTokenType::TERNARY,
+        JavaTokenType::LESS_THAN,
+        JavaTokenType::GREATER_THAN,
         JavaTokenType::DOT,
         JavaTokenType::COMMA,
-        JavaTokenType::SEMICOLON,
-        JavaTokenType::COLON,
+        
         JavaTokenType::QUOTE,
-        JavaTokenType::EQUALS,
-        JavaTokenType::NOT_EQUALS,
-
-        JavaTokenType::LESS_THAN,
-        JavaTokenType::LESS_EQUALS,
-        JavaTokenType::GREATER_EQUALS,
-        JavaTokenType::GREATER_THAN,
+        JavaTokenType::BACK_SLASH,
         JavaTokenType::LEFT_PAREN,
         JavaTokenType::RIGHT_PAREN,
-        JavaTokenType::LEFT_BRACKET,
+        JavaTokenType::LEFT_BRACKET
         JavaTokenType::RIGHT_BRACKET,
         JavaTokenType::LEFT_BRACE,
         JavaTokenType::RIGHT_BRACE,
-        JavaTokenType::UP_ARROW,
-        JavaTokenType::DOT_DOT
+        
+        JavaTokenType::INCREMENT,
+        JavaTokenType::DECREMENT,
+        JavaTokenType::LEFT_SHIFT,
+        JavaTokenType::RIGHT_SHIFT,
+        JavaTokenType::LESS_EQUALS,
+        JavaTokenType::GREATER_EQUALS,
+        JavaTokenType::PLUS_ASSIGN,
+        JavaTokenType::MINUS_ASSIGN,
+        JavaTokenType::MULTI_ASSIGN,
+        JavaTokenType::DIVIDE_ASSIGN,
+        
+        JavaTokenType::EQUAL,
+        JavaTokenType::OR_ASSIGN,
+        JavaTokenType::MODULE_ASSIGN,
+        JavaTokenType::AND_ASSIGN,
+        JavaTokenType::XOR_ASSIGN,
+        JavaTokenType::NOT_EQUAL,
+        JavaTokenType::LEFTSHIFT_AND_ASSIGN,
+        JavaTokenType::RIGHTSHIFT_AND_ASSIGN,
+        JavaTokenType::OR,
+        JavaTokenType::AND,
+        
+        JavaTokenType::ONE_LINE_COMMENT,
+        JavaTokenType::BEGIN_COMMENT,
+        JavaTokenType::END_COMMENT,
     };
 
     for (int i = 0; i < ss_strings.size(); i++)
@@ -131,11 +161,12 @@ void JavaToken::initialize()
 
     vector<string> ss_names =
     {
-        "UNARY", "NOT", "@", "REMIND", "BIT_EXCLUSIVE", "BIT_AND", "MULTI", "MINUS", "ADD", "ASSIGN",
-        "BIT_OR", "DIVID", "COLON", "SEMICOLON", "?", "LESS_THAN","GREATER_THAN", "DOT", "COMMA",
+        "UNARY", "NOT", "OVERRIDE", "REMIND", "XOR", "BIT_AND", "MULTI", "MINUS", "ADD", "ASSIGN",
+        "BIT_OR", "DIVID", "COLON", "SEMICOLON", "TERNARY", "LESS_THAN","GREATER_THAN", "DOT", "COMMA",
         "QUOTE", "BACK_SLASH", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
-        "INCREMENT", "DECREMENT", "LEFT_SHIFT", "RIGHT_SHIFT", "LESS_EQUALS", "GREATER_EQUALS", "PLUS_EQUAL", "MINUS_EQUAL","MULTI_EQUAL", "DIVIDE_EQUAL",
-        "EQUAL", "|=", "%=", "&=", "^=", "NOT_EQUAL", "<<=", "OR", "AND", "ONE_LINE_COMMENT", "BEGIN_COMMENT", "END_COMMENT"
+        "INCREMENT", "DECREMENT", "LEFT_SHIFT", "RIGHT_SHIFT", "LESS_EQUALS", "GREATER_EQUALS", "PLUS_ASSIGN", "MINUS_ASSIGN","MULTI_ASSIGN", "DIVIDE_ASSIGN",
+        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND",
+        "ONE_LINE_COMMENT", "BEGIN_COMMENT", "END_COMMENT"
 
     };
 
