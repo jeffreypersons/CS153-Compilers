@@ -39,45 +39,45 @@ void JavaToken::initialize()
 
     vector<JavaTokenType> rw_keys =
     {
-        JavaTokenType::abstract,
-        JavaTokenType::double,
-        JavaTokenType::int,
-        JavaTokenType::long,
+        JavaTokenType::ABSTRACT,
+        JavaTokenType::DOUBLE,
+        JavaTokenType::INT,
+        JavaTokenType::LONG,
         
-        JavaTokenType::break,
-        JavaTokenType::else,
-        JavaTokenType::long,
-        JavaTokenType::switch,
+        JavaTokenType::BREAK,
+        JavaTokenType::ELSE,
+        JavaTokenType::LONG,
+        JavaTokenType::SWITCH,
 
-        JavaTokenType::case,
-        JavaTokenType::enum,
-        JavaTokenType::native,
-        JavaTokenType::super,
+        JavaTokenType::CASE,
+        JavaTokenType::ENUM,
+        JavaTokenType::NATIVE,
+        JavaTokenType::SUPER,
             
-        JavaTokenType::char,
-        JavaTokenType::extends,
-        JavaTokenType::return,
-        JavaTokenType::this,
+        JavaTokenType::CHAR,
+        JavaTokenType::EXTENDS,
+        JavaTokenType::RETURN,
+        JavaTokenType::THIS,
 
-        JavaTokenType::class,
-        JavaTokenType::float,
-        JavaTokenType::short,
-        JavaTokenType::throw,
+        JavaTokenType::CLASS,
+        JavaTokenType::FLOAT,
+        JavaTokenType::SHORT,
+        JavaTokenType::THROW,
             
-        JavaTokenType::const,
-        JavaTokenType::for,
-        JavaTokenType::package,
-        JavaTokenType::void,
+        JavaTokenType::CONST,
+        JavaTokenType::FOR,
+        JavaTokenType::PACKAGE,
+        JavaTokenType::VOID,
 
-        JavaTokenType::continue,
-        JavaTokenType::goto,
-        JavaTokenType::protected,
-        JavaTokenType::volatile,
+        JavaTokenType::CONTINUE,
+        JavaTokenType::GOTO,
+        JavaTokenType::PROTECTED,
+        JavaTokenType::VOLATILE,
             
-        JavaTokenType::do,
-        JavaTokenType::if,
-        JavaTokenType::static,
-        JavaTokenType::while,
+        JavaTokenType::DO,
+        JavaTokenType::IF,
+        JavaTokenType::STATIC,
+        JavaTokenType::WHILE,
     };
 
     for (int i = 0; i < rw_strings.size(); i++)
@@ -109,7 +109,7 @@ void JavaToken::initialize()
         JavaTokenType::ASSIGN,
         
         JavaTokenType::BIT_OR,
-        JavaTokenType::DIVID,
+        JavaTokenType::DIVIDE,
         JavaTokenType::COLON,
         JavaTokenType::SEMICOLON,
         JavaTokenType::TERNARY,
@@ -122,7 +122,7 @@ void JavaToken::initialize()
         JavaTokenType::BACK_SLASH,
         JavaTokenType::LEFT_PAREN,
         JavaTokenType::RIGHT_PAREN,
-        JavaTokenType::LEFT_BRACKET
+        JavaTokenType::LEFT_BRACKET,
         JavaTokenType::RIGHT_BRACKET,
         JavaTokenType::LEFT_BRACE,
         JavaTokenType::RIGHT_BRACE,
@@ -138,20 +138,16 @@ void JavaToken::initialize()
         JavaTokenType::MULTI_ASSIGN,
         JavaTokenType::DIVIDE_ASSIGN,
         
-        JavaTokenType::EQUAL,
+        JavaTokenType::EQUALS,
         JavaTokenType::OR_ASSIGN,
         JavaTokenType::MODULE_ASSIGN,
         JavaTokenType::AND_ASSIGN,
         JavaTokenType::XOR_ASSIGN,
-        JavaTokenType::NOT_EQUAL,
+        JavaTokenType::NOT_EQUALS,
         JavaTokenType::LEFTSHIFT_AND_ASSIGN,
         JavaTokenType::RIGHTSHIFT_AND_ASSIGN,
         JavaTokenType::OR,
-        JavaTokenType::AND,
-        
-        JavaTokenType::ONE_LINE_COMMENT,
-        JavaTokenType::BEGIN_COMMENT,
-        JavaTokenType::END_COMMENT,
+        JavaTokenType::AND
     };
 
     for (int i = 0; i < ss_strings.size(); i++)
@@ -162,11 +158,10 @@ void JavaToken::initialize()
     vector<string> ss_names =
     {
         "UNARY", "NOT", "OVERRIDE", "REMIND", "XOR", "BIT_AND", "MULTI", "MINUS", "ADD", "ASSIGN",
-        "BIT_OR", "DIVID", "COLON", "SEMICOLON", "TERNARY", "LESS_THAN","GREATER_THAN", "DOT", "COMMA",
+        "BIT_OR", "DIVIDE", "COLON", "SEMICOLON", "TERNARY", "LESS_THAN","GREATER_THAN", "DOT", "COMMA",
         "QUOTE", "BACK_SLASH", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
         "INCREMENT", "DECREMENT", "LEFT_SHIFT", "RIGHT_SHIFT", "LESS_EQUALS", "GREATER_EQUALS", "PLUS_ASSIGN", "MINUS_ASSIGN","MULTI_ASSIGN", "DIVIDE_ASSIGN",
-        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND",
-        "ONE_LINE_COMMENT", "BEGIN_COMMENT", "END_COMMENT"
+        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND"
 
     };
 
