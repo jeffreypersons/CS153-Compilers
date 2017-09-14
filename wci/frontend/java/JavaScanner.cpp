@@ -51,8 +51,13 @@ Token *JavaScanner::extract_token() throw (string)
     {
         token = new JavaNumberToken(source);
     }
+    /* This might actually be a char token
     else if (current_ch == '\'')
     {
+        token = new JavaStringToken(source);
+    }*/
+    // changed to double quote
+    else if (current_ch == '\"'){
         token = new JavaStringToken(source);
     }
     else if (JavaToken::SPECIAL_SYMBOLS.find(string_ch)
@@ -72,24 +77,31 @@ Token *JavaScanner::extract_token() throw (string)
 void JavaScanner::skip_white_space() throw (string)
 {
     char current_ch = current_char();
-
-    while (isspace(current_ch) || (current_ch == '{')) {
+    char next_ch;
+    // Add support for long comments utilizing /**/ and standard //
+    while (isspace(current_ch) || (current_ch == '/')) {
 
         // Start of a comment?
-        if (current_ch == '{')
+        if (current_ch == '/')
         {
-            do
-            {
-                current_ch = next_char();  // consume comment characters
-            } while ((current_ch != '}') &&
-                     (current_ch != Source::END_OF_FILE));
-
-            // Found closing '}'?
-            if (current_ch == '}') {
-                current_ch = next_char();  // consume the '}'
+            if(peek_char() == '*'){
+                current_ch = next_char(); // consume *
+                do
+                {
+                    current_ch = next_char();  // consume comment characters
+                    // Found closing '}'?
+                    if (current_ch == '*' && peek_char() == '/') {
+                        current_ch = next_char();  // consume the '*'
+                        current_ch = next_char(); // consume the /
+                        break; // get out of while loop
+                    }
+                } while ((current_ch != Source::END_OF_FILE));
+            }
+            else if(peek_char() == '/'){
+                while(current_ch != '\n') current_ch = next_char();
+                current_ch = next_char(); // consume \n
             }
         }
-
         // Not a comment.
         else current_ch = next_char();  // consume whitespace character
     }
