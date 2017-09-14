@@ -31,6 +31,8 @@
 *.out
 *.app
 
-# IDE related files
+# Misc
+.DS_Store
 .idea/
+xcuserdata/
 cmake-build-debug/
