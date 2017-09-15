@@ -147,11 +147,7 @@ void JavaToken::initialize()
         JavaTokenType::LEFTSHIFT_AND_ASSIGN,
         JavaTokenType::RIGHTSHIFT_AND_ASSIGN,
         JavaTokenType::OR,
-        JavaTokenType::AND,
-
-        JavaTokenType::ONELINE_COMMENT,
-        JavaTokenType::BEGIN_COMMENT,
-        JavaTokenType::END_COMMENT
+        JavaTokenType::AND
     };
 
     for (int i = 0; i < ss_strings.size(); i++)
