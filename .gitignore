@@ -36,3 +36,5 @@
 .idea/
 xcuserdata/
 cmake-build-debug/
+
+a.out.dSYM/Contents/Info.plist

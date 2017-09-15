@@ -27,54 +27,57 @@ void JavaToken::initialize()
 
     vector<string> rw_strings =
     {
-        "AND", "ARRAY", "BEGIN", "CASE", "CONST", "DIV", "DO", "DOWNTO",
-        "ELSE", "END", "FILE", "FOR", "FUNCTION", "GOTO", "IF", "IN",
-        "LABEL", "MOD", "NIL", "NOT", "OF", "OR", "PACKED", "PROCEDURE",
-        "PROGRAM", "RECORD", "REPEAT", "SET", "THEN", "TO", "TYPE",
-        "UNTIL", "VAR", "WHILE", "WITH"
+        "abstract", "double", "int", "long",
+        "break", "else", "long", "switch",
+        "case", "enum", "native", "super",
+        "char", "extends", "return", "this",
+        "class", "float", "short", "throw",
+        "const", "for", "package", "void",
+        "continue", "goto", "protected", "volatile",
+        "do", "if", "static", "while"
     };
 
     vector<JavaTokenType> rw_keys =
     {
-        JavaTokenType::AND,
-        JavaTokenType::ARRAY,
-        JavaTokenType::BEGIN,
-        JavaTokenType::CASE,
-        JavaTokenType::CONST,
-        JavaTokenType::DIV,
-        JavaTokenType::DO,
-        JavaTokenType::DOWNTO,
-
+        JavaTokenType::ABSTRACT,
+        JavaTokenType::DOUBLE,
+        JavaTokenType::INT,
+        JavaTokenType::LONG,
+        
+        JavaTokenType::BREAK,
         JavaTokenType::ELSE,
-        JavaTokenType::END,
-        JavaTokenType::FILE,
+        JavaTokenType::LONG,
+        JavaTokenType::SWITCH,
+
+        JavaTokenType::CASE,
+        JavaTokenType::ENUM,
+        JavaTokenType::NATIVE,
+        JavaTokenType::SUPER,
+            
+        JavaTokenType::CHAR,
+        JavaTokenType::EXTENDS,
+        JavaTokenType::RETURN,
+        JavaTokenType::THIS,
+
+        JavaTokenType::CLASS,
+        JavaTokenType::FLOAT,
+        JavaTokenType::SHORT,
+        JavaTokenType::THROW,
+            
+        JavaTokenType::CONST,
         JavaTokenType::FOR,
-        JavaTokenType::FUNCTION,
+        JavaTokenType::PACKAGE,
+        JavaTokenType::VOID,
+
+        JavaTokenType::CONTINUE,
         JavaTokenType::GOTO,
+        JavaTokenType::PROTECTED,
+        JavaTokenType::VOLATILE,
+            
+        JavaTokenType::DO,
         JavaTokenType::IF,
-        JavaTokenType::IN,
-
-        JavaTokenType::LABEL,
-        JavaTokenType::MOD,
-        JavaTokenType::NIL,
-        JavaTokenType::NOT,
-        JavaTokenType::OF,
-        JavaTokenType::OR,
-        JavaTokenType::PACKED,
-        JavaTokenType::PROCEDURE,
-
-        JavaTokenType::PROGRAM,
-        JavaTokenType::RECORD,
-        JavaTokenType::REPEAT,
-        JavaTokenType::SET,
-        JavaTokenType::THEN,
-        JavaTokenType::TO,
-        JavaTokenType::TYPE,
-
-        JavaTokenType::UNTIL,
-        JavaTokenType::VAR,
+        JavaTokenType::STATIC,
         JavaTokenType::WHILE,
-        JavaTokenType::WITH
     };
 
     for (int i = 0; i < rw_strings.size(); i++)
@@ -84,37 +87,71 @@ void JavaToken::initialize()
 
     vector<string> ss_strings =
     {
-        "+", "-", "*", "/", ":=", ".", ",", ";", ":", "'", "=", "<>",
-        "<", "<=", ">=", ">", "(", ")", "[", "]", "{", "}",  "^", ".."
+        "~", "!", "@", "%", "^", "&", "*", "-", "+", "=",
+        "|", "/", ":", ";", "?", "<", ">", ".", ",",
+        "'", "\\", "(",  ")", "[", "]", "{", "}",
+        "++", "--", "<<", ">>", "<=", ">=", "+=", "-=", "*=", "/=",
+        "==", "|=", "%=", "&=", "^=", "!=", "<<=", ">>=", "||", "&&",
+        "//", "/*", "*/"
     };
 
     vector<JavaTokenType> ss_keys =
     {
-        JavaTokenType::PLUS,
+        JavaTokenType::UNARY,
+        JavaTokenType::NOT,
+        JavaTokenType::OVERRIDE,
+        JavaTokenType::REMIND,
+        JavaTokenType::XOR,
+        JavaTokenType::BIT_AND,
+        JavaTokenType::MULTI,
         JavaTokenType::MINUS,
-        JavaTokenType::STAR,
-        JavaTokenType::SLASH,
-        JavaTokenType::COLON_EQUALS,
+        JavaTokenType::PLUS,
+        JavaTokenType::ASSIGN,
+        
+        JavaTokenType::BIT_OR,
+        JavaTokenType::DIVIDE,
+        JavaTokenType::COLON,
+        JavaTokenType::SEMICOLON,
+        JavaTokenType::TERNARY,
+        JavaTokenType::LESS_THAN,
+        JavaTokenType::GREATER_THAN,
         JavaTokenType::DOT,
         JavaTokenType::COMMA,
-        JavaTokenType::SEMICOLON,
-        JavaTokenType::COLON,
+        
         JavaTokenType::QUOTE,
-        JavaTokenType::EQUALS,
-        JavaTokenType::NOT_EQUALS,
-
-        JavaTokenType::LESS_THAN,
-        JavaTokenType::LESS_EQUALS,
-        JavaTokenType::GREATER_EQUALS,
-        JavaTokenType::GREATER_THAN,
+        JavaTokenType::BACK_SLASH,
         JavaTokenType::LEFT_PAREN,
         JavaTokenType::RIGHT_PAREN,
         JavaTokenType::LEFT_BRACKET,
         JavaTokenType::RIGHT_BRACKET,
         JavaTokenType::LEFT_BRACE,
         JavaTokenType::RIGHT_BRACE,
-        JavaTokenType::UP_ARROW,
-        JavaTokenType::DOT_DOT
+        
+        JavaTokenType::INCREMENT,
+        JavaTokenType::DECREMENT,
+        JavaTokenType::LEFT_SHIFT,
+        JavaTokenType::RIGHT_SHIFT,
+        JavaTokenType::LESS_EQUALS,
+        JavaTokenType::GREATER_EQUALS,
+        JavaTokenType::PLUS_ASSIGN,
+        JavaTokenType::MINUS_ASSIGN,
+        JavaTokenType::MULTI_ASSIGN,
+        JavaTokenType::DIVIDE_ASSIGN,
+        
+        JavaTokenType::EQUALS,
+        JavaTokenType::OR_ASSIGN,
+        JavaTokenType::MODULE_ASSIGN,
+        JavaTokenType::AND_ASSIGN,
+        JavaTokenType::XOR_ASSIGN,
+        JavaTokenType::NOT_EQUALS,
+        JavaTokenType::LEFTSHIFT_AND_ASSIGN,
+        JavaTokenType::RIGHTSHIFT_AND_ASSIGN,
+        JavaTokenType::OR,
+        JavaTokenType::AND,
+
+        JavaTokenType::ONELINE_COMMENT,
+        JavaTokenType::BEGIN_COMMENT,
+        JavaTokenType::END_COMMENT
     };
 
     for (int i = 0; i < ss_strings.size(); i++)
@@ -124,12 +161,12 @@ void JavaToken::initialize()
 
     vector<string> ss_names =
     {
-        "PLUS", "MINUS", "STAR", "SLASH", "COLON_EQUALS", "DOT", "COMMA",
-        "SEMICOLON", "COLON", "QUOTE", "EQUALS", "NOT_EQUALS",
-
-        "LESS_THAN", "LESS_EQUALS", "GREATER_EQUALS", "GREATER_THAN",
-        "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET",
-        "LEFT_BRACE", "RIGHT_BRACE", "UP_ARROW", "DOT_DOT"
+        "UNARY", "NOT", "OVERRIDE", "REMIND", "XOR", "BIT_AND", "MULTI", "MINUS", "ADD", "ASSIGN",
+        "BIT_OR", "DIVIDE", "COLON", "SEMICOLON", "TERNARY", "LESS_THAN","GREATER_THAN", "DOT", "COMMA",
+        "QUOTE", "BACK_SLASH", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
+        "INCREMENT", "DECREMENT", "LEFT_SHIFT", "RIGHT_SHIFT", "LESS_EQUALS", "GREATER_EQUALS", "PLUS_ASSIGN", "MINUS_ASSIGN","MULTI_ASSIGN", "DIVIDE_ASSIGN",
+        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND",
+        "ONELINE_COMMENT", "BEGIN_COMMENT", "END_COMMENT"
     };
 
     for (int i = 0; i < ss_names.size(); i++)
