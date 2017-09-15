@@ -50,6 +50,12 @@ public:
     char current_char() throw (string);
 
     /**
+     * @param  returns next character in source without moving pointer
+     * @return throws string if error occurs
+     */
+    char peek_char() throw (string);
+
+    /**
      * @return the next character from the source.
      * @throw a string message if an error occurred.
      */

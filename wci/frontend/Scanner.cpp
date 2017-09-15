@@ -37,6 +37,11 @@ char Scanner::current_char() throw (string)
     return source->current_char();
 }
 
+char Scanner::peek_char() throw(string)
+{
+	return source->peek_char();
+}
+
 char Scanner::next_char() throw (string)
 {
     return source->next_char();

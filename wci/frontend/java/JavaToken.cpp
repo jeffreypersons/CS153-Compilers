@@ -89,7 +89,11 @@ void JavaToken::initialize()
     {
         "~", "!", "@", "%", "^", "&", "*", "-", "+", "=",
         "|", "/", ":", ";", "?", "<", ">", ".", ",",
+<<<<<<< HEAD
         "'", "\"", "(",  ")", "[", "]", "{", "}",
+=======
+        "\'", "\"", "(",  ")", "[", "]", "{", "}",
+>>>>>>> 790ae36c234da5fe97a410d95eafc1b846e62617
         "++", "--", "<<", ">>", "<=", ">=", "+=", "-=", "*=", "/=",
         "==", "|=", "%=", "&=", "^=", "!=", "<<=", ">>=", "||", "&&",
         "//", "/*", "*/"
@@ -120,6 +124,8 @@ void JavaToken::initialize()
         
         JavaTokenType::QUOTE,
         JavaTokenType::BACK_SLASH,
+
+        JavaTokenType::APOSTROPHE,
         JavaTokenType::LEFT_PAREN,
         JavaTokenType::RIGHT_PAREN,
         JavaTokenType::LEFT_BRACKET,
@@ -162,7 +168,9 @@ void JavaToken::initialize()
         "QUOTE", "BACK_SLASH", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
         "INCREMENT", "DECREMENT", "LEFT_SHIFT", "RIGHT_SHIFT", "LESS_EQUALS", "GREATER_EQUALS", "PLUS_ASSIGN", "MINUS_ASSIGN","MULTI_ASSIGN", "DIVIDE_ASSIGN",
         "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND"
-
+        "APOSTROPHE", "QUOTE", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
+        "INCREMENT", "DECREMENT", "LEFT_SHIFT", "RIGHT_SHIFT", "LESS_EQUALS", "GREATER_EQUALS", "PLUS_ASSIGN", "MINUS_ASSIGN","MULTI_ASSIGN", "DIVIDE_ASSIGN",
+        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND"
     };
 
     for (int i = 0; i < ss_names.size(); i++)

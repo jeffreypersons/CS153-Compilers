@@ -12,108 +12,262 @@
 
 namespace wci { namespace frontend { namespace java { namespace tokens {
 
-using namespace std;
-using namespace wci::frontend;
-using namespace wci::frontend::java;
+                using namespace std;
+                using namespace wci::frontend;
+                using namespace wci::frontend::java;
 
-JavaSpecialSymbolToken::JavaSpecialSymbolToken(Source *source) throw (string)
-    : JavaToken(source)
-{
-    extract();
-}
+                JavaSpecialSymbolToken::JavaSpecialSymbolToken(Source *source) throw (string)
+                        : JavaToken(source)
+                {
+                    extract();
+                }
 
-void JavaSpecialSymbolToken::extract() throw (string)
-{
-    char current_ch = current_char();
-    bool good_symbol = true;
+                void JavaSpecialSymbolToken::extract() throw (string)
+                {
+                    char current_ch = current_char();
+                    bool good_symbol = true;
 
-    text = current_ch;
+                    text = current_ch;
 
-    switch (current_ch)
-    {
-        // Single-character special symbols.
-        case '+':  case '-':  case '*':  case '/':  case ',':
-        case ';':  case '\'': case '=':  case '(':  case ')':
-        case '[':  case ']':  case '{':  case '}':  case '^':
-        {
-            next_char();  // consume character
-            break;
-        }
+                    switch (current_ch)
+                    {
+                        // Single-character special symbols.
+                        case '~':  case '@':  case ':':  case ';':  case '?':
+                        case '.':  case ',':  case '\'': case '\\':  case '(':
+                        case ')':  case '[':  case ']':  case '{':  case '}':
+                        case '\"':
+                        {
+                            next_char();  // consume character
+                            break;
+                        }
+                            // ! or !=
+                        case '!':
+                        {
+                            current_ch = next_char();  // consume '!';
 
-        // : or :=
-        case ':':
-        {
-            current_ch = next_char();  // consume ':';
+                            if (current_ch == '=')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
 
-            if (current_ch == '=')
-            {
-                text += current_ch;
-                next_char();  // consume '='
-            }
+                            break;
+                        }
 
-            break;
-        }
+                            // % or %=
+                        case '%':
+                        {
+                            current_ch = next_char();  // consume '%';
 
-        // < or <= or <>
-        case '<':
-        {
-            current_ch = next_char();  // consume '<';
+                            if (current_ch == '=')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
 
-            if (current_ch == '=')
-            {
-                text += current_ch;
-                next_char();  // consume '='
-            }
-            else if (current_ch == '>')
-            {
-                text += current_ch;
-                next_char();  // consume '>'
-            }
+                            break;
+                        }
 
-            break;
-        }
+                            // ^ or ^=
+                        case '^':
+                        {
+                            current_ch = next_char();  // consume '^';
 
-        // > or >=
-        case '>':
-        {
-            current_ch = next_char();  // consume '>';
+                            if (current_ch == '=')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
 
-            if (current_ch == '=')
-            {
-                text += current_ch;
-                next_char();  // consume '='
-            }
+                            break;
+                        }
 
-            break;
-        }
+                            // & or &= or &&
+                        case '&':
+                        {
+                            current_ch = next_char();  // consume '&';
 
-        // . or ..
-        case '.':
-        {
-            current_ch = next_char();  // consume '.';
+                            if (current_ch == '=')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
+                            else if(current_ch == '&')
+                            {
+                                text += current_ch;
+                                next_char(); //consume '&'
+                            }
 
-            if (current_ch == '.')
-            {
-                text += current_ch;
-                next_char();  // consume '.'
-            }
+                            break;
+                        }
 
-            break;
-        }
+                            // * or *= or */
+                        case '*':
+                        {
+                            current_ch = next_char();  // consume '*';
 
-        default:
-        {
-            next_char();  // consume bad character
-            type = (TokenType) (PT_ERROR);
-            value = new DataValue((int) INVALID_CHARACTER);
-            good_symbol = false;
-        }
-    }
+                            if (current_ch == '=')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
+                            else if(current_ch == '/')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '/'
+                            }
 
-    // Set the type if it wasn't an error.
-    if (good_symbol) {
-        type = (TokenType) (JavaToken::SPECIAL_SYMBOLS[text]);
-    }
-}
+                            break;
+                        }
 
-}}}}  // namespace wci::frontend::Java::tokens
+                            // - or -=
+                        case '-':
+                        {
+                            current_ch = next_char();  // consume '-';
+
+                            if (current_ch == '=')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
+
+                            break;
+                        }
+
+                            // + or +=
+                        case '+':
+                        {
+                            current_ch = next_char();  // consume '+';
+
+                            if (current_ch == '=')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
+
+                            break;
+                        }
+
+                            // = or ==
+                        case '=':
+                        {
+                            current_ch = next_char();  // consume '=';
+
+                            if (current_ch == '=')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
+
+                            break;
+                        }
+
+                            // | or |= or ||
+                        case '|':
+                        {
+                            current_ch = next_char();  // consume '|';
+
+                            if (current_ch == '=')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
+                            else if(current_ch =='|')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '|'
+                            }
+
+                            break;
+                        }
+
+                            // / or /= or // or /*
+                        case '/':
+                        {
+                            current_ch = next_char();  // consume '/';
+
+                            if (current_ch == '=')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
+                            else if(current_ch =='/')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '/'
+                            }
+                            else if(current_ch =='*')
+                            {
+                                text += current_ch;
+                                next_char();  // consume '*'
+                            }
+
+                            break;
+                        }
+
+                            // < or <= or << or <<=
+                        case '<':
+                        {
+                            current_ch = next_char();  // consume '<';
+
+                            if (current_ch == '=') //case <=
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
+                            else if(current_ch =='<') //case <<
+                            {
+                                text += current_ch;
+                                current_ch = next_char();  // consume '<'
+
+                                if(current_ch == '=') //case <<=
+                                {
+                                    text += current_ch;
+                                    next_char();  // consume '='
+                                }
+                            }
+
+                            break;
+                        }
+
+                            // > or >= or >> or >>=
+                        case '>':
+                        {
+                            current_ch = next_char();  // consume '>';
+
+                            if (current_ch == '=') //case >=
+                            {
+                                text += current_ch;
+                                next_char();  // consume '='
+                            }
+                            else if(current_ch =='>') //case >>
+                            {
+                                text += current_ch;
+                                current_ch = next_char();  // consume '<'
+
+                                if(current_ch == '=') //case >>=
+                                {
+                                    text += current_ch;
+                                    next_char();  // consume '='
+                                }
+                            }
+
+                            break;
+                        }
+
+                        default:
+                        {
+                            next_char();  // consume bad character
+                            type = (TokenType) (PT_ERROR);
+                            value = new DataValue((int) INVALID_CHARACTER);
+                            good_symbol = false;
+                        }
+                    }
+
+                    // Set the type if it wasn't an error.
+                    if (good_symbol) {
+                        type = (TokenType) (JavaToken::SPECIAL_SYMBOLS[text]);
+                    }
+                }
+
+            }}}}  // namespace wci::frontend::Java::tokens

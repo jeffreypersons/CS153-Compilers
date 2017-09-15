@@ -17,8 +17,8 @@
 
 namespace wci { namespace frontend { namespace java {
 
-using namespace std;
-using namespace wci::frontend;
+            using namespace std;
+            using namespace wci::frontend;
 
 /**
  * Java token types.
