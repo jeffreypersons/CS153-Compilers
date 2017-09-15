@@ -89,7 +89,7 @@ void JavaToken::initialize()
     {
         "~", "!", "@", "%", "^", "&", "*", "-", "+", "=",
         "|", "/", ":", ";", "?", "<", ">", ".", ",",
-        "'", "\"", "(",  ")", "[", "]", "{", "}",
+        "'", "\\", "(",  ")", "[", "]", "{", "}",
         "++", "--", "<<", ">>", "<=", ">=", "+=", "-=", "*=", "/=",
         "==", "|=", "%=", "&=", "^=", "!=", "<<=", ">>=", "||", "&&",
         "//", "/*", "*/"
@@ -147,7 +147,11 @@ void JavaToken::initialize()
         JavaTokenType::LEFTSHIFT_AND_ASSIGN,
         JavaTokenType::RIGHTSHIFT_AND_ASSIGN,
         JavaTokenType::OR,
-        JavaTokenType::AND
+        JavaTokenType::AND,
+
+        JavaTokenType::ONELINE_COMMENT,
+        JavaTokenType::BEGIN_COMMENT,
+        JavaTokenType::END_COMMENT
     };
 
     for (int i = 0; i < ss_strings.size(); i++)
@@ -161,8 +165,8 @@ void JavaToken::initialize()
         "BIT_OR", "DIVIDE", "COLON", "SEMICOLON", "TERNARY", "LESS_THAN","GREATER_THAN", "DOT", "COMMA",
         "QUOTE", "BACK_SLASH", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
         "INCREMENT", "DECREMENT", "LEFT_SHIFT", "RIGHT_SHIFT", "LESS_EQUALS", "GREATER_EQUALS", "PLUS_ASSIGN", "MINUS_ASSIGN","MULTI_ASSIGN", "DIVIDE_ASSIGN",
-        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND"
-
+        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND",
+        "ONELINE_COMMENT", "BEGIN_COMMENT", "END_COMMENT"
     };
 
     for (int i = 0; i < ss_names.size(); i++)

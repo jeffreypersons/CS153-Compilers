@@ -1,0 +1,134 @@
+001 /* This is a comment. */
+    ^
+*** Invalid character [at "/"]
+>>> MULTI           line=001, pos= 1, text="*"
+>>> IDENTIFIER      line=001, pos= 3, text="This"
+>>> IDENTIFIER      line=001, pos= 8, text="is"
+>>> IDENTIFIER      line=001, pos=11, text="a"
+>>> IDENTIFIER      line=001, pos=13, text="comment"
+>>> DOT             line=001, pos=20, text="."
+>>>                 line=001, pos=22, text="*/"
+002 // So is this.
+>>>                 line=002, pos= 0, text="//"
+>>> IDENTIFIER      line=002, pos= 3, text="So"
+>>> IDENTIFIER      line=002, pos= 6, text="is"
+>>> this            line=002, pos= 9, text="this"
+>>> DOT             line=002, pos=13, text="."
+003 
+004 /* Here's a comment
+>>>                 line=004, pos= 0, text="/*"
+>>> IDENTIFIER      line=004, pos= 3, text="Here"
+005    that spans several
+006    source lines. */
+007 
+008 Two/*comments in*//***a row***/ here.
+009 /* This is /* not a nested comment. */
+010 // Nor is /* this */ one.
+011 
+012 { Not a comment. }
+013 
+014 // Word tokens
+015 Hello world
+016 Abstract abstract ABSTRACT aBsTrAcT
+017 What?
+018 
+019 // Character tokens
+020 'x' 'A' '\'' 'a' '\n' '\t' '\\'
+021 
+022 // String tokens
+023 "Hello, world."
+>>> STRING          line=004, pos= 7, text=""s a comment    that spans several    source lines. */  Two/*comments in*//***a row***/ here. /* This is /* not a nested comment. */ // Nor is /* this */ one.  { Not a comment. }  // Word tokens Hello world Abstract abstract ABSTRACT aBsTrAcT What?  // Character tokens 'x' 'A' '\'' 'a' '\n' '\t' '\\'  // String tokens ""
+>>>                 value="s a comment    that spans several    source lines. */  Two/*comments in*//***a row***/ here. /* This is /* not a nested comment. */ // Nor is /* this */ one.  { Not a comment. }  // Word tokens Hello world Abstract abstract ABSTRACT aBsTrAcT What?  // Character tokens 'x' 'A' '\'' 'a' '\n' '\t' '\\'  // String tokens "
+>>> IDENTIFIER      line=023, pos= 1, text="Hello"
+>>> COMMA           line=023, pos= 6, text=","
+>>> IDENTIFIER      line=023, pos= 8, text="world"
+>>> DOT             line=023, pos=13, text="."
+                  ^
+*** Invalid character [at """]
+024 "Hello,\tworld!"
+    ^
+*** Invalid character [at """]
+>>> IDENTIFIER      line=024, pos= 1, text="Hello"
+>>> COMMA           line=024, pos= 6, text=","
+>>> BACK_SLASH      line=024, pos= 7, text="\"
+>>> IDENTIFIER      line=024, pos= 8, text="tworld"
+>>> NOT             line=024, pos=14, text="!"
+                   ^
+*** Invalid character [at """]
+025 "Hello,\n\"world!\""
+    ^
+*** Invalid character [at """]
+>>> IDENTIFIER      line=025, pos= 1, text="Hello"
+>>> COMMA           line=025, pos= 6, text=","
+>>> BACK_SLASH      line=025, pos= 7, text="\"
+>>> IDENTIFIER      line=025, pos= 8, text="n"
+>>> BACK_SLASH      line=025, pos= 9, text="\"
+              ^
+*** Invalid character [at """]
+>>> IDENTIFIER      line=025, pos=11, text="world"
+>>> NOT             line=025, pos=16, text="!"
+>>> BACK_SLASH      line=025, pos=17, text="\"
+                      ^
+*** Invalid character [at """]
+                       ^
+*** Invalid character [at """]
+026 "It's Friday!"
+    ^
+*** Invalid character [at """]
+>>> IDENTIFIER      line=026, pos= 1, text="It"
+>>> STRING          line=026, pos= 3, text=""s Friday!""
+>>>                 value="s Friday!"
+027 ""  "\""
+    ^
+*** Invalid character [at """]
+     ^
+*** Invalid character [at """]
+        ^
+*** Invalid character [at """]
+>>> BACK_SLASH      line=027, pos= 5, text="\"
+          ^
+*** Invalid character [at """]
+           ^
+*** Invalid character [at """]
+028 
+029 // Special symbol tokens
+>>>                 line=029, pos= 0, text="//"
+>>> IDENTIFIER      line=029, pos= 3, text="Special"
+>>> IDENTIFIER      line=029, pos=11, text="symbol"
+>>> IDENTIFIER      line=029, pos=18, text="tokens"
+030 + - * / := . , ; : = <> < <= >= > ( ) [ ] { } } ^ ..
+>>> ADD             line=030, pos= 0, text="+"
+>>> MINUS           line=030, pos= 2, text="-"
+>>> MULTI           line=030, pos= 4, text="*"
+>>> DIVIDE          line=030, pos= 6, text="/"
+>>> COLON           line=030, pos= 8, text=":"
+>>> ASSIGN          line=030, pos= 9, text="="
+>>> DOT             line=030, pos=11, text="."
+>>> COMMA           line=030, pos=13, text=","
+>>> SEMICOLON       line=030, pos=15, text=";"
+>>> COLON           line=030, pos=17, text=":"
+>>> ASSIGN          line=030, pos=19, text="="
+>>> LESS_THAN       line=030, pos=21, text="<"
+>>> GREATER_THAN    line=030, pos=22, text=">"
+>>> LESS_THAN       line=030, pos=24, text="<"
+>>> LESS_EQUALS     line=030, pos=26, text="<="
+>>> GREATER_EQUALS  line=030, pos=29, text=">="
+>>> GREATER_THAN    line=030, pos=32, text=">"
+>>> LEFT_PAREN      line=030, pos=34, text="("
+>>> RIGHT_PAREN     line=030, pos=36, text=")"
+>>> LEFT_BRACKET    line=030, pos=38, text="["
+>>> RIGHT_BRACKET   line=030, pos=40, text="]"
+>>> RIGHT_BRACE     line=030, pos=46, text="}"
+>>> XOR             line=030, pos=48, text="^"
+>>> DOT             line=030, pos=50, text="."
+>>> DOT             line=030, pos=51, text="."
+031 <<=  >>=
+>>> LEFTSHIFT_AND_ASSIGN line=031, pos= 0, text="<<="
+>>> RIGHTSHIFT_AND_ASSIGNOR line=031, pos= 5, text=">>="
+
+                  31 source lines.
+                  14 syntax errors.
+                0.00 seconds total parsing time.
+
+                   0 instructions generated.
+                0.00 seconds total code generation time.
