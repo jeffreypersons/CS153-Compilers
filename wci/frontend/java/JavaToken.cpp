@@ -89,7 +89,7 @@ void JavaToken::initialize()
     {
         "~", "!", "@", "%", "^", "&", "*", "-", "+", "=",
         "|", "/", ":", ";", "?", "<", ">", ".", ",",
-        "'", "\\", "(",  ")", "[", "]", "{", "}",
+        "\'", "\"", "(",  ")", "[", "]", "{", "}",
         "++", "--", "<<", ">>", "<=", ">=", "+=", "-=", "*=", "/=",
         "==", "|=", "%=", "&=", "^=", "!=", "<<=", ">>=", "||", "&&",
         "//", "/*", "*/"
@@ -118,8 +118,8 @@ void JavaToken::initialize()
         JavaTokenType::DOT,
         JavaTokenType::COMMA,
         
+        JavaTokenType::APOSTROPHE,
         JavaTokenType::QUOTE,
-        JavaTokenType::BACK_SLASH,
         JavaTokenType::LEFT_PAREN,
         JavaTokenType::RIGHT_PAREN,
         JavaTokenType::LEFT_BRACKET,
@@ -163,7 +163,7 @@ void JavaToken::initialize()
     {
         "UNARY", "NOT", "OVERRIDE", "REMIND", "XOR", "BIT_AND", "MULTI", "MINUS", "ADD", "ASSIGN",
         "BIT_OR", "DIVIDE", "COLON", "SEMICOLON", "TERNARY", "LESS_THAN","GREATER_THAN", "DOT", "COMMA",
-        "QUOTE", "BACK_SLASH", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
+        "APOSTROPHE", "QUOTE", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
         "INCREMENT", "DECREMENT", "LEFT_SHIFT", "RIGHT_SHIFT", "LESS_EQUALS", "GREATER_EQUALS", "PLUS_ASSIGN", "MINUS_ASSIGN","MULTI_ASSIGN", "DIVIDE_ASSIGN",
         "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND",
         "ONELINE_COMMENT", "BEGIN_COMMENT", "END_COMMENT"

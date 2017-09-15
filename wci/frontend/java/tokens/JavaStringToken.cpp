@@ -27,7 +27,7 @@ void JavaStringToken::extract() throw (string)
     string value_str = "";
 
     char current_ch = next_char();  // consume initial quote
-    text += "'";
+    //text += "\"";
 
     // Get string characters.
     do
@@ -35,30 +35,112 @@ void JavaStringToken::extract() throw (string)
         // Replace any whitespace character with a blank.
         if (isspace(current_ch)) current_ch = ' ';
 
-        if ((current_ch != '\'') && (current_ch != EOF))
+        if ((current_ch != '\"') && (current_ch != EOF))
         {
             text += current_ch;
             value_str  += current_ch;
             current_ch = next_char();  // consume character
         }
 
-        // Quote?  Each pair of adjacent quotes represents a single-quote.
-        if (current_ch == '\'')
+        /*
+        // String? put all to text
+        if(current_ch == '\"')
         {
-            while ((current_ch == '\'') && (peek_char() == '\''))
+            current_ch = next_char();
+            while(current_ch != '\"')
             {
-                text += "''";
+                if(current_ch == '\\' && peek_char() == '\"')
+                {
+                    current_ch = next_char();
+                    text += current_ch;
+                }
+                else
+                {
+                    text += current_ch;
+                }
+                value_str += current_ch;
+                current_ch = next_char();
+            }
+        }
+         */
+
+
+
+
+
+        // Quote?  Each pair of adjacent quotes represents a single-quote.
+        if (current_ch == '\"')
+        {
+            while ((current_ch == '\"') && (peek_char() == '\"'))
+            {
+                text += '\"';
                 value_str  += current_ch;  // append single-quote
                 current_ch = next_char();  // consume pair of quotes
                 current_ch = next_char();
             }
         }
-    } while ((current_ch != '\'') && (current_ch != Source::END_OF_FILE));
 
-    if (current_ch == '\'')
+        /*
+        if (current_ch == '\"')
+        {
+            current_ch = next_char();
+            text += '\"';
+            while (peek_char() != '\"')
+            {
+                value_str  += current_ch;  // append single-quote
+                //current_ch = next_char();  // consume pair of quotes
+                current_ch = next_char();
+            }
+            next_char();  // consume final quote
+            text += '\"';
+            type = (TokenType) PT_STRING;
+            value = new DataValue(value_str);
+        }
+        */
+
+
+
+        /*
+        if(current_ch == '\'')
+        {
+            next_char();
+            switch (current_ch)
+            {
+                case 'n':
+                {
+                    break;
+                }
+                default:
+                {
+
+                }
+            }
+        }
+         */
+
+
+
+
+
+
+        /*
+        if(current_ch == '\'')
+        {
+            if(peek_char() == '\\')
+                current_ch = next_char();
+            text += current_ch;
+            current_ch = next_char();
+        }
+         */
+
+
+
+    } while ((current_ch != '\"') && (current_ch != Source::END_OF_FILE));
+
+    if (current_ch == '\"')
     {
         next_char();  // consume final quote
-        text += '\'';
+        text += '\"';
         type = (TokenType) PT_STRING;
         value = new DataValue(value_str);
     }

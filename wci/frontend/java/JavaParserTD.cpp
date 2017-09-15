@@ -80,6 +80,14 @@ void JavaParserTD::parse() throw (string)
                 break;
             }
 
+            case PT_ABSTRACT:
+            {
+                type_str = "ABSTRACT";
+                value_str = token -> get_value() -> display();
+                break;
+            }
+
+
             case PT_ERROR: break;
 
             default:  // reserved word or special character
@@ -105,6 +113,7 @@ void JavaParserTD::parse() throw (string)
             }
         }
 
+
         if (token_type != (TokenType) PT_ERROR)
         {
             // Format and send a message about each token.
@@ -122,6 +131,7 @@ void JavaParserTD::parse() throw (string)
                                 (JavaErrorCode) token->get_value()->i;
             error_handler.flag(token, error_code, this);
         }
+
     }
 
     // Send the parser summary message.
