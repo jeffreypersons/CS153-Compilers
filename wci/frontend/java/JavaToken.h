@@ -39,7 +39,7 @@ enum class JavaTokenType
     GREATER_EQUALS, GREATER_THAN, LEFT_PAREN, RIGHT_PAREN,
     LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE,
     UP_ARROW, DOT_DOT, UNARY, NOT, OVERRIDE, REMIND, XOR, BIT_AND, MULTI, ASSIGN, BIT_OR, DIVIDE,
-    TERNARY, BACK_SLASH,
+    TERNARY, BACK_SLASH, APOSTROPHE,
 
     //symbols continued
     INCREMENT, DECREMENT, LEFT_SHIFT, RIGHT_SHIFT, PLUS_ASSIGN, MINUS_ASSIGN, MULTI_ASSIGN,
@@ -131,7 +131,7 @@ constexpr JavaTokenType PT_LEFT_BRACE = JavaTokenType::LEFT_BRACE;
 constexpr JavaTokenType PT_RIGHT_BRACE = JavaTokenType::RIGHT_BRACE;
 constexpr JavaTokenType PT_UP_ARROW = JavaTokenType::UP_ARROW;
 constexpr JavaTokenType PT_DOT_DOT = JavaTokenType::DOT_DOT;
-
+constexpr JavaTokenType PT_APOSTROPHE = JavaTokenType::APOSTROPHE;
 constexpr JavaTokenType PT_IDENTIFIER = JavaTokenType::IDENTIFIER;
 constexpr JavaTokenType PT_INTEGER = JavaTokenType::INTEGER;
 constexpr JavaTokenType PT_REAL = JavaTokenType::REAL;
