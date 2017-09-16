@@ -209,8 +209,6 @@ void Java::message_received(Message& message)
                 {
                     token_value = "\"" + token_value + "\"";
                 }
-                else if(token_type == "CHAR")
-                    token_value = '\'' + token_value + '\'';
 
                 printf(VALUE_FORMAT.c_str(), token_value.c_str());
             }
