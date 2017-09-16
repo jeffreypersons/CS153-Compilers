@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <algorithm>
 #include "PascalWordToken.h"
 #include "../PascalError.h"
 
