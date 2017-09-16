@@ -5,7 +5,7 @@
 # For instructional purposes only.  No warranties.
 #
 TARGET = Chapter3cpp
-SRCS = Pascal.cpp \
+SRCS = Java.cpp \
        wci/frontend/FrontendFactory.cpp \
        wci/frontend/Parser.cpp \
        wci/frontend/Scanner.cpp \
@@ -26,29 +26,19 @@ SRCS = Pascal.cpp \
        wci/backend/interpreter/Executor.cpp \
        wci/backend/compiler/CodeGenerator.cpp \
        wci/message/Message.cpp \
-       wci/message/MessageHandler.cpp
-JSRCS = Java.cpp \
-	   wci/frontend/FrontendFactory.cpp \
-       wci/frontend/Parser.cpp \
-       wci/frontend/Scanner.cpp \
-       wci/frontend/Token.cpp \
-       wci/frontend/Source.cpp \
+       wci/message/MessageHandler.cpp \
        wci/frontend/java/JavaError.cpp \
        wci/frontend/java/JavaScanner.cpp \
        wci/frontend/java/JavaParserTD.cpp \
        wci/frontend/java/JavaErrorHandler.cpp \
        wci/frontend/java/JavaToken.cpp \
        wci/frontend/java/tokens/JavaErrorToken.cpp \
+       wci/frontend/java/tokens/JavaCharToken.cpp \
        wci/frontend/java/tokens/JavaNumberToken.cpp \
        wci/frontend/java/tokens/JavaSpecialSymbolToken.cpp \
        wci/frontend/java/tokens/JavaStringToken.cpp \
        wci/frontend/java/tokens/JavaWordToken.cpp \
-       wci/backend/BackendFactory.cpp \
-       wci/backend/Backend.cpp \
-       wci/backend/interpreter/Executor.cpp \
-       wci/backend/compiler/CodeGenerator.cpp \
-       wci/message/Message.cpp \
-       wci/message/MessageHandler.cpp
+
 OBJS = $(SRCS:.cpp=.o)
 SOBJS = $(JSRCS:.cpp=.o)
 CC = g++
@@ -61,9 +51,6 @@ DEPENDENCY_FILE =
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 all: $(TARGET)
-
-java: $(SOBJS)
-	$(CC) $(CFLAGS) $(JSRCS) 
 
 clean:
 	\rm $(OBJS) $(TARGET) $(RAW_DEPENDENCY_FILE)

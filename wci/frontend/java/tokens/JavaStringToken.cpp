@@ -25,9 +25,8 @@ JavaStringToken::JavaStringToken(Source *source) throw (string)
 void JavaStringToken::extract() throw (string)
 {
     string value_str = "";
-
     char current_ch = next_char();  // consume initial quote
-    text += "'";
+    //text += "\"";
 
     // Get string characters.
     do
@@ -35,30 +34,28 @@ void JavaStringToken::extract() throw (string)
         // Replace any whitespace character with a blank.
         if (isspace(current_ch)) current_ch = ' ';
 
-        if ((current_ch != '\'') && (current_ch != EOF))
+        if(current_ch == '\\'){
+            text += '\\';
+            value_str += '\\';
+            current_ch = next_char();
+            text += current_ch;
+            value_str += current_ch;
+            current_ch = next_char();
+        }
+
+        if ((current_ch != '\"') && (current_ch != EOF) && (current_ch != '\\'))
         {
             text += current_ch;
             value_str  += current_ch;
             current_ch = next_char();  // consume character
         }
 
-        // Quote?  Each pair of adjacent quotes represents a single-quote.
-        if (current_ch == '\'')
-        {
-            while ((current_ch == '\'') && (peek_char() == '\''))
-            {
-                text += "''";
-                value_str  += current_ch;  // append single-quote
-                current_ch = next_char();  // consume pair of quotes
-                current_ch = next_char();
-            }
-        }
-    } while ((current_ch != '\'') && (current_ch != Source::END_OF_FILE));
 
-    if (current_ch == '\'')
+    } while ((current_ch != '\"') && (current_ch != Source::END_OF_FILE));
+
+    if (current_ch == '\"')
     {
         next_char();  // consume final quote
-        text += '\'';
         type = (TokenType) PT_STRING;
         value = new DataValue(value_str);
     }

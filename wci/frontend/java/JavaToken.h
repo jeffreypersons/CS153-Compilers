@@ -17,8 +17,8 @@
 
 namespace wci { namespace frontend { namespace java {
 
-using namespace std;
-using namespace wci::frontend;
+            using namespace std;
+            using namespace wci::frontend;
 
 /**
  * Java token types.
@@ -26,10 +26,11 @@ using namespace wci::frontend;
 enum class JavaTokenType
 {
     // Reserved words.
-    AND, ARRAY, BEGIN, CASE, CONST, DIV, DO, DOWNTO, ELSE, END,
-    FILE, FOR, FUNCTION, GOTO, IF, IN, LABEL, MOD, NIL, NOT,
-    OF, OR, PACKED, PROCEDURE, PROGRAM, RECORD, REPEAT, SET,
-    THEN, TO, TYPE, UNTIL, VAR, WHILE, WITH,
+    ABSTRACT, DOUBLE, CASE, CONST, GOTO, DO, CONTINUE, ELSE, INT,
+    LONG, FOR, BREAK, ENUM, IF, NATIVE, SUPER, MOD, PROTECTED,
+    OF, OR, FLOAT, SWITCH, VOID, PACKAGE, SHORT,
+    CLASS, RETURN, THIS, EXTENDS, CHAR, WHILE, VOLATILE, STATIC,
+    THROW,
 
     // Special symbols.
     PLUS, MINUS, STAR, SLASH, COLON_EQUALS,
@@ -37,51 +38,73 @@ enum class JavaTokenType
     EQUALS, NOT_EQUALS, LESS_THAN, LESS_EQUALS,
     GREATER_EQUALS, GREATER_THAN, LEFT_PAREN, RIGHT_PAREN,
     LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE,
-    UP_ARROW, DOT_DOT,
+    UP_ARROW, DOT_DOT, UNARY, NOT, OVERRIDE, REMIND, XOR, BIT_AND, MULTI, ASSIGN, BIT_OR, DIVIDE,
+    TERNARY, BACK_SLASH, APOSTROPHE,
+
+    //symbols continued
+    INCREMENT, DECREMENT, LEFT_SHIFT, RIGHT_SHIFT, PLUS_ASSIGN, MINUS_ASSIGN, MULTI_ASSIGN,
+    DIVIDE_ASSIGN, OR_ASSIGN, MODULE_ASSIGN, AND_ASSIGN, XOR_ASSIGN, AND, LEFTSHIFT_AND_ASSIGN, RIGHTSHIFT_AND_ASSIGN,
 
     IDENTIFIER, INTEGER, REAL, STRING,
     ERROR, END_OF_FILE,
 };
 
+
+constexpr JavaTokenType PT_INCREMENT = JavaTokenType::INCREMENT;
+constexpr JavaTokenType PT_DECREMENT = JavaTokenType::DECREMENT;
+constexpr JavaTokenType PT_LEFT_SHIFT = JavaTokenType::LEFT_SHIFT;
+constexpr JavaTokenType PT_RIGHT_SHIFT = JavaTokenType::RIGHT_SHIFT;
+constexpr JavaTokenType PT_PLUS_ASSIGN = JavaTokenType::PLUS_ASSIGN;
+constexpr JavaTokenType PT_MINUS_ASSIGN = JavaTokenType::MINUS_ASSIGN;
+constexpr JavaTokenType PT_MULTI_ASSIGN = JavaTokenType::MULTI_ASSIGN;
+constexpr JavaTokenType PT_DIVIDE_ASSIGN = JavaTokenType::DIVIDE_ASSIGN;
+constexpr JavaTokenType PT_DIVIDE_LEFTSHIFT_AND_ASSIGN = JavaTokenType::LEFTSHIFT_AND_ASSIGN;
+constexpr JavaTokenType PT_DIVIDE_RIGHTSHIFT_AND_ASSIGN = JavaTokenType::RIGHTSHIFT_AND_ASSIGN;
+
+
+constexpr JavaTokenType PT_OR_ASSIGN = JavaTokenType::OR_ASSIGN;
+constexpr JavaTokenType PT_MODULE_ASSIGN = JavaTokenType::MODULE_ASSIGN;
+constexpr JavaTokenType PT_AND_ASSIGN = JavaTokenType::AND_ASSIGN;
 constexpr JavaTokenType PT_AND = JavaTokenType::AND;
-constexpr JavaTokenType PT_ARRAY = JavaTokenType::ARRAY;
-constexpr JavaTokenType PT_BEGIN = JavaTokenType::BEGIN;
-constexpr JavaTokenType PT_CASE = JavaTokenType::CASE;
+
+constexpr JavaTokenType PT_ABSTRACT = JavaTokenType::ABSTRACT;
+constexpr JavaTokenType PT_DOUBLE = JavaTokenType::DOUBLE;
 constexpr JavaTokenType PT_CONST = JavaTokenType::CONST;
-constexpr JavaTokenType PT_DIV = JavaTokenType::DIV;
+constexpr JavaTokenType PT_CASE = JavaTokenType::CASE;
+constexpr JavaTokenType PT_CONTINUE = JavaTokenType::CONTINUE;
 constexpr JavaTokenType PT_DO = JavaTokenType::DO;
-constexpr JavaTokenType PT_DOWNTO = JavaTokenType::DOWNTO;
+constexpr JavaTokenType PT_INT = JavaTokenType::INT;
+constexpr JavaTokenType PT_SHORT = JavaTokenType::SHORT;
+constexpr JavaTokenType PT_THROW = JavaTokenType::THROW;
 
 constexpr JavaTokenType PT_ELSE = JavaTokenType::ELSE;
-constexpr JavaTokenType PT_END = JavaTokenType::END;
-constexpr JavaTokenType PT_FILE = JavaTokenType::FILE;
+constexpr JavaTokenType PT_SUPER = JavaTokenType::SUPER;
 constexpr JavaTokenType PT_FOR = JavaTokenType::FOR;
-constexpr JavaTokenType PT_FUNCTION = JavaTokenType::FUNCTION;
 constexpr JavaTokenType PT_GOTO = JavaTokenType::GOTO;
 constexpr JavaTokenType PT_IF = JavaTokenType::IF;
-constexpr JavaTokenType PT_IN = JavaTokenType::IN;
+constexpr JavaTokenType PT_NATIVE = JavaTokenType::NATIVE;
 
-constexpr JavaTokenType PT_LABEL = JavaTokenType::LABEL;
+constexpr JavaTokenType PT_LONG = JavaTokenType::LONG;
 constexpr JavaTokenType PT_MOD = JavaTokenType::MOD;
-constexpr JavaTokenType PT_NIL = JavaTokenType::NIL;
-constexpr JavaTokenType PT_NOT = JavaTokenType::NOT;
+constexpr JavaTokenType PT_ENUM = JavaTokenType::ENUM;
+constexpr JavaTokenType PT_CHAR = JavaTokenType::CHAR;
 constexpr JavaTokenType PT_OF = JavaTokenType::OF;
 constexpr JavaTokenType PT_OR = JavaTokenType::OR;
-constexpr JavaTokenType PT_PACKED = JavaTokenType::PACKED;
-constexpr JavaTokenType PT_PROCEDURE = JavaTokenType::PROCEDURE;
+constexpr JavaTokenType PT_BREAK = JavaTokenType::BREAK;
+constexpr JavaTokenType PT_VOLATILE = JavaTokenType::VOLATILE;
 
-constexpr JavaTokenType PT_PROGRAM = JavaTokenType::PROGRAM;
-constexpr JavaTokenType PT_RECORD = JavaTokenType::RECORD;
-constexpr JavaTokenType PT_REPEAT = JavaTokenType::REPEAT;
-constexpr JavaTokenType PT_SET = JavaTokenType::SET;
-constexpr JavaTokenType PT_THEN = JavaTokenType::THEN;
-constexpr JavaTokenType PT_TO = JavaTokenType::TO;
-constexpr JavaTokenType PT_TYPE = JavaTokenType::TYPE;
+constexpr JavaTokenType PT_FLOAT = JavaTokenType::FLOAT;
+constexpr JavaTokenType PT_PROTECTED = JavaTokenType::PROTECTED;
+constexpr JavaTokenType PT_SWITCH = JavaTokenType::SWITCH;
+constexpr JavaTokenType PT_VOID = JavaTokenType::VOID;
+constexpr JavaTokenType PT_STATIC = JavaTokenType::STATIC;
+constexpr JavaTokenType PT_EXTENDS = JavaTokenType::EXTENDS;
+constexpr JavaTokenType PT_PACKAGE = JavaTokenType::PACKAGE;
 
-constexpr JavaTokenType PT_UNTIL = JavaTokenType::UNTIL;
-constexpr JavaTokenType PT_VAR = JavaTokenType::VAR;
+constexpr JavaTokenType PT_CLASS = JavaTokenType::CLASS;
+constexpr JavaTokenType PT_RETURN = JavaTokenType::RETURN;
 constexpr JavaTokenType PT_WHILE = JavaTokenType::WHILE;
-constexpr JavaTokenType PT_WITH = JavaTokenType::WITH;
+constexpr JavaTokenType PT_THIS = JavaTokenType::THIS;
 
 constexpr JavaTokenType PT_PLUS = JavaTokenType::PLUS;
 constexpr JavaTokenType PT_MINUS = JavaTokenType::MINUS;
@@ -108,7 +131,7 @@ constexpr JavaTokenType PT_LEFT_BRACE = JavaTokenType::LEFT_BRACE;
 constexpr JavaTokenType PT_RIGHT_BRACE = JavaTokenType::RIGHT_BRACE;
 constexpr JavaTokenType PT_UP_ARROW = JavaTokenType::UP_ARROW;
 constexpr JavaTokenType PT_DOT_DOT = JavaTokenType::DOT_DOT;
-
+constexpr JavaTokenType PT_APOSTROPHE = JavaTokenType::APOSTROPHE;
 constexpr JavaTokenType PT_IDENTIFIER = JavaTokenType::IDENTIFIER;
 constexpr JavaTokenType PT_INTEGER = JavaTokenType::INTEGER;
 constexpr JavaTokenType PT_REAL = JavaTokenType::REAL;
