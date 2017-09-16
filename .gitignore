@@ -1,6 +1,10 @@
 # Prerequisites
 *.d
 
+# Pascal
+*.lps
+*.lpi
+
 # Compiled Object files
 *.slo
 *.lo
@@ -36,9 +40,10 @@
 .idea/
 xcuserdata/
 cmake-build-debug/
-
 a.out.dSYM/Contents/Info.plist
 
+# ignore first assignment - was individual
+HW01/
 ouput.txt
 CMakeCache.txt
 CMakeFiles/cmake.check_cache
