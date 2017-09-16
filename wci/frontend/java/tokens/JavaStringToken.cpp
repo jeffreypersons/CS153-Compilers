@@ -56,7 +56,6 @@ void JavaStringToken::extract() throw (string)
     if (current_ch == '\"')
     {
         next_char();  // consume final quote
-        text += '\"';
         type = (TokenType) PT_STRING;
         value = new DataValue(value_str);
     }
