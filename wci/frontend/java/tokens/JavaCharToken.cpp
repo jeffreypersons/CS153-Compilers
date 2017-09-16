@@ -28,11 +28,11 @@ void JavaCharToken::extract() throw (string)
 
     char current_ch = next_char();  // consume initial quote
     text += '\'';
+    value_str += '\'';
     // Get string characters.
     if (isspace(current_ch)) current_ch = ' ';
     else if (current_ch == '\\'){
         text += current_ch;
-        //value_str += current_ch;
         current_ch = next_char();
         switch(current_ch){
             case '\\': case '\'': case '"': text += current_ch;
@@ -58,6 +58,7 @@ void JavaCharToken::extract() throw (string)
     if (current_ch == '\'')
     {
         text += current_ch;
+        value_str += current_ch;
         next_char();  // consume final quote
         type = (TokenType) PT_CHAR;
         value = new DataValue(value_str);
