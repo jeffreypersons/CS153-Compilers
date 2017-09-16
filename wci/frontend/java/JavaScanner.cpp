@@ -83,7 +83,7 @@ void JavaScanner::skip_white_space() throw (string)
     char current_ch = current_char();
     char next_ch;
     // Add support for long comments utilizing /**/ and standard //
-    while (isspace(current_ch) || (current_ch == '/')) {
+    while (isspace(current_ch) || ((current_ch == '/') && (peek_char() == '/' || peek_char() == '*')))  {
 
         // Start of a comment?
         if (current_ch == '/')
@@ -107,7 +107,7 @@ void JavaScanner::skip_white_space() throw (string)
             }
         }
         // Not a comment.
-        else current_ch = next_char();  // consume whitespace character
+        else if(isspace(current_ch)) current_ch = next_char();  // consume whitespace character
     }
 }
 
