@@ -39,6 +39,7 @@ JSRCS = Java.cpp \
        wci/frontend/java/JavaErrorHandler.cpp \
        wci/frontend/java/JavaToken.cpp \
        wci/frontend/java/tokens/JavaErrorToken.cpp \
+       wci/frontend/java/tokens/JavaCharToken.cpp \
        wci/frontend/java/tokens/JavaNumberToken.cpp \
        wci/frontend/java/tokens/JavaSpecialSymbolToken.cpp \
        wci/frontend/java/tokens/JavaStringToken.cpp \
