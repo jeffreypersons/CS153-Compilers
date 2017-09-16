@@ -1,44 +1,55 @@
-# Prerequisites
-*.d
+# course related
+HW01/
+ouput.txt
 
-# Compiled Object files
-*.slo
-*.lo
+# pascal
+*.lpi
+*.lps
+
+# compiled object files
 *.o
+*.lo
+*.slo
 *.obj
 
-# Precompiled Headers
+# precompiled headers
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
+# compiled dynamic libraries
 *.so
-*.dylib
 *.dll
+*.dylib
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
+# compiled static libraries
 *.a
+*.la
+*.lai
 *.lib
 
-# Executables
+# executables
+*.app
 *.exe
 *.out
-*.app
+*.app.*
+*.exe.*
+*.out.*
 
-# Misc
+# mac osx
 .DS_Store
-.idea/
+__MACOSX/
 xcuserdata/
-cmake-build-debug/
 
-a.out.dSYM/Contents/Info.plist
+# jetbrains
+*.iml
+.idea/
 
-ouput.txt
+# cache, logging, and debugging
+*.bak
+*.log
 CMakeCache.txt
+cmake-build-debug/
 CMakeFiles/cmake.check_cache
+
+# misc
+*.d
