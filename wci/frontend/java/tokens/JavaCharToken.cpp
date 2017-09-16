@@ -33,20 +33,26 @@ void JavaCharToken::extract() throw (string)
     if (isspace(current_ch)) current_ch = ' ';
     else if (current_ch == '\\'){
         text += current_ch;
-        value_str += current_ch;
         current_ch = next_char();
         switch(current_ch){
-            case '\\': case '\'': case '\"': case 'n': case 't': text += current_ch;
+            case '\\': case '\'': case '"': text += current_ch;
                                              value_str += current_ch;
-                                             break;                    
+                                             break;    
+            case 'n':                        text += current_ch;
+                                             value_str += '\n';
+                                             break;        
+            case 't':                        text += current_ch;
+                                             value_str += "\t";
+                                             break;              
             default: type = (TokenType) PT_ERROR;
                      value = new DataValue((int) UNEXPECTED_TOKEN);
         }
     }
-    else if(current_ch != '\''){
+    else{
         text += current_ch;
         value_str += current_ch;
     }
+    
     current_ch = next_char();
 
     if (current_ch == '\'')

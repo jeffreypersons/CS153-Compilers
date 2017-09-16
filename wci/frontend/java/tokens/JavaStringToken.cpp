@@ -36,10 +36,16 @@ void JavaStringToken::extract() throw (string)
 
         if(current_ch == '\\'){
             text += '\\';
-            value_str += '\\';
             current_ch = next_char();
             text += current_ch;
-            value_str += current_ch;
+            switch(current_ch){
+                case 'n':   value_str += "\n";
+                            break;
+                case 't':   value_str += "\t";
+                            break;
+                default:   value_str += current_ch;
+
+            }
             current_ch = next_char();
         }
 

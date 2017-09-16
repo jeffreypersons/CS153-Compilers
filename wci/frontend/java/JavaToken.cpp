@@ -101,18 +101,18 @@ void JavaToken::initialize()
         JavaTokenType::NOT,
         JavaTokenType::OVERRIDE,
         JavaTokenType::REMIND,
-        JavaTokenType::XOR,
+        JavaTokenType::HAT,
         JavaTokenType::BIT_AND,
-        JavaTokenType::MULTI,
+        JavaTokenType::MULT,
         JavaTokenType::MINUS,
         JavaTokenType::PLUS,
-        JavaTokenType::ASSIGN,
-        
+        JavaTokenType::EQUALS,
+
         JavaTokenType::BIT_OR,
-        JavaTokenType::DIVIDE,
+        JavaTokenType::SLASH,
         JavaTokenType::COLON,
         JavaTokenType::SEMICOLON,
-        JavaTokenType::TERNARY,
+        JavaTokenType::QUESTION_MARK,
         JavaTokenType::LESS_THAN,
         JavaTokenType::GREATER_THAN,
         JavaTokenType::DOT,
@@ -159,14 +159,19 @@ void JavaToken::initialize()
 
     vector<string> ss_names =
     {
-        "UNARY", "NOT", "OVERRIDE", "REMIND", "XOR", "BIT_AND", "MULTI", "MINUS", "ADD", "ASSIGN",
-        "BIT_OR", "DIVIDE", "COLON", "SEMICOLON", "TERNARY", "LESS_THAN","GREATER_THAN", "DOT", "COMMA",
+        "UNARY", "NOT", "OVERRIDE", "REMIND", "HAT", "BIT_AND", "MULT", "MINUS", "PLUS", "EQUALS",
+        "BIT_OR", "SLASH", "COLON", "SEMICOLON", "QUESTION_MARK", "LESS_THAN","GREATER_THAN", "DOT", "COMMA",
         "QUOTE", "BACK_SLASH", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
         "INCREMENT", "DECREMENT", "LEFT_SHIFT", "RIGHT_SHIFT", "LESS_EQUALS", "GREATER_EQUALS", "PLUS_ASSIGN", "MINUS_ASSIGN","MULTI_ASSIGN", "DIVIDE_ASSIGN",
-        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND"
+        "EQUAL", "EQUALS", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN", "OR", "AND",
+/*
+=======
+        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN", "OR", "AND",
+>>>>>>> origin/fixes
+ */
         "APOSTROPHE", "QUOTE", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
         "INCREMENT", "DECREMENT", "LEFT_SHIFT", "RIGHT_SHIFT", "LESS_EQUALS", "GREATER_EQUALS", "PLUS_ASSIGN", "MINUS_ASSIGN","MULTI_ASSIGN", "DIVIDE_ASSIGN",
-        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN" "OR", "AND"
+        "EQUAL", "OR_ASSIGN", "MODULE_ASSIGN", "AND_ASSIGN", "XOR_ASSIGN", "NOT_EQUAL", "LEFTSHIFT_AND_ASSIGN", "RIGHTSHIFT_AND_ASSIGN", "OR", "AND"
     };
 
     for (int i = 0; i < ss_names.size(); i++)
