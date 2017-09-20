@@ -26,7 +26,7 @@ void JavaStringToken::extract() throw (string)
 {
     string value_str = "";
     char current_ch = next_char();  // consume initial quote
-    //text += "\"";
+    text += "\"";
 
     // Get string characters.
     do
@@ -61,6 +61,7 @@ void JavaStringToken::extract() throw (string)
 
     if (current_ch == '\"')
     {
+        text += "\"";
         next_char();  // consume final quote
         type = (TokenType) PT_STRING;
         value = new DataValue(value_str);
