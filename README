@@ -1,15 +1,10 @@
-to build run: make java
+## to build and run java (and pascal) input on MAC OSX
+make all
+./Chapter3cpp compile javatest.in > output.txt
+./a.out compile hello.pas > pascal_out.txt
 
-Currently is just the refactored Pascal code, to have the Java names
 
-TODO:
-- Replace keywords in JavaToken from pascal to Java
-- Modify JavaParserTD to have all necessary types in java, currently contains the pascal types: string, number, and real
-- Modify JavaError to have error codes relevant to Java
-- Modify all classes under tokens to be compliant with Java
-- Modify Java.cpp to be correct under Java, for example change the token types in the ouput on line 203
-- Modify FrontEndFactory (uncomment if the "pascal" string is passed it) to be able to provide both pascal and java frontends
-- Change makefile to compile both Pascal and Java so that both programs can be called once compiled
-- May have to modify JavaScanner - if modifying all tokens does not produce desired result
-- May have to modify JavaErrorHandler if changing JavaError doe not produce desire result
-- Hopefully no need to make changes to language independant classes - e.g. Parser.cpp
+## to build and run java (and pascal) input on WINDOWS
+make all
+./Chapter3cpp.exe compile javatest.in > output.txt
+./a.exe compile hello.pas > pascal_out.txt
