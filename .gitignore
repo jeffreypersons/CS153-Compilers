@@ -1,5 +1,4 @@
 # course related
-HW01/
 ouput.txt
 
 # pascal
@@ -52,4 +51,3 @@ cmake-build-debug/
 CMakeFiles/cmake.check_cache
 
 # other
-*.pdf
