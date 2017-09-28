@@ -1,17 +1,20 @@
 ## Files to change in _wci_ for homework #3
 wci/frontend/pascal
-• PascalTokenType.java
+- PascalTokenType.java
+
 
 wci/frontend/pascal/parsers
-• PascalSpecialSymbolToken.java
-• StatementParser.java
-• WhenStatementParser.java
+- PascalSpecialSymbolToken.java
+- StatementParser.java
+- WhenStatementParser.java
+
 
 wci/intermediate/icodeimpl
-• ICodeNodeImpl.java
+- ICodeNodeImpl.java
+
 wci/backend/interpreter/executors
-• StatementExecutor.java
-• WhenExecutor.java
+- StatementExecutor.java
+- WhenExecutor.java
 
 
 ## Make file commands
