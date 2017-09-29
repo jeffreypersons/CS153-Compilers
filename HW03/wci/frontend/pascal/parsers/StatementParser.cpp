@@ -14,6 +14,7 @@
 #include "WhileStatementParser.h"
 #include "ForStatementParser.h"
 #include "IfStatementParser.h"
+#include "WhenStatementParser.h"
 #include "CaseStatementParser.h"
 #include "../PascalParserTD.h"
 #include "../PascalToken.h"
@@ -33,12 +34,12 @@ using namespace wci::intermediate::icodeimpl;
 set<PascalTokenType> StatementParser::STMT_START_SET =
 {
     PT_BEGIN, PT_CASE, PT_FOR, PT_IF, PT_REPEAT, PT_WHILE,
-    PT_IDENTIFIER, PT_SEMICOLON,
+    PT_IDENTIFIER, PT_SEMICOLON, PT_WHEN,
 };
 
 set<PascalTokenType> StatementParser::STMT_FOLLOW_SET =
 {
-    PT_SEMICOLON, PT_END, PT_ELSE, PT_UNTIL, PT_DOT,
+    PT_SEMICOLON, PT_END, PT_ELSE, PT_UNTIL, PT_DOT, PT_OTHERWISE,
 };
 
 StatementParser::StatementParser(PascalParserTD *parent)
@@ -100,6 +101,13 @@ ICodeNode *StatementParser::parse_statement(Token *token) throw (string)
         {
             CaseStatementParser case_parser(this);
             statement_node = case_parser.parse_statement(token);
+            break;
+        }
+
+        case PT_WHEN:
+        {
+            WhenStatementParser when_parser(this);
+            statement_node = when_parser.parse_statement(token);
             break;
         }
 
