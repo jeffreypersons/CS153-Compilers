@@ -30,6 +30,7 @@ SRCS =  Pascal.cpp \
         wci/frontend/pascal/PascalScanner.cpp \
         wci/frontend/pascal/PascalToken.cpp \
         wci/frontend/pascal/parsers/AssignmentStatementParser.cpp \
+        wci/frontend/pascal/parsers/WhenStatementParser.cpp \
         wci/frontend/pascal/parsers/CaseStatementParser.cpp \
         wci/frontend/pascal/parsers/CompoundStatementParser.cpp \
         wci/frontend/pascal/parsers/ExpressionParser.cpp \
