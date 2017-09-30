@@ -78,6 +78,9 @@ void ICodeNodeImpl::initialize()
 
         // WRITE parameter
         NT_WRITE_PARM,
+
+        //LAMBDA TYPE
+        NT_LAMBDA,
     };
 
     vector<string> type_names =
@@ -105,6 +108,9 @@ void ICodeNodeImpl::initialize()
 
         // WRITE parameter
         "WRITE_PARM",
+
+        //WHEN statement
+        "LAMBDA",
     };
 
     for (int i = 0; i < types.size(); i++)
