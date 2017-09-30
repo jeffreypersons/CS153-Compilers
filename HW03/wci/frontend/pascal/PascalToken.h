@@ -40,7 +40,7 @@ enum class PascalTokenType
     UP_ARROW, DOT_DOT,
 
     IDENTIFIER, INTEGER, REAL, STRING,
-    ERROR, END_OF_FILE, WHEN, OTHERWISE,
+    ERROR, END_OF_FILE, WHEN, OTHERWISE, LAMBDA,
 };
 
 constexpr PascalTokenType PT_AND = PascalTokenType::AND;
@@ -51,8 +51,11 @@ constexpr PascalTokenType PT_CONST = PascalTokenType::CONST;
 constexpr PascalTokenType PT_DIV = PascalTokenType::DIV;
 constexpr PascalTokenType PT_DO = PascalTokenType::DO;
 constexpr PascalTokenType PT_DOWNTO = PascalTokenType::DOWNTO;
+
+// added for when
 constexpr PascalTokenType PT_WHEN = PascalTokenType::WHEN;
 constexpr PascalTokenType PT_OTHERWISE = PascalTokenType::OTHERWISE;
+constexpr PascalTokenType PT_LAMBDA = PascalTokenType::LAMBDA;
 
 constexpr PascalTokenType PT_ELSE = PascalTokenType::ELSE;
 constexpr PascalTokenType PT_END = PascalTokenType::END;
