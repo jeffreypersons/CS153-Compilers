@@ -33,7 +33,7 @@ public:
 private:
     // Synchronization set for DO.
     static set<PascalTokenType> DO_SET;
-
+    ICodeNode *parse_branch(Token *token) throw (string);
     static bool INITIALIZED;
 
     /**
