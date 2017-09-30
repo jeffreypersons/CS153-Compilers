@@ -17,7 +17,7 @@ namespace wci { namespace frontend { namespace pascal { namespace parsers {
 using namespace std;
 using namespace wci::frontend::pascal;
 using namespace wci::intermediate;
-//using namespace wci::intermediate::icodeimpl;
+using namespace wci::intermediate::icodeimpl;
 // COPIED DIRECTLY FROM WHILESTATEMENTPARSER
 bool WhenStatementParser::INITIALIZED = false;
 
@@ -49,43 +49,59 @@ WhenStatementParser::WhenStatementParser(PascalParserTD *parent)
 
 ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
 {
-    token = next_token(token);  // consume the WHILE
+    // TODO: I made current token call randomly because for some reasons errors were happening that
+    // resulted in stack dumps
+    token = next_token(token);  // consume the WHEN
 
-    // Create LOOP, TEST, and NOT nodes.
-    // example code from whilestatemet:
-    ICodeNode *loop_node =
-            ICodeFactory::create_icode_node((ICodeNodeType) NT_LOOP);
-    ICodeNode *test_node =
-            ICodeFactory::create_icode_node((ICodeNodeType) NT_TEST);
-    ICodeNode *not_node =
-            ICodeFactory::create_icode_node((ICodeNodeType) NT_NOT);
+    // no op node for testing
+    ICodeNode* nothing_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_NO_OP);
 
-    // The LOOP node adopts the TEST node as its first child.
-    // The TEST node adopts the NOT node as its only child.
-    loop_node->add_child(test_node);
-    test_node->add_child(not_node);
+    // text for each statemtn on the side of the =>
+    string statement_text;
+    ExpressionParser e(this);
+    StatementParser s(this);
 
-    // Parse the expression.
-    // The NOT node adopts the expression subtree as its only child.
-    ExpressionParser expression_parser(this);
-    not_node->add_child(expression_parser.parse_statement(token));
+    // look through and prase all branches until otherwise keyword encountered
+    while(token->get_text() != "OTHERWISE"){
+        parse_branch(token);
+        token = current_token();
+    }
 
-    // Synchronize at the DO.
-    token = synchronize(DO_SET);
-    if (token->get_type() == (TokenType) PT_DO)
+    token = next_token(token); // consume otherwise
+    if(token->get_text() != "=>") ;// throw error here
+    token = next_token(token);
+    s.parse_statement(token);
+    token = current_token();
+    token = next_token(token);
+
+    return nothing_node;
+}
+
+ICodeNode *WhenStatementParser::parse_branch(Token *token) throw (string)
+{
+
+    ICodeNode* nothing_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_NO_OP);
+    // Look for the : token.
+    token = current_token();
+
+    ExpressionParser e(this);
+    StatementParser s(this);
+
+    e.parse_statement(token);
+
+    token = current_token();
+    if(token->get_text() != "=>")
     {
-        token = next_token(token);  // consume the DO
+        error_handler.flag(token, INVALID_CHARACTER, this); // temporary error should make specific for missing lambda
+        return nothing_node;
     }
-    else {
-        error_handler.flag(token, MISSING_DO, this);
-    }
+    else token = next_token(token);
+    s.parse_statement(token);
 
-    // Parse the statement.
-    // The LOOP node adopts the statement subtree as its second child.
-    StatementParser statement_parser(this);
-    loop_node->add_child(statement_parser.parse_statement(token));
+    token = current_token();
+    token = next_token(token); // skip semicolon
 
-    return loop_node;
+    return nothing_node;
 }
 
 }}}}
