@@ -87,7 +87,7 @@ void PascalToken::initialize()
     vector<string> ss_strings =
     {
         "+", "-", "*", "/", ":=", ".", ",", ";", ":", "'", "=", "<>",
-        "<", "<=", ">=", ">", "(", ")", "[", "]", "{", "}",  "^", ".."
+        "<", "<=", ">=", ">", "(", ")", "[", "]", "{", "}",  "^", "..", "=>",
     };
 
     vector<PascalTokenType> ss_keys =
@@ -116,7 +116,8 @@ void PascalToken::initialize()
         PascalTokenType::LEFT_BRACE,
         PascalTokenType::RIGHT_BRACE,
         PascalTokenType::UP_ARROW,
-        PascalTokenType::DOT_DOT
+        PascalTokenType::DOT_DOT,
+        PascalTokenType::LAMBDA,
     };
 
     for (int i = 0; i < ss_strings.size(); i++)
@@ -131,7 +132,7 @@ void PascalToken::initialize()
 
         "LESS_THAN", "LESS_EQUALS", "GREATER_EQUALS", "GREATER_THAN",
         "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACKET", "RIGHT_BRACKET",
-        "LEFT_BRACE", "RIGHT_BRACE", "UP_ARROW", "DOT_DOT"
+        "LEFT_BRACE", "RIGHT_BRACE", "UP_ARROW", "DOT_DOT", "LAMBDA",
     };
 
     for (int i = 0; i < ss_names.size(); i++)
