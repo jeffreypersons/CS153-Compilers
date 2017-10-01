@@ -1,0 +1,19 @@
+001 BEGIN
+002     i := 3;
+003     
+004     WHEN
+005         i = 1 => f := 10;
+006         i = 2 => f := 20;
+007         i = 3 => f := 30;
+008         i = 4 => f := 40;
+009         OTHERWISE => f := -1
+010     END;
+011     
+012     range := 5.7;
+013     
+014     WHEN
+015         (1.0 <= range) AND (range < 3.0) => level := 1;
+016         (4.5 <= range) AND (range < 7.5) => BEGIN
+017                                                level := 2;
+018                                                range := 0.0;
+019
