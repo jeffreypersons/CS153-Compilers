@@ -36,10 +36,6 @@
 
 # building and running pascal statements
 
-### compile the c++ code
-make
-
-
 ### test if statement compilation *_with_* AND *_without_* errors
     ./Chapter8cpp compile -ix tests/if.txt
 
