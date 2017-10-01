@@ -22,20 +22,27 @@ WhenExecutor::WhenExecutor(Executor *parent)
 DataValue *WhenExecutor::execute(ICodeNode *node)
 {
     // Get the IF node's children.
-    vector<ICodeNode *> children = node->get_children();
-    vector<ICodeNode*> children_of_children = children[0]->get_children();
+
+    // NOTE: compiler quirk of g++: unlike visual c++, the compiler does less inferring for us in g++
+    // that means that we have to explicitly specify type name AND a 'nested' scoped expression (std::)
+    // otherwise it will fail to compile as they are dependent names.
+    // SEE: https://stackoverflow.com/questions/13897200/iterator-for-vector-of-pointers-error-expected?noredirect=1&lq=1
+    typename std::vector<ICodeNode*> children = node->get_children();
+    typename std::vector<ICodeNode*> children_of_children = children[0]->get_children();
+
     ICodeNode* expr_child = children[0];
     ICodeNode* statement_child = children[1];
     ExpressionExecutor branch_expression(this);
     StatementExecutor executor(this);
 
     DataValue* d_val = branch_expression.execute(children_of_children[0]);
-    if(d_val->b) executor.execute(children[1]);
-    /*if(d_val->b){
-        cout << "true" << endl;
-    }*/
-    
-    ++execution_count;  // count the IF statement itself*/
+    if(d_val->b)
+    {
+        //cout << "true" << endl;
+        executor.execute(children[1]);
+    }
+
+    ++execution_count;  // count the IF statement itself
     return nullptr;
 }
 
