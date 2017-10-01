@@ -42,11 +42,16 @@ enum class ICodeNodeTypeImpl
 
     // WRITE parameter
     WRITE_PARM,
+
+    //LAMBDA.
+    LAMBDA, WHEN,
 };
 
 constexpr ICodeNodeTypeImpl NT_PROGRAM = ICodeNodeTypeImpl::PROGRAM;
 constexpr ICodeNodeTypeImpl NT_PROCEDURE = ICodeNodeTypeImpl::PROCEDURE;
 constexpr ICodeNodeTypeImpl NT_FUNCTION = ICodeNodeTypeImpl::FUNCTION;
+constexpr ICodeNodeTypeImpl NT_LAMBDA = ICodeNodeTypeImpl::LAMBDA;
+constexpr ICodeNodeTypeImpl NT_WHEN = ICodeNodeTypeImpl::WHEN;
 
 constexpr ICodeNodeTypeImpl NT_COMPOUND = ICodeNodeTypeImpl::COMPOUND;
 constexpr ICodeNodeTypeImpl NT_ASSIGN = ICodeNodeTypeImpl::ASSIGN;
