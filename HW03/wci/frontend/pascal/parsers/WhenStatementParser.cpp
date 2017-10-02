@@ -71,28 +71,37 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
         token = current_token();
     }
 
+    // form otherwise statement node
     token = next_token(token); // consume otherwise
     if(token->get_text() != "=>") ;// throw error here
-    token = next_token(token);
-    root_node->add_child(s.parse_statement(token));
+
+    token = next_token(token); // consume =>
+
+    // create compound node, store otherwise statement, then add to root node
+    tmp_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_COMPOUND);
+    tmp_node->add_child(s.parse_statement(token));
+    
     token = current_token();
     token = next_token(token);
 
+    root_node->add_child(tmp_node);
     return root_node;
 }
 
 ICodeNode *WhenStatementParser::parse_branch(Token *token) throw (string)
 {
 
+    // delcare needed nodes
     ICodeNode* root_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_COMPOUND);
     ICodeNode* test_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_TEST);
-    //ICodeNode* function_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_COMPOUND);
+    ICodeNode* statement_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_COMPOUND);
 
-    // Look for the : token.
     token = current_token();
 
     ExpressionParser e(this);
     StatementParser s(this);
+
+    // parsed expression to test_node
     test_node->add_child(e.parse_statement(token));
 
     token = current_token();
@@ -102,9 +111,13 @@ ICodeNode *WhenStatementParser::parse_branch(Token *token) throw (string)
         return root_node;
     }
     else token = next_token(token);
-    //function_node->add_child(s.parse_statement(token));
+
+    // add test node to root
     root_node->add_child(test_node);
-    root_node->add_child(s.parse_statement(token));
+
+    // add parsed statement to statement node
+    statement_node->add_child(s.parse_statement(token));
+    root_node->add_child(statement_node);
 
     token = current_token();
     token = next_token(token); // skip semicolon
