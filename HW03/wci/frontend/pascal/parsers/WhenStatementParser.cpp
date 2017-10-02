@@ -17,7 +17,7 @@ namespace wci { namespace frontend { namespace pascal { namespace parsers {
 using namespace std;
 using namespace wci::frontend::pascal;
 using namespace wci::intermediate;
-//using namespace wci::intermediate::icodeimpl;
+using namespace wci::intermediate::icodeimpl;
 // COPIED DIRECTLY FROM WHILESTATEMENTPARSER
 bool WhenStatementParser::INITIALIZED = false;
 
@@ -49,43 +49,69 @@ WhenStatementParser::WhenStatementParser(PascalParserTD *parent)
 
 ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
 {
-    token = next_token(token);  // consume the WHILE
+    // TODO: I made current token call randomly because for some reasons errors were happening that
+    // resulted in stack dumps
+    token = next_token(token);  // consume the WHEN
+    vector<ICodeNode*> children;
+    // no op node for testing
+    ICodeNode* root_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_WHEN);
+    ICodeNode* tmp_node;
+    // text for each statemtn on the side of the =>
+    string statement_text;
+    ExpressionParser e(this);
+    StatementParser s(this);
 
-    // Create LOOP, TEST, and NOT nodes.
-    // example code from whilestatemet:
-    ICodeNode *loop_node =
-            ICodeFactory::create_icode_node((ICodeNodeType) NT_LOOP);
-    ICodeNode *test_node =
-            ICodeFactory::create_icode_node((ICodeNodeType) NT_TEST);
-    ICodeNode *not_node =
-            ICodeFactory::create_icode_node((ICodeNodeType) NT_NOT);
+    // look through and prase all branches until otherwise keyword encountered
+    while(token->get_text() != "OTHERWISE"){
+        children.clear();
+        tmp_node = parse_branch(token);
+        children = tmp_node->get_children();
+        root_node->add_child(children[0]);
+        root_node->add_child(children[1]);
+        token = current_token();
+    }
 
-    // The LOOP node adopts the TEST node as its first child.
-    // The TEST node adopts the NOT node as its only child.
-    loop_node->add_child(test_node);
-    test_node->add_child(not_node);
+    token = next_token(token); // consume otherwise
+    if(token->get_text() != "=>") ;// throw error here
+    token = next_token(token);
+    root_node->add_child(s.parse_statement(token));
+    token = current_token();
+    token = next_token(token);
 
-    // Parse the expression.
-    // The NOT node adopts the expression subtree as its only child.
-    ExpressionParser expression_parser(this);
-    not_node->add_child(expression_parser.parse_statement(token));
+    return root_node;
+}
 
-    // Synchronize at the DO.
-    token = synchronize(DO_SET);
-    if (token->get_type() == (TokenType) PT_DO)
+ICodeNode *WhenStatementParser::parse_branch(Token *token) throw (string)
+{
+
+    ICodeNode* root_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_COMPOUND);
+    ICodeNode* test_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_TEST);
+    //ICodeNode* function_node = ICodeFactory::create_icode_node((ICodeNodeType) NT_COMPOUND);
+
+    // Look for the : token.
+    token = current_token();
+
+    ExpressionParser e(this);
+    StatementParser s(this);
+    test_node->add_child(e.parse_statement(token));
+
+    token = current_token();
+    if(token->get_text() != "=>")
     {
-        token = next_token(token);  // consume the DO
+        error_handler.flag(token, INVALID_CHARACTER, this); // temporary error should make specific for missing lambda
+        return root_node;
     }
-    else {
-        error_handler.flag(token, MISSING_DO, this);
-    }
+    else token = next_token(token);
+    //function_node->add_child(s.parse_statement(token));
+    root_node->add_child(test_node);
+    root_node->add_child(s.parse_statement(token));
 
-    // Parse the statement.
-    // The LOOP node adopts the statement subtree as its second child.
-    StatementParser statement_parser(this);
-    loop_node->add_child(statement_parser.parse_statement(token));
+    token = current_token();
+    token = next_token(token); // skip semicolon
 
-    return loop_node;
+
+
+    return root_node;
 }
 
 }}}}
