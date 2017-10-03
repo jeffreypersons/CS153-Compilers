@@ -81,7 +81,8 @@ enum class PascalErrorCode
 
     // Fatal errors.
     IO_ERROR,
-    TOO_MANY_ERRORS
+    TOO_MANY_ERRORS,
+    MISSING_LAMBDA
 };
 
 constexpr PascalErrorCode ALREADY_FORWARDED = PascalErrorCode::ALREADY_FORWARDED;
@@ -144,6 +145,7 @@ constexpr PascalErrorCode WRONG_NUMBER_OF_PARMS = PascalErrorCode::WRONG_NUMBER_
 
 constexpr PascalErrorCode IO_ERROR = PascalErrorCode::IO_ERROR;
 constexpr PascalErrorCode TOO_MANY_ERRORS = PascalErrorCode::TOO_MANY_ERRORS;
+constexpr PascalErrorCode MISSING_LAMBDA = PascalErrorCode::MISSING_LAMBDA;
 
 class PascalError
 {

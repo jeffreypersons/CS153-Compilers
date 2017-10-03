@@ -49,46 +49,56 @@ range            012 015 015 016 016 018 020 020
                 <INTEGER_CONSTANT value="1" />
             </EQ>
         </TEST>
-        <ASSIGN line="5">
-            <VARIABLE id="f" level="0" />
-            <INTEGER_CONSTANT value="10" />
-        </ASSIGN>
+        <COMPOUND>
+            <ASSIGN line="5">
+                <VARIABLE id="f" level="0" />
+                <INTEGER_CONSTANT value="10" />
+            </ASSIGN>
+        </COMPOUND>
         <TEST>
             <EQ>
                 <VARIABLE id="i" level="0" />
                 <INTEGER_CONSTANT value="2" />
             </EQ>
         </TEST>
-        <ASSIGN line="6">
-            <VARIABLE id="f" level="0" />
-            <INTEGER_CONSTANT value="20" />
-        </ASSIGN>
+        <COMPOUND>
+            <ASSIGN line="6">
+                <VARIABLE id="f" level="0" />
+                <INTEGER_CONSTANT value="20" />
+            </ASSIGN>
+        </COMPOUND>
         <TEST>
             <EQ>
                 <VARIABLE id="i" level="0" />
                 <INTEGER_CONSTANT value="3" />
             </EQ>
         </TEST>
-        <ASSIGN line="7">
-            <VARIABLE id="f" level="0" />
-            <INTEGER_CONSTANT value="30" />
-        </ASSIGN>
+        <COMPOUND>
+            <ASSIGN line="7">
+                <VARIABLE id="f" level="0" />
+                <INTEGER_CONSTANT value="30" />
+            </ASSIGN>
+        </COMPOUND>
         <TEST>
             <EQ>
                 <VARIABLE id="i" level="0" />
                 <INTEGER_CONSTANT value="4" />
             </EQ>
         </TEST>
-        <ASSIGN line="8">
-            <VARIABLE id="f" level="0" />
-            <INTEGER_CONSTANT value="40" />
-        </ASSIGN>
-        <ASSIGN line="9">
-            <VARIABLE id="f" level="0" />
-            <NEGATE>
-                <INTEGER_CONSTANT value="1" />
-            </NEGATE>
-        </ASSIGN>
+        <COMPOUND>
+            <ASSIGN line="8">
+                <VARIABLE id="f" level="0" />
+                <INTEGER_CONSTANT value="40" />
+            </ASSIGN>
+        </COMPOUND>
+        <COMPOUND>
+            <ASSIGN line="9">
+                <VARIABLE id="f" level="0" />
+                <NEGATE>
+                    <INTEGER_CONSTANT value="1" />
+                </NEGATE>
+            </ASSIGN>
+        </COMPOUND>
     </WHEN>
     <ASSIGN line="12">
         <VARIABLE id="range" level="0" />
@@ -107,10 +117,12 @@ range            012 015 015 016 016 018 020 020
                 </LT>
             </AND>
         </TEST>
-        <ASSIGN line="15">
-            <VARIABLE id="level" level="0" />
-            <INTEGER_CONSTANT value="1" />
-        </ASSIGN>
+        <COMPOUND>
+            <ASSIGN line="15">
+                <VARIABLE id="level" level="0" />
+                <INTEGER_CONSTANT value="1" />
+            </ASSIGN>
+        </COMPOUND>
         <TEST>
             <AND>
                 <LE>
@@ -123,15 +135,17 @@ range            012 015 015 016 016 018 020 020
                 </LT>
             </AND>
         </TEST>
-        <COMPOUND line="16">
-            <ASSIGN line="17">
-                <VARIABLE id="level" level="0" />
-                <INTEGER_CONSTANT value="2" />
-            </ASSIGN>
-            <ASSIGN line="18">
-                <VARIABLE id="range" level="0" />
-                <REAL_CONSTANT value="0.000000" />
-            </ASSIGN>
+        <COMPOUND>
+            <COMPOUND line="16">
+                <ASSIGN line="17">
+                    <VARIABLE id="level" level="0" />
+                    <INTEGER_CONSTANT value="2" />
+                </ASSIGN>
+                <ASSIGN line="18">
+                    <VARIABLE id="range" level="0" />
+                    <REAL_CONSTANT value="0.000000" />
+                </ASSIGN>
+            </COMPOUND>
         </COMPOUND>
         <TEST>
             <AND>
@@ -145,16 +159,20 @@ range            012 015 015 016 016 018 020 020
                 </LT>
             </AND>
         </TEST>
-        <ASSIGN line="20">
-            <VARIABLE id="level" level="0" />
-            <INTEGER_CONSTANT value="3" />
-        </ASSIGN>
-        <ASSIGN line="21">
-            <VARIABLE id="level" level="0" />
-            <NEGATE>
-                <INTEGER_CONSTANT value="1" />
-            </NEGATE>
-        </ASSIGN>
+        <COMPOUND>
+            <ASSIGN line="20">
+                <VARIABLE id="level" level="0" />
+                <INTEGER_CONSTANT value="3" />
+            </ASSIGN>
+        </COMPOUND>
+        <COMPOUND>
+            <ASSIGN line="21">
+                <VARIABLE id="level" level="0" />
+                <NEGATE>
+                    <INTEGER_CONSTANT value="1" />
+                </NEGATE>
+            </ASSIGN>
+        </COMPOUND>
     </WHEN>
 </COMPOUND>
 
