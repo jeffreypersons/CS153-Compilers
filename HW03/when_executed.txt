@@ -29,8 +29,11 @@
 ===== OUTPUT =====
 
 >>> LINE 002: i = 3
+>>> LINE 007: f = 30
 >>> LINE 012: range = 5.700000
+>>> LINE 017: level = 2
+>>> LINE 018: range = 0.000000
 
-                   4 statements executed.
+                   7 statements executed.
                    0 runtime errors.
                 0.00 seconds total execution time.
