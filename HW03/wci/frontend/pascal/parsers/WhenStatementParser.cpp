@@ -66,9 +66,20 @@ ICodeNode *WhenStatementParser::parse_statement(Token *token) throw (string)
         children.clear();
         tmp_node = parse_branch(token);
         children = tmp_node->get_children();
-        root_node->add_child(children[0]);
-        root_node->add_child(children[1]);
+
+        if(children.size() == 2)
+        {
+            root_node->add_child(children[0]);
+            root_node->add_child(children[1]);
+        }
+        else
+        {
+            token = synchronize(DO_SET);
+            error_handler.flag(token, MISSING_SEMICOLON, this);
+            return nullptr;
+        }
         token = current_token();
+
     }
 
     // form otherwise statement node
@@ -107,7 +118,7 @@ ICodeNode *WhenStatementParser::parse_branch(Token *token) throw (string)
     token = current_token();
     if(token->get_text() != "=>")
     {
-        error_handler.flag(token, INVALID_CHARACTER, this); // temporary error should make specific for missing lambda
+        error_handler.flag(token, MISSING_LAMBDA, this); // temporary error should make specific for missing lambda
         return root_node;
     }
     else token = next_token(token);
