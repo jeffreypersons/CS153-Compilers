@@ -9,16 +9,6 @@
     make clean
 
 
-### test if statement compilation *_with_* AND *_without_* errors
-    ./Chapter8cpp compile -ix tests/if.txt
-
-    ./Chapter8cpp execute tests/if.txt
-
-    ./Chapter8cpp compile -ix tests/iferrors.txt
-
-    ./Chapter8cpp execute tests/iferrors.txt
-
-
 ### test when statement compilation and execution *_without_* errors
     ./Chapter8cpp compile -ix tests/when.txt > docs/when_compiled.txt
 
