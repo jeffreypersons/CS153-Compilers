@@ -1,4 +1,4 @@
-# Project assignments for SJSU's CS 153 (Compilers) course. Starring Jeff, Itaru, Ki Sung, and Ben.
+# Team Assignments for SJSU's CS 153 (Compilers) course. Starring Jeff, Itaru, Ben, and Ki Sung.
 
 
 ## WHAT YOU SHOULD ALWAYS DO
