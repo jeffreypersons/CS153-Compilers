@@ -1,3 +1,4 @@
+./Chapter3cpp execute tests/hello.pas
 001 PROGRAM assign1(input, output);
 >>> IDENTIFIER      line=001, pos= 0, text="PROGRAM"
 >>> IDENTIFIER      line=001, pos= 8, text="assign1"
@@ -721,7 +722,8 @@
 
                  105 source lines.
                   25 syntax errors.
-                0.02 seconds total parsing time.
+                0.00 seconds total parsing time.
 
-                   0 instructions generated.
-                0.00 seconds total code generation time.
+                   0 statements executed.
+                   0 runtime errors.
+                0.00 seconds total execution time.

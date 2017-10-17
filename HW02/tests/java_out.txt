@@ -1,3 +1,4 @@
+./Chapter3cpp execute tests/javatest.in
 001 /* This is a comment. */
 002 // So is this.
 003 
@@ -115,7 +116,8 @@
 
                   32 source lines.
                    0 syntax errors.
-                0.01 seconds total parsing time.
+                0.00 seconds total parsing time.
 
-                   0 instructions generated.
-                0.00 seconds total code generation time.
+                   0 statements executed.
+                   0 runtime errors.
+                0.00 seconds total execution time.

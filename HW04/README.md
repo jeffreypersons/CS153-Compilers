@@ -11,15 +11,22 @@
     make clean
 
 
-### test complex data types
+### simple test of complex data types
 
-    make execute src=Complex.pas > complex_executed.txt
+    make execute src=tests/BaseTest.pas > tests/basetest_out.txt
     
-    printf '%b\n' "$(cat complex_executed.txt)"
+    printf '%b\n' "$(cat tests/basetest_out.txt)"
+
+
+### more elaborate test of complex data types
+
+    make execute src=tests/Complex.pas > tests/complex_out.txt
+    
+    printf '%b\n' "$(cat tests/complex_out.txt)"
 
 
 ### test complex builtins
 
-    make execute src=ComplexBuiltIn.pas > complexbuiltin_executed.txt
+    make execute src=tests/ComplexBuiltIn.pas > tests/complexbuiltin_out.txt
     
-    printf '%b\n' "$(cat complexbuiltin_executed.txt)"
+    printf '%b\n' "$(cat tests/complexbuiltin_out.txt)"
