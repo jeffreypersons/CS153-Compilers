@@ -19,4 +19,5 @@
 ### test scanner on pascal source
     
     ./Chapter3cpp compile hello.pas > pascal_out.txt
+    
     printf '%b\n' "$(cat pascal_out.txt)"
