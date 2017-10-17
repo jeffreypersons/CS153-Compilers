@@ -1,17 +1,25 @@
-make clean
+# Assignment #4: Builtin Complex Types
 
-    Remove all generated files to start fresh.
 
-make
+### compile all the files and generate an executable file
 
-    Compile all the files and generate an executable file.
+    make
 
-make execute src=hello.pas
 
-    Run the Pascal interpreter to execute 
-    source file hello.pas
+### remove all generated object code and build related files
 
-make compile src=hilbert.pas
+    make clean
 
-    Run the Pascal compiler to generate object code 
-    for source file hilbert.pas
+
+### test complex data types
+
+    make execute src=Complex.pas > complex_executed.txt
+    
+    printf '%b\n' "$(cat complex_executed.txt)"
+
+
+### test complex builtins
+
+    make execute src=ComplexBuiltIn.pas > complexbuiltin_executed.txt
+    
+    printf '%b\n' "$(cat complexbuiltin_executed.txt)"

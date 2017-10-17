@@ -48,7 +48,6 @@ xcuserdata/
 *.bak
 *.log
 CMakeCache.txt
+CMakeLists.txt
 cmake-build-debug/
 CMakeFiles/cmake.check_cache
-
-# other

@@ -1,0 +1,86 @@
+./Chapter12cpp execute -ix ComplexBuiltIn.pas
+001 PROGRAM ComplexBuiltIn;
+002 
+003 TYPE
+004     mystring = ARRAY[1..3] OF char;
+005 
+006 VAR
+007     x, y, z : complex;
+008     
+009 PROCEDURE print(expr : mystring; VAR z : complex);
+010     BEGIN
+011         write(expr, ' = (', z.re:0:5, ', ', z.im:0:5, ') ');
+                                  ^
+*** Invalid field [at "re"]
+                                                  ^
+*** Invalid field [at "im"]
+012     END;
+013 
+014 BEGIN {ComplexTest}
+015     x.re := 3; x.im := 2;  print('  x', x);
+          ^
+*** Invalid field [at "re"]
+                ^
+*** Incompatible types [at "3"]
+                     ^
+*** Invalid field [at "im"]
+                           ^
+*** Incompatible types [at "2"]
+016     y.re := 8; y.im := -5; print('  y', y);
+          ^
+*** Invalid field [at "re"]
+                ^
+*** Incompatible types [at "8"]
+                     ^
+*** Invalid field [at "im"]
+                           ^
+*** Incompatible types [at "-"]
+017     z := x + y;            print('x+y', z);
+                 ^
+*** Incompatible types [at "y"]
+018     writeln;
+019 
+020     print('  x', x);
+021     print('  y', y);
+022     z := x - y; print('x-y', z);
+                 ^
+*** Incompatible types [at "y"]
+023     writeln;
+024     
+025     x.re := 4; x.im := -2; print('  x', x);
+          ^
+*** Invalid field [at "re"]
+                ^
+*** Incompatible types [at "4"]
+                     ^
+*** Invalid field [at "im"]
+                           ^
+*** Incompatible types [at "-"]
+026     y.re := 1; y.im := -5; print('  y', y);
+          ^
+*** Invalid field [at "re"]
+                ^
+*** Incompatible types [at "1"]
+                     ^
+*** Invalid field [at "im"]
+                           ^
+*** Incompatible types [at "-"]
+027     z := x*y;              print('x*y', z);
+               ^
+*** Incompatible types [at "y"]
+028     writeln;
+029 
+030     x.re := -3; x.im := 2;  print('  x', x);
+          ^
+*** Invalid field [at "re"]
+                ^
+*** Incompatible types [at "-"]
+                      ^
+*** Invalid field [at "im"]
+                            ^
+*** Incompatible types [at "2"]
+031     y.re := 3;  y.im := -6; print('  y', y);
+          ^
+*** Invalid field [at "re"]
+    ^
+*** FATAL ERROR: Too many syntax errorsmakefile:112: recipe for target 'execute' failed

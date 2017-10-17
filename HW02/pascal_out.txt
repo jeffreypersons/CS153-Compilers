@@ -1,0 +1,727 @@
+001 PROGRAM assign1(input, output);
+>>> IDENTIFIER      line=001, pos= 0, text="PROGRAM"
+>>> IDENTIFIER      line=001, pos= 8, text="assign1"
+>>> LEFT_PAREN      line=001, pos=15, text="("
+>>> IDENTIFIER      line=001, pos=16, text="input"
+>>> COMMA           line=001, pos=21, text=","
+>>> IDENTIFIER      line=001, pos=23, text="output"
+>>> RIGHT_PAREN     line=001, pos=29, text=")"
+>>> SEMICOLON       line=001, pos=30, text=";"
+002 
+003 CONST
+>>> IDENTIFIER      line=003, pos= 0, text="CONST"
+004     FIELD_SEPARATOR    = ',';
+>>> IDENTIFIER      line=004, pos= 4, text="FIELD"
+             ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=004, pos=10, text="SEPARATOR"
+>>> EQUALS          line=004, pos=23, text="="
+>>> CHAR            line=004, pos=25, text="','"
+>>>                 value=','
+>>> SEMICOLON       line=004, pos=28, text=";"
+005     MAX_NAME_LENGTH    = 25;
+>>> IDENTIFIER      line=005, pos= 4, text="MAX"
+           ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=005, pos= 8, text="NAME"
+                ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=005, pos=13, text="LENGTH"
+>>> EQUALS          line=005, pos=23, text="="
+>>> INTEGER         line=005, pos=25, text="25"
+>>>                 value=25
+>>> SEMICOLON       line=005, pos=27, text=";"
+006     MAX_EMPLOYEE_COUNT = 100;
+>>> IDENTIFIER      line=006, pos= 4, text="MAX"
+           ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=006, pos= 8, text="EMPLOYEE"
+                    ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=006, pos=17, text="COUNT"
+>>> EQUALS          line=006, pos=23, text="="
+>>> INTEGER         line=006, pos=25, text="100"
+>>>                 value=100
+>>> SEMICOLON       line=006, pos=28, text=";"
+007 TYPE
+>>> IDENTIFIER      line=007, pos= 0, text="TYPE"
+008     nameString = PACKED ARRAY [1..MAX_NAME_LENGTH] OF char;
+>>> IDENTIFIER      line=008, pos= 4, text="nameString"
+>>> EQUALS          line=008, pos=15, text="="
+>>> IDENTIFIER      line=008, pos=17, text="PACKED"
+>>> IDENTIFIER      line=008, pos=24, text="ARRAY"
+>>> LEFT_BRACKET    line=008, pos=30, text="["
+>>> INTEGER         line=008, pos=31, text="1"
+>>>                 value=1
+>>> DOT             line=008, pos=32, text="."
+>>> DOT             line=008, pos=33, text="."
+>>> IDENTIFIER      line=008, pos=34, text="MAX"
+                                         ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=008, pos=38, text="NAME"
+                                              ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=008, pos=43, text="LENGTH"
+>>> RIGHT_BRACKET   line=008, pos=49, text="]"
+>>> IDENTIFIER      line=008, pos=51, text="OF"
+>>> CHAR            line=008, pos=54, text="char"
+>>>                 value=char
+>>> SEMICOLON       line=008, pos=58, text=";"
+009     employeeRecord = RECORD
+>>> IDENTIFIER      line=009, pos= 4, text="employeeRecord"
+>>> EQUALS          line=009, pos=19, text="="
+>>> IDENTIFIER      line=009, pos=21, text="RECORD"
+010         stateID : integer;
+>>> IDENTIFIER      line=010, pos= 8, text="stateID"
+>>> COLON           line=010, pos=16, text=":"
+>>> IDENTIFIER      line=010, pos=18, text="integer"
+>>> SEMICOLON       line=010, pos=25, text=";"
+011         plantID : integer;
+>>> IDENTIFIER      line=011, pos= 8, text="plantID"
+>>> COLON           line=011, pos=16, text=":"
+>>> IDENTIFIER      line=011, pos=18, text="integer"
+>>> SEMICOLON       line=011, pos=25, text=";"
+012         deptID  : integer;
+>>> IDENTIFIER      line=012, pos= 8, text="deptID"
+>>> COLON           line=012, pos=16, text=":"
+>>> IDENTIFIER      line=012, pos=18, text="integer"
+>>> SEMICOLON       line=012, pos=25, text=";"
+013         empID : integer;
+>>> IDENTIFIER      line=013, pos= 8, text="empID"
+>>> COLON           line=013, pos=14, text=":"
+>>> IDENTIFIER      line=013, pos=16, text="integer"
+>>> SEMICOLON       line=013, pos=23, text=";"
+014         name  : nameString;
+>>> IDENTIFIER      line=014, pos= 8, text="name"
+>>> COLON           line=014, pos=14, text=":"
+>>> IDENTIFIER      line=014, pos=16, text="nameString"
+>>> SEMICOLON       line=014, pos=26, text=";"
+015         count : integer;
+>>> IDENTIFIER      line=015, pos= 8, text="count"
+>>> COLON           line=015, pos=14, text=":"
+>>> IDENTIFIER      line=015, pos=16, text="integer"
+>>> SEMICOLON       line=015, pos=23, text=";"
+016     END;
+>>> IDENTIFIER      line=016, pos= 4, text="END"
+>>> SEMICOLON       line=016, pos= 7, text=";"
+017 
+018 VAR
+>>> IDENTIFIER      line=018, pos= 0, text="VAR"
+019     employeeCount : integer;
+>>> IDENTIFIER      line=019, pos= 4, text="employeeCount"
+>>> COLON           line=019, pos=18, text=":"
+>>> IDENTIFIER      line=019, pos=20, text="integer"
+>>> SEMICOLON       line=019, pos=27, text=";"
+020     employees     : PACKED ARRAY [1..MAX_EMPLOYEE_COUNT] of employeeRecord;
+>>> IDENTIFIER      line=020, pos= 4, text="employees"
+>>> COLON           line=020, pos=18, text=":"
+>>> IDENTIFIER      line=020, pos=20, text="PACKED"
+>>> IDENTIFIER      line=020, pos=27, text="ARRAY"
+>>> LEFT_BRACKET    line=020, pos=33, text="["
+>>> INTEGER         line=020, pos=34, text="1"
+>>>                 value=1
+>>> DOT             line=020, pos=35, text="."
+>>> DOT             line=020, pos=36, text="."
+>>> IDENTIFIER      line=020, pos=37, text="MAX"
+                                            ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=020, pos=41, text="EMPLOYEE"
+                                                     ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=020, pos=50, text="COUNT"
+>>> RIGHT_BRACKET   line=020, pos=55, text="]"
+>>> IDENTIFIER      line=020, pos=57, text="of"
+>>> IDENTIFIER      line=020, pos=60, text="employeeRecord"
+>>> SEMICOLON       line=020, pos=74, text=";"
+021 
+022 
+023 {
+>>> LEFT_BRACE      line=023, pos= 0, text="{"
+024  Read integer from standard input and return it.
+>>> IDENTIFIER      line=024, pos= 1, text="Read"
+>>> IDENTIFIER      line=024, pos= 6, text="integer"
+>>> IDENTIFIER      line=024, pos=14, text="from"
+>>> IDENTIFIER      line=024, pos=19, text="standard"
+>>> IDENTIFIER      line=024, pos=28, text="input"
+>>> IDENTIFIER      line=024, pos=34, text="and"
+>>> return          line=024, pos=38, text="return"
+>>> IDENTIFIER      line=024, pos=45, text="it"
+>>> DOT             line=024, pos=47, text="."
+025 
+026  Assumes digits from current position terminated by field separator
+>>> IDENTIFIER      line=026, pos= 1, text="Assumes"
+>>> IDENTIFIER      line=026, pos= 9, text="digits"
+>>> IDENTIFIER      line=026, pos=16, text="from"
+>>> IDENTIFIER      line=026, pos=21, text="current"
+>>> IDENTIFIER      line=026, pos=29, text="position"
+>>> IDENTIFIER      line=026, pos=38, text="terminated"
+>>> IDENTIFIER      line=026, pos=49, text="by"
+>>> IDENTIFIER      line=026, pos=52, text="field"
+>>> IDENTIFIER      line=026, pos=58, text="separator"
+027  or end of line.
+>>> IDENTIFIER      line=027, pos= 1, text="or"
+>>> IDENTIFIER      line=027, pos= 4, text="end"
+>>> IDENTIFIER      line=027, pos= 8, text="of"
+>>> IDENTIFIER      line=027, pos=11, text="line"
+>>> DOT             line=027, pos=15, text="."
+028 }
+>>> RIGHT_BRACE     line=028, pos= 0, text="}"
+029 FUNCTION readInteger : integer;
+>>> IDENTIFIER      line=029, pos= 0, text="FUNCTION"
+>>> IDENTIFIER      line=029, pos= 9, text="readInteger"
+>>> COLON           line=029, pos=21, text=":"
+>>> IDENTIFIER      line=029, pos=23, text="integer"
+>>> SEMICOLON       line=029, pos=30, text=";"
+030     VAR
+>>> IDENTIFIER      line=030, pos= 4, text="VAR"
+031         num : integer;
+>>> IDENTIFIER      line=031, pos= 8, text="num"
+>>> COLON           line=031, pos=12, text=":"
+>>> IDENTIFIER      line=031, pos=14, text="integer"
+>>> SEMICOLON       line=031, pos=21, text=";"
+032         ch  : char;
+>>> IDENTIFIER      line=032, pos= 8, text="ch"
+>>> COLON           line=032, pos=12, text=":"
+>>> CHAR            line=032, pos=14, text="char"
+>>>                 value=char
+>>> SEMICOLON       line=032, pos=18, text=";"
+033     BEGIN
+>>> IDENTIFIER      line=033, pos= 4, text="BEGIN"
+034         {For each char, extract the digit and add to the inferred integer.}
+>>> LEFT_BRACE      line=034, pos= 8, text="{"
+>>> IDENTIFIER      line=034, pos= 9, text="For"
+>>> IDENTIFIER      line=034, pos=13, text="each"
+>>> CHAR            line=034, pos=18, text="char"
+>>>                 value=char
+>>> COMMA           line=034, pos=22, text=","
+>>> IDENTIFIER      line=034, pos=24, text="extract"
+>>> IDENTIFIER      line=034, pos=32, text="the"
+>>> IDENTIFIER      line=034, pos=36, text="digit"
+>>> IDENTIFIER      line=034, pos=42, text="and"
+>>> IDENTIFIER      line=034, pos=46, text="add"
+>>> IDENTIFIER      line=034, pos=50, text="to"
+>>> IDENTIFIER      line=034, pos=53, text="the"
+>>> IDENTIFIER      line=034, pos=57, text="inferred"
+>>> IDENTIFIER      line=034, pos=66, text="integer"
+>>> DOT             line=034, pos=73, text="."
+>>> RIGHT_BRACE     line=034, pos=74, text="}"
+035         num := 0;
+>>> IDENTIFIER      line=035, pos= 8, text="num"
+>>> COLON           line=035, pos=12, text=":"
+>>> EQUALS          line=035, pos=13, text="="
+>>> INTEGER         line=035, pos=15, text="0"
+>>>                 value=0
+>>> SEMICOLON       line=035, pos=16, text=";"
+036         REPEAT
+>>> IDENTIFIER      line=036, pos= 8, text="REPEAT"
+037             read(ch);
+>>> IDENTIFIER      line=037, pos=12, text="read"
+>>> LEFT_PAREN      line=037, pos=16, text="("
+>>> IDENTIFIER      line=037, pos=17, text="ch"
+>>> RIGHT_PAREN     line=037, pos=19, text=")"
+>>> SEMICOLON       line=037, pos=20, text=";"
+038             if (ch <> FIELD_SEPARATOR) THEN BEGIN
+>>> if              line=038, pos=12, text="if"
+>>> LEFT_PAREN      line=038, pos=15, text="("
+>>> IDENTIFIER      line=038, pos=16, text="ch"
+>>> LESS_THAN       line=038, pos=19, text="<"
+>>> GREATER_THAN    line=038, pos=20, text=">"
+>>> IDENTIFIER      line=038, pos=22, text="FIELD"
+                               ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=038, pos=28, text="SEPARATOR"
+>>> RIGHT_PAREN     line=038, pos=37, text=")"
+>>> IDENTIFIER      line=038, pos=39, text="THEN"
+>>> IDENTIFIER      line=038, pos=44, text="BEGIN"
+039                 num := 10*num + (ord(ch) - ord('0'));
+>>> IDENTIFIER      line=039, pos=16, text="num"
+>>> COLON           line=039, pos=20, text=":"
+>>> EQUALS          line=039, pos=21, text="="
+>>> INTEGER         line=039, pos=23, text="10"
+>>>                 value=10
+>>> MULT            line=039, pos=25, text="*"
+>>> IDENTIFIER      line=039, pos=26, text="num"
+>>> PLUS            line=039, pos=30, text="+"
+>>> LEFT_PAREN      line=039, pos=32, text="("
+>>> IDENTIFIER      line=039, pos=33, text="ord"
+>>> LEFT_PAREN      line=039, pos=36, text="("
+>>> IDENTIFIER      line=039, pos=37, text="ch"
+>>> RIGHT_PAREN     line=039, pos=39, text=")"
+>>> MINUS           line=039, pos=41, text="-"
+>>> IDENTIFIER      line=039, pos=43, text="ord"
+>>> LEFT_PAREN      line=039, pos=46, text="("
+>>> CHAR            line=039, pos=47, text="'0'"
+>>>                 value='0'
+>>> RIGHT_PAREN     line=039, pos=50, text=")"
+>>> RIGHT_PAREN     line=039, pos=51, text=")"
+>>> SEMICOLON       line=039, pos=52, text=";"
+040             END;
+>>> IDENTIFIER      line=040, pos=12, text="END"
+>>> SEMICOLON       line=040, pos=15, text=";"
+041         UNTIL eoln OR (ch = FIELD_SEPARATOR);
+>>> IDENTIFIER      line=041, pos= 8, text="UNTIL"
+>>> IDENTIFIER      line=041, pos=14, text="eoln"
+>>> IDENTIFIER      line=041, pos=19, text="OR"
+>>> LEFT_PAREN      line=041, pos=22, text="("
+>>> IDENTIFIER      line=041, pos=23, text="ch"
+>>> EQUALS          line=041, pos=26, text="="
+>>> IDENTIFIER      line=041, pos=28, text="FIELD"
+                                     ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=041, pos=34, text="SEPARATOR"
+>>> RIGHT_PAREN     line=041, pos=43, text=")"
+>>> SEMICOLON       line=041, pos=44, text=";"
+042         readInteger := num;
+>>> IDENTIFIER      line=042, pos= 8, text="readInteger"
+>>> COLON           line=042, pos=20, text=":"
+>>> EQUALS          line=042, pos=21, text="="
+>>> IDENTIFIER      line=042, pos=23, text="num"
+>>> SEMICOLON       line=042, pos=26, text=";"
+043     END;
+>>> IDENTIFIER      line=043, pos= 4, text="END"
+>>> SEMICOLON       line=043, pos= 7, text=";"
+044 
+045 
+046 {
+>>> LEFT_BRACE      line=046, pos= 0, text="{"
+047  Read a name from standard input (as an array of chars) into given reference.
+>>> IDENTIFIER      line=047, pos= 1, text="Read"
+>>> IDENTIFIER      line=047, pos= 6, text="a"
+>>> IDENTIFIER      line=047, pos= 8, text="name"
+>>> IDENTIFIER      line=047, pos=13, text="from"
+>>> IDENTIFIER      line=047, pos=18, text="standard"
+>>> IDENTIFIER      line=047, pos=27, text="input"
+>>> LEFT_PAREN      line=047, pos=33, text="("
+>>> IDENTIFIER      line=047, pos=34, text="as"
+>>> IDENTIFIER      line=047, pos=37, text="an"
+>>> IDENTIFIER      line=047, pos=40, text="array"
+>>> IDENTIFIER      line=047, pos=46, text="of"
+>>> IDENTIFIER      line=047, pos=49, text="chars"
+>>> RIGHT_PAREN     line=047, pos=54, text=")"
+>>> IDENTIFIER      line=047, pos=56, text="into"
+>>> IDENTIFIER      line=047, pos=61, text="given"
+>>> IDENTIFIER      line=047, pos=67, text="reference"
+>>> DOT             line=047, pos=76, text="."
+048 
+049  Assumes letters from current position are terminated by a field separator
+>>> IDENTIFIER      line=049, pos= 1, text="Assumes"
+>>> IDENTIFIER      line=049, pos= 9, text="letters"
+>>> IDENTIFIER      line=049, pos=17, text="from"
+>>> IDENTIFIER      line=049, pos=22, text="current"
+>>> IDENTIFIER      line=049, pos=30, text="position"
+>>> IDENTIFIER      line=049, pos=39, text="are"
+>>> IDENTIFIER      line=049, pos=43, text="terminated"
+>>> IDENTIFIER      line=049, pos=54, text="by"
+>>> IDENTIFIER      line=049, pos=57, text="a"
+>>> IDENTIFIER      line=049, pos=59, text="field"
+>>> IDENTIFIER      line=049, pos=65, text="separator"
+050  or end of line.
+>>> IDENTIFIER      line=050, pos= 1, text="or"
+>>> IDENTIFIER      line=050, pos= 4, text="end"
+>>> IDENTIFIER      line=050, pos= 8, text="of"
+>>> IDENTIFIER      line=050, pos=11, text="line"
+>>> DOT             line=050, pos=15, text="."
+051 }
+>>> RIGHT_BRACE     line=051, pos= 0, text="}"
+052 PROCEDURE readName(VAR name : nameString);
+>>> IDENTIFIER      line=052, pos= 0, text="PROCEDURE"
+>>> IDENTIFIER      line=052, pos=10, text="readName"
+>>> LEFT_PAREN      line=052, pos=18, text="("
+>>> IDENTIFIER      line=052, pos=19, text="VAR"
+>>> IDENTIFIER      line=052, pos=23, text="name"
+>>> COLON           line=052, pos=28, text=":"
+>>> IDENTIFIER      line=052, pos=30, text="nameString"
+>>> RIGHT_PAREN     line=052, pos=40, text=")"
+>>> SEMICOLON       line=052, pos=41, text=";"
+053     VAR
+>>> IDENTIFIER      line=053, pos= 4, text="VAR"
+054         i : integer;
+>>> IDENTIFIER      line=054, pos= 8, text="i"
+>>> COLON           line=054, pos=10, text=":"
+>>> IDENTIFIER      line=054, pos=12, text="integer"
+>>> SEMICOLON       line=054, pos=19, text=";"
+055         ch : char;
+>>> IDENTIFIER      line=055, pos= 8, text="ch"
+>>> COLON           line=055, pos=11, text=":"
+>>> CHAR            line=055, pos=13, text="char"
+>>>                 value=char
+>>> SEMICOLON       line=055, pos=17, text=";"
+056     BEGIN
+>>> IDENTIFIER      line=056, pos= 4, text="BEGIN"
+057         {For each char until terminal or max length, read character into name.}
+>>> LEFT_BRACE      line=057, pos= 8, text="{"
+>>> IDENTIFIER      line=057, pos= 9, text="For"
+>>> IDENTIFIER      line=057, pos=13, text="each"
+>>> CHAR            line=057, pos=18, text="char"
+>>>                 value=char
+>>> IDENTIFIER      line=057, pos=23, text="until"
+>>> IDENTIFIER      line=057, pos=29, text="terminal"
+>>> IDENTIFIER      line=057, pos=38, text="or"
+>>> IDENTIFIER      line=057, pos=41, text="max"
+>>> IDENTIFIER      line=057, pos=45, text="length"
+>>> COMMA           line=057, pos=51, text=","
+>>> IDENTIFIER      line=057, pos=53, text="read"
+>>> IDENTIFIER      line=057, pos=58, text="character"
+>>> IDENTIFIER      line=057, pos=68, text="into"
+>>> IDENTIFIER      line=057, pos=73, text="name"
+>>> DOT             line=057, pos=77, text="."
+>>> RIGHT_BRACE     line=057, pos=78, text="}"
+058         i := 0;
+>>> IDENTIFIER      line=058, pos= 8, text="i"
+>>> COLON           line=058, pos=10, text=":"
+>>> EQUALS          line=058, pos=11, text="="
+>>> INTEGER         line=058, pos=13, text="0"
+>>>                 value=0
+>>> SEMICOLON       line=058, pos=14, text=";"
+059         name := ' ';
+>>> IDENTIFIER      line=059, pos= 8, text="name"
+>>> COLON           line=059, pos=13, text=":"
+>>> EQUALS          line=059, pos=14, text="="
+>>> CHAR            line=059, pos=16, text="''"
+>>>                 value=''
+>>> SEMICOLON       line=059, pos=19, text=";"
+060         REPEAT
+>>> IDENTIFIER      line=060, pos= 8, text="REPEAT"
+061             IF NOT eoln THEN BEGIN
+>>> IDENTIFIER      line=061, pos=12, text="IF"
+>>> IDENTIFIER      line=061, pos=15, text="NOT"
+>>> IDENTIFIER      line=061, pos=19, text="eoln"
+>>> IDENTIFIER      line=061, pos=24, text="THEN"
+>>> IDENTIFIER      line=061, pos=29, text="BEGIN"
+062                 read(ch);
+>>> IDENTIFIER      line=062, pos=16, text="read"
+>>> LEFT_PAREN      line=062, pos=20, text="("
+>>> IDENTIFIER      line=062, pos=21, text="ch"
+>>> RIGHT_PAREN     line=062, pos=23, text=")"
+>>> SEMICOLON       line=062, pos=24, text=";"
+063                 IF  (ch <> FIELD_SEPARATOR) AND (i <= MAX_NAME_LENGTH) THEN BEGIN
+>>> IDENTIFIER      line=063, pos=16, text="IF"
+>>> LEFT_PAREN      line=063, pos=20, text="("
+>>> IDENTIFIER      line=063, pos=21, text="ch"
+>>> LESS_THAN       line=063, pos=24, text="<"
+>>> GREATER_THAN    line=063, pos=25, text=">"
+>>> IDENTIFIER      line=063, pos=27, text="FIELD"
+                                    ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=063, pos=33, text="SEPARATOR"
+>>> RIGHT_PAREN     line=063, pos=42, text=")"
+>>> IDENTIFIER      line=063, pos=44, text="AND"
+>>> LEFT_PAREN      line=063, pos=48, text="("
+>>> IDENTIFIER      line=063, pos=49, text="i"
+>>> LESS_EQUALS     line=063, pos=51, text="<="
+>>> IDENTIFIER      line=063, pos=54, text="MAX"
+                                                             ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=063, pos=58, text="NAME"
+                                                                  ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=063, pos=63, text="LENGTH"
+>>> RIGHT_PAREN     line=063, pos=69, text=")"
+>>> IDENTIFIER      line=063, pos=71, text="THEN"
+>>> IDENTIFIER      line=063, pos=76, text="BEGIN"
+064                     i := i + 1;
+>>> IDENTIFIER      line=064, pos=20, text="i"
+>>> COLON           line=064, pos=22, text=":"
+>>> EQUALS          line=064, pos=23, text="="
+>>> IDENTIFIER      line=064, pos=25, text="i"
+>>> PLUS            line=064, pos=27, text="+"
+>>> INTEGER         line=064, pos=29, text="1"
+>>>                 value=1
+>>> SEMICOLON       line=064, pos=30, text=";"
+065                     name[i] := ch;
+>>> IDENTIFIER      line=065, pos=20, text="name"
+>>> LEFT_BRACKET    line=065, pos=24, text="["
+>>> IDENTIFIER      line=065, pos=25, text="i"
+>>> RIGHT_BRACKET   line=065, pos=26, text="]"
+>>> COLON           line=065, pos=28, text=":"
+>>> EQUALS          line=065, pos=29, text="="
+>>> IDENTIFIER      line=065, pos=31, text="ch"
+>>> SEMICOLON       line=065, pos=33, text=";"
+066                 END;
+>>> IDENTIFIER      line=066, pos=16, text="END"
+>>> SEMICOLON       line=066, pos=19, text=";"
+067             END;
+>>> IDENTIFIER      line=067, pos=12, text="END"
+>>> SEMICOLON       line=067, pos=15, text=";"
+068         UNTIL eoln OR (ch = FIELD_SEPARATOR) OR (i = MAX_NAME_LENGTH);
+>>> IDENTIFIER      line=068, pos= 8, text="UNTIL"
+>>> IDENTIFIER      line=068, pos=14, text="eoln"
+>>> IDENTIFIER      line=068, pos=19, text="OR"
+>>> LEFT_PAREN      line=068, pos=22, text="("
+>>> IDENTIFIER      line=068, pos=23, text="ch"
+>>> EQUALS          line=068, pos=26, text="="
+>>> IDENTIFIER      line=068, pos=28, text="FIELD"
+                                     ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=068, pos=34, text="SEPARATOR"
+>>> RIGHT_PAREN     line=068, pos=43, text=")"
+>>> IDENTIFIER      line=068, pos=45, text="OR"
+>>> LEFT_PAREN      line=068, pos=48, text="("
+>>> IDENTIFIER      line=068, pos=49, text="i"
+>>> EQUALS          line=068, pos=51, text="="
+>>> IDENTIFIER      line=068, pos=53, text="MAX"
+                                                            ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=068, pos=57, text="NAME"
+                                                                 ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=068, pos=62, text="LENGTH"
+>>> RIGHT_PAREN     line=068, pos=68, text=")"
+>>> SEMICOLON       line=068, pos=69, text=";"
+069 
+070         {Read the rest of the name if more than MAX_STRING_LENGTH characters.}
+>>> LEFT_BRACE      line=070, pos= 8, text="{"
+>>> IDENTIFIER      line=070, pos= 9, text="Read"
+>>> IDENTIFIER      line=070, pos=14, text="the"
+>>> IDENTIFIER      line=070, pos=18, text="rest"
+>>> IDENTIFIER      line=070, pos=23, text="of"
+>>> IDENTIFIER      line=070, pos=26, text="the"
+>>> IDENTIFIER      line=070, pos=30, text="name"
+>>> if              line=070, pos=35, text="if"
+>>> IDENTIFIER      line=070, pos=38, text="more"
+>>> IDENTIFIER      line=070, pos=43, text="than"
+>>> IDENTIFIER      line=070, pos=48, text="MAX"
+                                                       ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=070, pos=52, text="STRING"
+                                                              ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=070, pos=59, text="LENGTH"
+>>> IDENTIFIER      line=070, pos=66, text="characters"
+>>> DOT             line=070, pos=76, text="."
+>>> RIGHT_BRACE     line=070, pos=77, text="}"
+071         IF i = MAX_NAME_LENGTH THEN BEGIN
+>>> IDENTIFIER      line=071, pos= 8, text="IF"
+>>> IDENTIFIER      line=071, pos=11, text="i"
+>>> EQUALS          line=071, pos=13, text="="
+>>> IDENTIFIER      line=071, pos=15, text="MAX"
+                      ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=071, pos=19, text="NAME"
+                           ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=071, pos=24, text="LENGTH"
+>>> IDENTIFIER      line=071, pos=31, text="THEN"
+>>> IDENTIFIER      line=071, pos=36, text="BEGIN"
+072             WHILE (NOT eoln) AND (ch <> FIELD_SEPARATOR) DO BEGIN
+>>> IDENTIFIER      line=072, pos=12, text="WHILE"
+>>> LEFT_PAREN      line=072, pos=18, text="("
+>>> IDENTIFIER      line=072, pos=19, text="NOT"
+>>> IDENTIFIER      line=072, pos=23, text="eoln"
+>>> RIGHT_PAREN     line=072, pos=27, text=")"
+>>> IDENTIFIER      line=072, pos=29, text="AND"
+>>> LEFT_PAREN      line=072, pos=33, text="("
+>>> IDENTIFIER      line=072, pos=34, text="ch"
+>>> LESS_THAN       line=072, pos=37, text="<"
+>>> GREATER_THAN    line=072, pos=38, text=">"
+>>> IDENTIFIER      line=072, pos=40, text="FIELD"
+                                                 ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=072, pos=46, text="SEPARATOR"
+>>> RIGHT_PAREN     line=072, pos=55, text=")"
+>>> IDENTIFIER      line=072, pos=57, text="DO"
+>>> IDENTIFIER      line=072, pos=60, text="BEGIN"
+073                 read(ch);
+>>> IDENTIFIER      line=073, pos=16, text="read"
+>>> LEFT_PAREN      line=073, pos=20, text="("
+>>> IDENTIFIER      line=073, pos=21, text="ch"
+>>> RIGHT_PAREN     line=073, pos=23, text=")"
+>>> SEMICOLON       line=073, pos=24, text=";"
+074             END;
+>>> IDENTIFIER      line=074, pos=12, text="END"
+>>> SEMICOLON       line=074, pos=15, text=";"
+075         END;
+>>> IDENTIFIER      line=075, pos= 8, text="END"
+>>> SEMICOLON       line=075, pos=11, text=";"
+076     END;
+>>> IDENTIFIER      line=076, pos= 4, text="END"
+>>> SEMICOLON       line=076, pos= 7, text=";"
+077 
+078 
+079 {
+>>> LEFT_BRACE      line=079, pos= 0, text="{"
+080  Read employee CSV data from standard input into a sequence of employee records.
+>>> IDENTIFIER      line=080, pos= 1, text="Read"
+>>> IDENTIFIER      line=080, pos= 6, text="employee"
+>>> IDENTIFIER      line=080, pos=15, text="CSV"
+>>> IDENTIFIER      line=080, pos=19, text="data"
+>>> IDENTIFIER      line=080, pos=24, text="from"
+>>> IDENTIFIER      line=080, pos=29, text="standard"
+>>> IDENTIFIER      line=080, pos=38, text="input"
+>>> IDENTIFIER      line=080, pos=44, text="into"
+>>> IDENTIFIER      line=080, pos=49, text="a"
+>>> IDENTIFIER      line=080, pos=51, text="sequence"
+>>> IDENTIFIER      line=080, pos=60, text="of"
+>>> IDENTIFIER      line=080, pos=63, text="employee"
+>>> IDENTIFIER      line=080, pos=72, text="records"
+>>> DOT             line=080, pos=79, text="."
+081 
+082  Assumes input is hierarchical sorted in increasing order, with each line after
+>>> IDENTIFIER      line=082, pos= 1, text="Assumes"
+>>> IDENTIFIER      line=082, pos= 9, text="input"
+>>> IDENTIFIER      line=082, pos=15, text="is"
+>>> IDENTIFIER      line=082, pos=18, text="hierarchical"
+>>> IDENTIFIER      line=082, pos=31, text="sorted"
+>>> IDENTIFIER      line=082, pos=38, text="in"
+>>> IDENTIFIER      line=082, pos=41, text="increasing"
+>>> IDENTIFIER      line=082, pos=52, text="order"
+>>> COMMA           line=082, pos=57, text=","
+>>> IDENTIFIER      line=082, pos=59, text="with"
+>>> IDENTIFIER      line=082, pos=64, text="each"
+>>> IDENTIFIER      line=082, pos=69, text="line"
+>>> IDENTIFIER      line=082, pos=74, text="after"
+083  the header listing employee fields delimited by FIELD_SEPARATOR.
+>>> IDENTIFIER      line=083, pos= 1, text="the"
+>>> IDENTIFIER      line=083, pos= 5, text="header"
+>>> IDENTIFIER      line=083, pos=12, text="listing"
+>>> IDENTIFIER      line=083, pos=20, text="employee"
+>>> IDENTIFIER      line=083, pos=29, text="fields"
+>>> IDENTIFIER      line=083, pos=36, text="delimited"
+>>> IDENTIFIER      line=083, pos=46, text="by"
+>>> IDENTIFIER      line=083, pos=49, text="FIELD"
+                                                          ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=083, pos=55, text="SEPARATOR"
+>>> DOT             line=083, pos=64, text="."
+084 }
+>>> RIGHT_BRACE     line=084, pos= 0, text="}"
+085 PROCEDURE readEmployees;
+>>> IDENTIFIER      line=085, pos= 0, text="PROCEDURE"
+>>> IDENTIFIER      line=085, pos=10, text="readEmployees"
+>>> SEMICOLON       line=085, pos=23, text=";"
+086     VAR
+>>> IDENTIFIER      line=086, pos= 4, text="VAR"
+087         i : integer;
+>>> IDENTIFIER      line=087, pos= 8, text="i"
+>>> COLON           line=087, pos=10, text=":"
+>>> IDENTIFIER      line=087, pos=12, text="integer"
+>>> SEMICOLON       line=087, pos=19, text=";"
+088     BEGIN
+>>> IDENTIFIER      line=088, pos= 4, text="BEGIN"
+089         {For each input line after the header, initialize an employeeRecord.}
+>>> LEFT_BRACE      line=089, pos= 8, text="{"
+>>> IDENTIFIER      line=089, pos= 9, text="For"
+>>> IDENTIFIER      line=089, pos=13, text="each"
+>>> IDENTIFIER      line=089, pos=18, text="input"
+>>> IDENTIFIER      line=089, pos=24, text="line"
+>>> IDENTIFIER      line=089, pos=29, text="after"
+>>> IDENTIFIER      line=089, pos=35, text="the"
+>>> IDENTIFIER      line=089, pos=39, text="header"
+>>> COMMA           line=089, pos=45, text=","
+>>> IDENTIFIER      line=089, pos=47, text="initialize"
+>>> IDENTIFIER      line=089, pos=58, text="an"
+>>> IDENTIFIER      line=089, pos=61, text="employeeRecord"
+>>> DOT             line=089, pos=75, text="."
+>>> RIGHT_BRACE     line=089, pos=76, text="}"
+090         i := 0;
+>>> IDENTIFIER      line=090, pos= 8, text="i"
+>>> COLON           line=090, pos=10, text=":"
+>>> EQUALS          line=090, pos=11, text="="
+>>> INTEGER         line=090, pos=13, text="0"
+>>>                 value=0
+>>> SEMICOLON       line=090, pos=14, text=";"
+091         readln();
+>>> IDENTIFIER      line=091, pos= 8, text="readln"
+>>> LEFT_PAREN      line=091, pos=14, text="("
+>>> RIGHT_PAREN     line=091, pos=15, text=")"
+>>> SEMICOLON       line=091, pos=16, text=";"
+092         WHILE (NOT eof) AND (i < MAX_EMPLOYEE_COUNT) DO BEGIN
+>>> IDENTIFIER      line=092, pos= 8, text="WHILE"
+>>> LEFT_PAREN      line=092, pos=14, text="("
+>>> IDENTIFIER      line=092, pos=15, text="NOT"
+>>> IDENTIFIER      line=092, pos=19, text="eof"
+>>> RIGHT_PAREN     line=092, pos=22, text=")"
+>>> IDENTIFIER      line=092, pos=24, text="AND"
+>>> LEFT_PAREN      line=092, pos=28, text="("
+>>> IDENTIFIER      line=092, pos=29, text="i"
+>>> LESS_THAN       line=092, pos=31, text="<"
+>>> IDENTIFIER      line=092, pos=33, text="MAX"
+                                        ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=092, pos=37, text="EMPLOYEE"
+                                                 ^
+*** Invalid character [at "_"]
+>>> IDENTIFIER      line=092, pos=46, text="COUNT"
+>>> RIGHT_PAREN     line=092, pos=51, text=")"
+>>> IDENTIFIER      line=092, pos=53, text="DO"
+>>> IDENTIFIER      line=092, pos=56, text="BEGIN"
+093             i := i + 1;
+>>> IDENTIFIER      line=093, pos=12, text="i"
+>>> COLON           line=093, pos=14, text=":"
+>>> EQUALS          line=093, pos=15, text="="
+>>> IDENTIFIER      line=093, pos=17, text="i"
+>>> PLUS            line=093, pos=19, text="+"
+>>> INTEGER         line=093, pos=21, text="1"
+>>>                 value=1
+>>> SEMICOLON       line=093, pos=22, text=";"
+094             WITH employees[i] DO BEGIN
+>>> IDENTIFIER      line=094, pos=12, text="WITH"
+>>> IDENTIFIER      line=094, pos=17, text="employees"
+>>> LEFT_BRACKET    line=094, pos=26, text="["
+>>> IDENTIFIER      line=094, pos=27, text="i"
+>>> RIGHT_BRACKET   line=094, pos=28, text="]"
+>>> IDENTIFIER      line=094, pos=30, text="DO"
+>>> IDENTIFIER      line=094, pos=33, text="BEGIN"
+095                 stateID := readInteger;
+>>> IDENTIFIER      line=095, pos=16, text="stateID"
+>>> COLON           line=095, pos=24, text=":"
+>>> EQUALS          line=095, pos=25, text="="
+>>> IDENTIFIER      line=095, pos=27, text="readInteger"
+>>> SEMICOLON       line=095, pos=38, text=";"
+096                 plantID := readInteger;
+>>> IDENTIFIER      line=096, pos=16, text="plantID"
+>>> COLON           line=096, pos=24, text=":"
+>>> EQUALS          line=096, pos=25, text="="
+>>> IDENTIFIER      line=096, pos=27, text="readInteger"
+>>> SEMICOLON       line=096, pos=38, text=";"
+097                 deptID  := readInteger;
+>>> IDENTIFIER      line=097, pos=16, text="deptID"
+>>> COLON           line=097, pos=24, text=":"
+>>> EQUALS          line=097, pos=25, text="="
+>>> IDENTIFIER      line=097, pos=27, text="readInteger"
+>>> SEMICOLON       line=097, pos=38, text=";"
+098                 empID := readInteger;
+>>> IDENTIFIER      line=098, pos=16, text="empID"
+>>> COLON           line=098, pos=22, text=":"
+>>> EQUALS          line=098, pos=23, text="="
+>>> IDENTIFIER      line=098, pos=25, text="readInteger"
+>>> SEMICOLON       line=098, pos=36, text=";"
+099                 readName(name);
+>>> IDENTIFIER      line=099, pos=16, text="readName"
+>>> LEFT_PAREN      line=099, pos=24, text="("
+>>> IDENTIFIER      line=099, pos=25, text="name"
+>>> RIGHT_PAREN     line=099, pos=29, text=")"
+>>> SEMICOLON       line=099, pos=30, text=";"
+100                 count := readInteger;
+>>> IDENTIFIER      line=100, pos=16, text="count"
+>>> COLON           line=100, pos=22, text=":"
+>>> EQUALS          line=100, pos=23, text="="
+>>> IDENTIFIER      line=100, pos=25, text="readInteger"
+>>> SEMICOLON       line=100, pos=36, text=";"
+101                 readln();
+>>> IDENTIFIER      line=101, pos=16, text="readln"
+>>> LEFT_PAREN      line=101, pos=22, text="("
+>>> RIGHT_PAREN     line=101, pos=23, text=")"
+>>> SEMICOLON       line=101, pos=24, text=";"
+102             END;
+>>> IDENTIFIER      line=102, pos=12, text="END"
+>>> SEMICOLON       line=102, pos=15, text=";"
+103         END;
+>>> IDENTIFIER      line=103, pos= 8, text="END"
+>>> SEMICOLON       line=103, pos=11, text=";"
+104         employeeCount := i;
+>>> IDENTIFIER      line=104, pos= 8, text="employeeCount"
+>>> COLON           line=104, pos=22, text=":"
+>>> EQUALS          line=104, pos=23, text="="
+>>> IDENTIFIER      line=104, pos=25, text="i"
+>>> SEMICOLON       line=104, pos=26, text=";"
+105     END;
+>>> IDENTIFIER      line=105, pos= 4, text="END"
+>>> SEMICOLON       line=105, pos= 7, text=";"
+
+                 105 source lines.
+                  25 syntax errors.
+                0.02 seconds total parsing time.
+
+                   0 instructions generated.
+                0.00 seconds total code generation time.

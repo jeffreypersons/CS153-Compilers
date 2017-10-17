@@ -1,9 +1,10 @@
-# Project assignments for SJSU's CS 153 (Compilers) course. Starring Jeff, Itaru, Ki Sung, and Ben.
+# HW Assignments for SJSU's CS 153 - Compilers
+_Starring Jeff, Itaru, Ben, and Ki Sung_
 
 
 ## WHAT YOU SHOULD ALWAYS DO
-Incremental, staged pull requests AND commits -- that is, never just blindly select all and commit.
-Rather, if you have a lot of changes, do it in blocks (eg updated readme, improved parser field names, etc)
+_Incremental, staged pull requests AND commits -- that is, never just blindly select all and commit.
+Rather, if you have a lot of changes, do it in blocks (eg updated readme, improved parser field names, etc)._
 
 ## How to contribute using Git from terminal
 0. use git clone on the repo, using credentials and this url
