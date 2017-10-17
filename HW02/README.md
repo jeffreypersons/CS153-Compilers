@@ -1,5 +1,6 @@
 # Assignment #2: Java Scanner
 
+
 ### compile all the files and generate an executable file
     make
 
