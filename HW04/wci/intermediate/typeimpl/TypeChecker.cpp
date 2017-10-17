@@ -45,7 +45,14 @@ bool TypeChecker::is_at_least_one_real(TypeSpec *typespec1, TypeSpec *typespec2)
 {
     return (is_real(typespec1) && is_real(typespec2)) ||
            (is_real(typespec1) && is_integer(typespec2)) ||
-           (is_integer(typespec1) && is_real(typespec2));
+           (is_integer(typespec1) && is_real(typespec2)) ||
+           (is_real(typespec1) && is_complex(typespec2)) ||
+           (is_complex(typespec1) && is_real(typespec2));
+}
+
+bool TypeChecker::is_complex(TypeSpec *typespec)
+{
+    return    (typespec != nullptr) && (typespec->base_type() == Predefined::complex_type);
 }
 
 /**
@@ -96,6 +103,10 @@ bool TypeChecker::are_assignment_compatible(TypeSpec *target_typespec,
         compatible = true;
     }
 
+    else if(is_complex(target_typespec) && is_real(value_typespec))
+    {
+        compatible = true;
+    } 
     // string := string
     else {
         compatible =    target_typespec->is_pascal_string()

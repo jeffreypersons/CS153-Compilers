@@ -20,6 +20,13 @@ class TypeChecker
 {
 public:
     /**
+     * Check if a type specification is complex.
+     * @param typespec the type specification to check.
+     * @return true if complex, else false.
+     */
+    static bool is_complex(TypeSpec *typespec);
+
+    /**
      * Check if a type specification is integer.
      * @param typespec the type specification to check.
      * @return true if integer, else false.
