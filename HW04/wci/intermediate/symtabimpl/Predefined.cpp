@@ -111,13 +111,25 @@ void Predefined::initialize_types(SymTabStack *symtab_stack)
     // Undefined type.
     undefined_type = TypeFactory::create_type((TypeForm) TF_SCALAR);
 
-    //Type complex.
+    // Create complex type as record. set identifier as "complex"
     complex_id = symtab_stack->enter_local("complex");
-    complex_type = TypeFactory::create_type((TypeForm) TF_SCALAR);
-    complex_type->set_identifier(complex_id);
+    complex_type = TypeFactory::create_type((TypeForm) TypeFormImpl::RECORD);
     complex_id->set_definition((Definition) DF_TYPE);
+    complex_type->set_identifier(complex_id);
     complex_id->set_typespec(complex_type);
+    complex_type->set_attribute((TypeKey) RECORD_SYMTAB, new TypeValue(symtab_stack->push())); // set attribute as a record symtable, push onto symbtable stack for record
 
+    im_id = symtab_stack->enter_local("im"); // create id im for imaginary
+    im_id->set_definition((Definition) DF_FIELD); // establish as a field of the record
+    im_id->set_typespec(real_type); // set type as real number
+
+    // repeat above for the real number field in the record type
+    re_id = symtab_stack->enter_local("re");
+    re_id->set_definition((Definition) DF_FIELD);
+    re_id->set_typespec(real_type);
+
+    // pop record stack
+    symtab_stack->pop();
 }
 
 void Predefined::initialize_constants(SymTabStack *symtab_stack)
