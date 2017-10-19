@@ -235,6 +235,12 @@ ICodeNode *ExpressionParser::parse_simple_expression(Token *token)
                     result_typespec = Predefined::real_type;
                 }
 
+                // allows arithmetic for complex types
+                else if(TypeChecker::is_complex(result_typespec) && TypeChecker::is_complex(term_typespec))
+                {
+                    result_typespec = Predefined::complex_type;
+                }
+
                 else
                 {
                     error_handler.flag(expr_token, INCOMPATIBLE_TYPES, this);
