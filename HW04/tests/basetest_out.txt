@@ -1,0 +1,88 @@
+./Chapter12cpp execute -ix tests/BaseTest.pas
+001 PROGRAM BaseTest;
+002 
+003 VAR
+004    x: real; 
+005    y: complex;
+006    
+007 BEGIN {ComplexTest}
+008     x := 10;
+009     y.im := -10;
+010     y.re := 10;
+011     writeln('y.re = ', y.re);
+012     writeln('y.im = ', y.im);
+013 END {ComplexTest}.
+
+                  13 source lines.
+                   0 syntax errors.
+                0.00 seconds total parsing time.
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM basetest ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+x                004 008
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = real
+y                005 009 010 011 012
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = record, Type id = complex
+
+===== INTERMEDIATE CODE =====
+
+*** PROGRAM basetest ***
+
+<COMPOUND line="7">
+    <ASSIGN line="8" type_id="real">
+        <VARIABLE id="x" level="1" type_id="real" />
+        <INTEGER_CONSTANT value="10" type_id="integer" />
+    </ASSIGN>
+    <ASSIGN line="9" type_id="real">
+        <VARIABLE id="y" level="1" type_id="real">
+            <FIELD id="im" level="1" type_id="real" />
+        </VARIABLE>
+        <NEGATE type_id="integer">
+            <INTEGER_CONSTANT value="10" type_id="integer" />
+        </NEGATE>
+    </ASSIGN>
+    <ASSIGN line="10" type_id="real">
+        <VARIABLE id="y" level="1" type_id="real">
+            <FIELD id="re" level="1" type_id="real" />
+        </VARIABLE>
+        <INTEGER_CONSTANT value="10" type_id="integer" />
+    </ASSIGN>
+    <CALL line="11" id="writeln" level="0">
+        <PARAMETERS>
+            <WRITE_PARM>
+                <STRING_CONSTANT value="y.re = " type_id="$anon_7faa8264" />
+            </WRITE_PARM>
+            <WRITE_PARM>
+                <VARIABLE id="y" level="1" type_id="real">
+                    <FIELD id="re" level="1" type_id="real" />
+                </VARIABLE>
+            </WRITE_PARM>
+        </PARAMETERS>
+    </CALL>
+    <CALL line="12" id="writeln" level="0">
+        <PARAMETERS>
+            <WRITE_PARM>
+                <STRING_CONSTANT value="y.im = " type_id="$anon_7faa8d04" />
+            </WRITE_PARM>
+            <WRITE_PARM>
+                <VARIABLE id="y" level="1" type_id="real">
+                    <FIELD id="im" level="1" type_id="real" />
+                </VARIABLE>
+            </WRITE_PARM>
+        </PARAMETERS>
+    </CALL>
+</COMPOUND>
+y.re = 10.000000
+y.im = -10.000000
+
+                   5 statements executed.
+                   0 runtime errors.
+                0.00 seconds total execution time.
