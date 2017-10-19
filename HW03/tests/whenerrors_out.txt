@@ -1,3 +1,4 @@
+./Chapter8cpp execute -ix tests/whenerrors.txt
 001 BEGIN
 002     WHEN
 003         i := 3 => k > 5;

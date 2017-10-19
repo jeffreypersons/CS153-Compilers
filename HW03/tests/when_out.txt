@@ -1,3 +1,4 @@
+./Chapter8cpp execute -ix tests/when.txt
 001 BEGIN
 002     i := 3;
 003     
@@ -176,5 +177,14 @@ range            012 015 015 016 016 018 020 020
     </WHEN>
 </COMPOUND>
 
-                   0 instructions generated.
-                0.00 seconds total code generation time.
+===== OUTPUT =====
+
+>>> LINE 002: i = 3
+>>> LINE 007: f = 30
+>>> LINE 012: range = 5.700000
+>>> LINE 017: level = 2
+>>> LINE 018: range = 0.000000
+
+                   7 statements executed.
+                   0 runtime errors.
+                0.00 seconds total execution time.

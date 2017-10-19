@@ -13,13 +13,13 @@
 
 ### test scanner on java source
 
-    ./Chapter3cpp compile javatest.in > java_out.txt
-
-    printf '%b\n' "$(cat java_out.txt)"
+    make execute src=tests/javatest.in > tests/java_out.txt
+    
+    printf '%b\n' "$(cat tests/java_out.txt)"
 
 
 ### test scanner on pascal source
+
+    make execute src=tests/hello.pas > tests/pascal_out.txt
     
-    ./Chapter3cpp compile hello.pas > pascal_out.txt
-    
-    printf '%b\n' "$(cat pascal_out.txt)"
+    printf '%b\n' "$(cat tests/pascal_out.txt)"
