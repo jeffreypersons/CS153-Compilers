@@ -166,7 +166,7 @@ ICodeNode *ExpressionParser::parse_simple_expression(Token *token)
                                     : Predefined::undefined_type;
 
     // Type check: Leading sign.
-    if (leading_sign && (!TypeChecker::is_integer_or_real(result_typespec)))
+    if (leading_sign && (!TypeChecker::is_integer_or_real(result_typespec)) )
     {
         error_handler.flag(sign_token, INCOMPATIBLE_TYPES, this);
     }
@@ -340,6 +340,11 @@ ICodeNode *ExpressionParser::parse_term(Token *token) throw (string)
                     result_typespec = Predefined::real_type;
                 }
 
+                else if(TypeChecker::is_complex(result_typespec) && TypeChecker::is_complex(factor_typespec))
+                {
+                    result_typespec = Predefined::complex_type;
+                }
+
                 else
                 {
                     error_handler.flag(expr_token, INCOMPATIBLE_TYPES, this);
@@ -359,6 +364,12 @@ ICodeNode *ExpressionParser::parse_term(Token *token) throw (string)
                 {
                     result_typespec = Predefined::real_type;
                 }
+
+                else if(TypeChecker::is_complex(result_typespec) && TypeChecker::is_complex(factor_typespec))
+                {
+                    result_typespec = Predefined::complex_type;
+                }
+                
                 else
                 {
                     error_handler.flag(expr_token, INCOMPATIBLE_TYPES, this);
