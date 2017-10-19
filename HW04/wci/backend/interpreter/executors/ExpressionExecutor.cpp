@@ -308,11 +308,17 @@ CellValue *ExpressionExecutor::execute_binary_operator(
     bool integer_mode = false;
     bool character_mode = false;
     bool string_mode = false;
+    bool complex_mode = false;
 
     if (   (typespec1 == Predefined::integer_type)
         && (typespec2 == Predefined::integer_type))
     {
         integer_mode = true;
+    }
+    // set complex arithmetic if any operands are complex
+    else if((typespec1 == Predefined::complex_type) || (typespec2 == Predefined::complex_type))
+    {
+        complex_mode = true;
     }
     else if (   (   (typespec1 == Predefined::char_type)
                  || (   (operand1->type == STRING)
@@ -412,6 +418,101 @@ CellValue *ExpressionExecutor::execute_binary_operator(
 
                 default: result_cell_value = nullptr;  // shouldn't get here
             }
+        }
+        // implement arithmetic for complex numbers here. Currently returns 0
+
+        else if(complex_mode)
+        {
+            enum
+            {
+                L_COMPLEX = 1,
+                R_COMPLEX = 2,
+                B_COMPLEX = 4,
+            };
+            int flags = 0;
+            Cell* complex_cell1, *complex_cell2;
+            float real_value1, real_value2, imaginary_value1, imaginary_value2;
+            if(typespec1 == Predefined::complex_type)
+            {
+                complex_cell1 = execute_variable(operand_node1);
+                real_value1 = complex_cell1->get_value()->memory_map->get_cell("re")->get_value()->value->f;
+                imaginary_value1 = complex_cell1->get_value()->memory_map->get_cell("im")->get_value()->value->f;
+                imaginary_value1 *= -1;
+                flags = L_COMPLEX;
+            }
+            else
+            {
+                real_value1 = operand1->f;
+                imaginary_value1 = 0;
+            }
+
+            if(typespec2 == Predefined::complex_type)
+            {
+                complex_cell2 = execute_variable(operand_node2);
+                real_value2 = complex_cell2->get_value()->memory_map->get_cell("re")->get_value()->value->f;
+                imaginary_value2 = complex_cell2->get_value()->memory_map->get_cell("im")->get_value()->value->f;
+                imaginary_value2 *= -1;
+                if(flags & L_COMPLEX) flags = B_COMPLEX;
+                else flags = R_COMPLEX;
+            }
+            else
+            {
+                real_value2 = operand2->f;
+                imaginary_value2 = 0;
+            }
+            // make copy of complex cell to pass to result
+            float real_result, imaginary_result; 
+            CellValue *t;
+
+            if((flags & L_COMPLEX) || (flags & B_COMPLEX)) t = copy_of(complex_cell1->get_value(), node);
+            else t = copy_of(complex_cell2->get_value(), node);
+
+            switch(node_type)
+            {
+                case NT_ADD:
+                {
+                    // both complex
+                    // currently just adds the imaginary and real value fields
+                    if(flags & B_COMPLEX)
+                    {
+                        real_result = real_value2 + real_value1;
+                        imaginary_result = imaginary_value1 + imaginary_value2;
+                    }
+                    else if(flags & L_COMPLEX)
+                    {
+                        real_result = real_value1 + real_value2;
+                        imaginary_result = imaginary_value1;
+                    }
+                    else if(flags & R_COMPLEX)
+                    {
+                        real_result = real_value1 + real_value2;
+                        imaginary_result = imaginary_value2;
+                    }
+                    break;
+                }
+                // following cases need to be implemented
+                case NT_SUBTRACT:
+                {
+                    break;
+                }
+                case NT_MULTIPLY:
+                {
+                    break;
+                }
+                case NT_FLOAT_DIVIDE:
+                {
+                    break;
+                }
+                default: 
+                {
+                    real_result = 0;
+                    imaginary_result = 0;
+                }
+            }
+
+            t->memory_map->get_cell("re")->get_value()->value->f = real_result;
+            t->memory_map->get_cell("im")->get_value()->value->f = imaginary_result * -1;
+            result_cell_value = t;
         }
         else
         {
