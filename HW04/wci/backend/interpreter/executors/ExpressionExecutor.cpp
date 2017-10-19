@@ -423,6 +423,7 @@ CellValue *ExpressionExecutor::execute_binary_operator(
 
         else if(complex_mode)
         {
+            // complex flags. e.g. if left number is complex, is right number complex, or are both complex
             enum
             {
                 L_COMPLEX = 1,
@@ -430,7 +431,10 @@ CellValue *ExpressionExecutor::execute_binary_operator(
                 B_COMPLEX = 4,
             };
             int flags = 0;
+            int removed_minus_1 = 0;
             Cell* complex_cell1, *complex_cell2;
+
+            // create all values
             float real_value1, real_value2, imaginary_value1, imaginary_value2;
             if(typespec1 == Predefined::complex_type)
             {
@@ -460,22 +464,23 @@ CellValue *ExpressionExecutor::execute_binary_operator(
                 real_value2 = operand2->f;
                 imaginary_value2 = 0;
             }
-            // make copy of complex cell to pass to result
+
             float real_result, imaginary_result; 
             CellValue *t;
 
+            // make copy of complex cell to pass to result
             if((flags & L_COMPLEX) || (flags & B_COMPLEX)) t = copy_of(complex_cell1->get_value(), node);
             else t = copy_of(complex_cell2->get_value(), node);
 
+            // figure out node operation
             switch(node_type)
             {
                 case NT_ADD:
                 {
                     // both complex
-                    // currently just adds the imaginary and real value fields
                     if(flags & B_COMPLEX)
                     {
-                        real_result = real_value2 + real_value1;
+                        real_result =  real_value1 + real_value2;
                         imaginary_result = imaginary_value1 + imaginary_value2;
                     }
                     else if(flags & L_COMPLEX)
@@ -490,17 +495,53 @@ CellValue *ExpressionExecutor::execute_binary_operator(
                     }
                     break;
                 }
-                // following cases need to be implemented
+                // subtraction
                 case NT_SUBTRACT:
                 {
+                    if(flags & B_COMPLEX)
+                    {
+                        real_result = real_value1 - real_value2;
+                        imaginary_result = imaginary_value1 - imaginary_value2;
+                    }
+                    else if(flags & L_COMPLEX)
+                    {
+                        real_result = real_value1 - real_value2;
+                        imaginary_result = imaginary_value1;
+                    }
+                    else if(flags & R_COMPLEX)
+                    {
+                        real_result = real_value1 - real_value2;
+                        imaginary_result = imaginary_value2;
+                    }
                     break;
                 }
+                // multiply according to error. Not sure to throw error when multiplying real and complex
                 case NT_MULTIPLY:
                 {
+                    if(flags & B_COMPLEX)
+                    {
+                        real_result = real_value1*real_value2 - imaginary_value1*imaginary_value2;
+                        imaginary_result = imaginary_value1*real_value2 + imaginary_value2*real_value1;
+                    }
+                    else if(flags & L_COMPLEX) // THROW ERROR?
+                    {
+                        real_result = real_value1 * real_value2;
+                        imaginary_result = imaginary_value1;
+                    }
+                    else if(flags & R_COMPLEX) // THROW ERROR?
+                    {
+                        real_result = real_value1 * real_value2;
+                        imaginary_result = imaginary_value2;
+                    }
                     break;
-                }
+                }              
+                // division according to complex math rules. throw error for 0 divisor?
                 case NT_FLOAT_DIVIDE:
                 {
+                    float divisor = real_value2 * real_value2 + imaginary_value2 * imaginary_value2;
+                    if(divisor == 0); // throw error
+                    real_result = (real_value1*real_value2 + imaginary_value1*imaginary_value2) / divisor;
+                    imaginary_result = (real_value2*imaginary_value1 - real_value1*imaginary_value2) / divisor;
                     break;
                 }
                 default: 
@@ -510,8 +551,11 @@ CellValue *ExpressionExecutor::execute_binary_operator(
                 }
             }
 
+            // set values of CellValue to the real result. Distribute -1 to imaginary result
             t->memory_map->get_cell("re")->get_value()->value->f = real_result;
             t->memory_map->get_cell("im")->get_value()->value->f = imaginary_result * -1;
+
+            // set result to our cell value
             result_cell_value = t;
         }
         else
