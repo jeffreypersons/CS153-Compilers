@@ -27,7 +27,7 @@ BEGIN {ComplexTest}
     print('  x', x);
     print('  y', y);
     z := x - y;
-     print('x-y', z);
+    print('x-y', z);
     writeln;
 
     x.re := 4;
@@ -59,8 +59,6 @@ BEGIN {ComplexTest}
     z := x + y;
     print('x+y', z);
     writeln;
-
-
 
     x.re := 5;
     x.im := 4;
