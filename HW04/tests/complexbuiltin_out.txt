@@ -119,7 +119,7 @@ z                009 011 011
     </ASSIGN>
     <CALL line="15" id="print" level="1">
         <PARAMETERS>
-            <STRING_CONSTANT value="  x" type_id="$anon_7f71b8f4" />
+            <STRING_CONSTANT value="  x" type_id="$anon_7e3318f4" />
             <VARIABLE id="x" level="1" type_id="complex" />
         </PARAMETERS>
     </CALL>
@@ -139,7 +139,7 @@ z                009 011 011
     </ASSIGN>
     <CALL line="16" id="print" level="1">
         <PARAMETERS>
-            <STRING_CONSTANT value="  y" type_id="$anon_7f71ca74" />
+            <STRING_CONSTANT value="  y" type_id="$anon_7e332a74" />
             <VARIABLE id="y" level="1" type_id="complex" />
         </PARAMETERS>
     </CALL>
