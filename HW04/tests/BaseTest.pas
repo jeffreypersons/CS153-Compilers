@@ -57,7 +57,7 @@ BEGIN {ComplexTest}
     y.im := 2; 
     print('  y', y);
     z := x + y;          
-     print('x+y', z);
+    print('x+y', z);
     writeln;
     
     
