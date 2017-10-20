@@ -1,88 +1,200 @@
 ./Chapter12cpp execute -ix tests/BaseTest.pas
-001 PROGRAM BaseTest;
+001 PROGRAM ComplexBuiltIn;
 002 
-003 VAR
-004    x: real; 
-005    y: complex;
-006    
-007 BEGIN {ComplexTest}
-008     x := 10;
-009     y.im := -10;
-010     y.re := 10;
-011     writeln('y.re = ', y.re);
-012     writeln('y.im = ', y.im);
-013 END {ComplexTest}.
+003 TYPE
+004     mystring = ARRAY[1..3] OF char;
+005 
+006 VAR
+007     x, y, z : complex;
+008     
+009 PROCEDURE print(expr : mystring; VAR z : complex);
+010     BEGIN
+011         write(expr, ' = (', z.re:0:5, ', ', z.im:0:5, ') ');
+012     END;
+013 
+014 BEGIN {ComplexTest} 
+015     z.re := 0;
+016     z.im := 0;
+017     x.re := 3; 
+018     x.im := 2;  
+019     print('  x', x);
+020     y.re := 8; 
+021     y.im := -5; 
+022     print('  y', y);
+023     z := x + y;            
+024     print('x+y', z);
+025     writeln;
+026 	
+027     print('  x', x);
+028     print('  y', y);
+029     z := x - y;
+030      print('x-y', z);
+031     writeln;
+032     
+033     x.re := 4; 
+034     x.im := -2; 
+035     print('  x', x);
+036     y.re := 1; 
+037     y.im := -5; 
+038     print('  y', y);
+039     z := x * y;              
+040     print('x*y', z);
+041     writeln;
+042 
+043     x.re := -3;
+044     x.im := 2;  
+045     print('  x', x);
+046     y.re := 3; 
+047     y.im := -6; 
+048     print('  y', y);
+049     z := x/y;               
+050     print('x/y', z);
+051     writeln;
+052     
+053     x.re := 5; 
+054     x.im := 0; 
+055     print('  x', x);
+056     y.re := 3; 
+057     y.im := 2; 
+058     print('  y', y);
+059     z := x + y;          
+060      print('x+y', z);
+061     writeln;
+062     
+063     
+064     
+065     x.re := 5;
+066     x.im := 4; 
+067     print('  x', x);
+068     y.re := 2;
+069     y.im := 0; 
+070     print('  y', y);
+071     z := x*y;             
+072     print('x*y', z);
+073     writeln;
+074    
+075     x.re := -2; x.im := -4; 
+076     print('  x', x);
+077     y.re := 0;  y.im :=  1; 
+078     print('  y', y);
+079     z := x/y;              
+080     print('x/y', z);
+081     writeln;
+082 END {ComplexTest}.
 
-                  13 source lines.
+                  82 source lines.
                    0 syntax errors.
                 0.00 seconds total parsing time.
 
 ===== CROSS-REFERENCE TABLE =====
 
-*** PROGRAM basetest ***
+*** PROGRAM complexbuiltin ***
 
 Identifier       Line numbers    Type specification
 ----------       ------------    ------------------
-x                004 008
+mystring         004 009
+                                 Defined as: type
+                                 Scope nesting level: 1
+                                 Type form = array, Type id = mystring
+                                 --- INDEX TYPE ---
+                                 Type form = subrange, Type id = <unnamed>
+                                 --- Base type ---
+                                 Type form = scalar, Type id = integer
+                                 Range = 1..3
+                                 --- ELEMENT TYPE ---
+                                 Type form = scalar, Type id = char
+                                 3 elements
+print           
+                                 Defined as: PROCEDURE
+                                 Scope nesting level: 1
+x                007 017 018 019 023 027 029 033 034 035 039 043 044 045 049 053 054 055 059 065 066 067 071 075 075 076 079
                                  Defined as: variable
                                  Scope nesting level: 1
-                                 Type form = scalar, Type id = real
-y                005 009 010 011 012
+                                 Type form = record, Type id = complex
+y                007 020 021 022 023 028 029 036 037 038 039 046 047 048 049 056 057 058 059 068 069 070 071 077 077 078 079
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = record, Type id = complex
+z                007 015 016 023 024 029 030 039 040 049 050 059 060 071 072 079 080
                                  Defined as: variable
                                  Scope nesting level: 1
                                  Type form = record, Type id = complex
 
+*** PROCEDURE print ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+expr             009 011
+                                 Defined as: value parameter
+                                 Scope nesting level: 2
+                                 Type form = array, Type id = mystring
+z                009 011 011
+                                 Defined as: VAR parameter
+                                 Scope nesting level: 2
+                                 Type form = record, Type id = complex
+
 ===== INTERMEDIATE CODE =====
 
-*** PROGRAM basetest ***
+*** PROGRAM complexbuiltin ***
 
-<COMPOUND line="7">
-    <ASSIGN line="8" type_id="real">
-        <VARIABLE id="x" level="1" type_id="real" />
-        <INTEGER_CONSTANT value="10" type_id="integer" />
+<COMPOUND line="14">
+    <ASSIGN line="15" type_id="real">
+        <VARIABLE id="z" level="1" type_id="real">
+            <FIELD id="re" level="1" type_id="real" />
+        </VARIABLE>
+        <INTEGER_CONSTANT value="0" type_id="integer" />
     </ASSIGN>
-    <ASSIGN line="9" type_id="real">
+    <ASSIGN line="16" type_id="real">
+        <VARIABLE id="z" level="1" type_id="real">
+            <FIELD id="im" level="1" type_id="real" />
+        </VARIABLE>
+        <INTEGER_CONSTANT value="0" type_id="integer" />
+    </ASSIGN>
+    <ASSIGN line="17" type_id="real">
+        <VARIABLE id="x" level="1" type_id="real">
+            <FIELD id="re" level="1" type_id="real" />
+        </VARIABLE>
+        <INTEGER_CONSTANT value="3" type_id="integer" />
+    </ASSIGN>
+    <ASSIGN line="18" type_id="real">
+        <VARIABLE id="x" level="1" type_id="real">
+            <FIELD id="im" level="1" type_id="real" />
+        </VARIABLE>
+        <INTEGER_CONSTANT value="2" type_id="integer" />
+    </ASSIGN>
+    <CALL line="19" id="print" level="1">
+        <PARAMETERS>
+            <STRING_CONSTANT value="  x" type_id="$anon_7f024144" />
+            <VARIABLE id="x" level="1" type_id="complex" />
+        </PARAMETERS>
+    </CALL>
+    <ASSIGN line="20" type_id="real">
+        <VARIABLE id="y" level="1" type_id="real">
+            <FIELD id="re" level="1" type_id="real" />
+        </VARIABLE>
+        <INTEGER_CONSTANT value="8" type_id="integer" />
+    </ASSIGN>
+    <ASSIGN line="21" type_id="real">
         <VARIABLE id="y" level="1" type_id="real">
             <FIELD id="im" level="1" type_id="real" />
         </VARIABLE>
         <NEGATE type_id="integer">
-            <INTEGER_CONSTANT value="10" type_id="integer" />
+            <INTEGER_CONSTANT value="5" type_id="integer" />
         </NEGATE>
     </ASSIGN>
-    <ASSIGN line="10" type_id="real">
-        <VARIABLE id="y" level="1" type_id="real">
-            <FIELD id="re" level="1" type_id="real" />
-        </VARIABLE>
-        <INTEGER_CONSTANT value="10" type_id="integer" />
+    <CALL line="22" id="print" level="1">
+        <PARAMETERS>
+            <STRING_CONSTANT value="  y" type_id="$anon_7f0252b4" />
+            <VARIABLE id="y" level="1" type_id="complex" />
+        </PARAMETERS>
+    </CALL>
+    <ASSIGN line="23" type_id="complex">
+        <VARIABLE id="z" level="1" type_id="complex" />
+        <ADD type_id="complex">
+            <VARIABLE id="x" level="1" type_id="complex" />
+            <VARIABLE id="y" level="1" type_id="complex" />
+        </ADD>
     </ASSIGN>
-    <CALL line="11" id="writeln" level="0">
+    <CALL line="24" id="print" level="1">
         <PARAMETERS>
-            <WRITE_PARM>
-                <STRING_CONSTANT value="y.re = " type_id="$anon_7faa8264" />
-            </WRITE_PARM>
-            <WRITE_PARM>
-                <VARIABLE id="y" level="1" type_id="real">
-                    <FIELD id="re" level="1" type_id="real" />
-                </VARIABLE>
-            </WRITE_PARM>
-        </PARAMETERS>
-    </CALL>
-    <CALL line="12" id="writeln" level="0">
-        <PARAMETERS>
-            <WRITE_PARM>
-                <STRING_CONSTANT value="y.im = " type_id="$anon_7faa8d04" />
-            </WRITE_PARM>
-            <WRITE_PARM>
-                <VARIABLE id="y" level="1" type_id="real">
-                    <FIELD id="im" level="1" type_id="real" />
-                </VARIABLE>
-            </WRITE_PARM>
-        </PARAMETERS>
-    </CALL>
-</COMPOUND>
-y.re = 10.000000
-y.im = -10.000000
-
-                   5 statements executed.
-                   0 runtime errors.
-                0.00 seconds total execution time.
+makefile:112: recipe for target 'execute' failed
