@@ -13,8 +13,6 @@
 
 ### simple test of complex data types
 
-    
-
     make execute src=tests/BaseTest.pas > tests/basetest_out.txt
     
     printf '%b\n' "$(cat tests/basetest_out.txt)"

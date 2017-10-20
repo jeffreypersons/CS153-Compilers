@@ -21,68 +21,66 @@
 020     y.re := 8; 
 021     y.im := -5; 
 022     print('  y', y);
-023     z := x + y;            
+023     z := x + y;
 024     print('x+y', z);
 025     writeln;
-026 	
+026 
 027     print('  x', x);
 028     print('  y', y);
 029     z := x - y;
-030      print('x-y', z);
+030     print('x-y', z);
 031     writeln;
-032     
-033     x.re := 4; 
-034     x.im := -2; 
+032 
+033     x.re := 4;
+034     x.im := -2;
 035     print('  x', x);
-036     y.re := 1; 
-037     y.im := -5; 
+036     y.re := 1;
+037     y.im := -5;
 038     print('  y', y);
-039     z := x * y;              
+039     z := x * y;
 040     print('x*y', z);
 041     writeln;
 042 
 043     x.re := -3;
-044     x.im := 2;  
+044     x.im := 2;
 045     print('  x', x);
-046     y.re := 3; 
-047     y.im := -6; 
+046     y.re := 3;
+047     y.im := -6;
 048     print('  y', y);
-049     z := x/y;               
+049     z := x/y;
 050     print('x/y', z);
 051     writeln;
-052     
-053     x.re := 5; 
-054     x.im := 0; 
+052 
+053     x.re := 5;
+054     x.im := 0;
 055     print('  x', x);
-056     y.re := 3; 
-057     y.im := 2; 
+056     y.re := 3;
+057     y.im := 2;
 058     print('  y', y);
-059     z := x + y;          
-060      print('x+y', z);
+059     z := x + y;
+060     print('x+y', z);
 061     writeln;
-062     
-063     
-064     
-065     x.re := 5;
-066     x.im := 4; 
-067     print('  x', x);
-068     y.re := 2;
-069     y.im := 0; 
-070     print('  y', y);
-071     z := x*y;             
-072     print('x*y', z);
-073     writeln;
-074    
-075     x.re := -2; x.im := -4; 
-076     print('  x', x);
-077     y.re := 0;  y.im :=  1; 
-078     print('  y', y);
-079     z := x/y;              
-080     print('x/y', z);
-081     writeln;
-082 END {ComplexTest}.
+062 
+063     x.re := 5;
+064     x.im := 4;
+065     print('  x', x);
+066     y.re := 2;
+067     y.im := 0;
+068     print('  y', y);
+069     z := x*y;
+070     print('x*y', z);
+071     writeln;
+072 
+073     x.re := -2; x.im := -4;
+074     print('  x', x);
+075     y.re := 0;  y.im :=  1;
+076     print('  y', y);
+077     z := x/y;
+078     print('x/y', z);
+079     writeln;
+080 END {ComplexTest}.
 
-                  82 source lines.
+                  80 source lines.
                    0 syntax errors.
                 0.00 seconds total parsing time.
 
@@ -107,15 +105,15 @@ mystring         004 009
 print           
                                  Defined as: PROCEDURE
                                  Scope nesting level: 1
-x                007 017 018 019 023 027 029 033 034 035 039 043 044 045 049 053 054 055 059 065 066 067 071 075 075 076 079
+x                007 017 018 019 023 027 029 033 034 035 039 043 044 045 049 053 054 055 059 063 064 065 069 073 073 074 077
                                  Defined as: variable
                                  Scope nesting level: 1
                                  Type form = record, Type id = complex
-y                007 020 021 022 023 028 029 036 037 038 039 046 047 048 049 056 057 058 059 068 069 070 071 077 077 078 079
+y                007 020 021 022 023 028 029 036 037 038 039 046 047 048 049 056 057 058 059 066 067 068 069 075 075 076 077
                                  Defined as: variable
                                  Scope nesting level: 1
                                  Type form = record, Type id = complex
-z                007 015 016 023 024 029 030 039 040 049 050 059 060 071 072 079 080
+z                007 015 016 023 024 029 030 039 040 049 050 059 060 069 070 077 078
                                  Defined as: variable
                                  Scope nesting level: 1
                                  Type form = record, Type id = complex
@@ -164,7 +162,7 @@ z                009 011 011
     </ASSIGN>
     <CALL line="19" id="print" level="1">
         <PARAMETERS>
-            <STRING_CONSTANT value="  x" type_id="$anon_7fba7144" />
+            <STRING_CONSTANT value="  x" type_id="$anon_7ef8e144" />
             <VARIABLE id="x" level="1" type_id="complex" />
         </PARAMETERS>
     </CALL>
@@ -184,7 +182,7 @@ z                009 011 011
     </ASSIGN>
     <CALL line="22" id="print" level="1">
         <PARAMETERS>
-            <STRING_CONSTANT value="  y" type_id="$anon_7fba82b4" />
+            <STRING_CONSTANT value="  y" type_id="$anon_7ef8f2b4" />
             <VARIABLE id="y" level="1" type_id="complex" />
         </PARAMETERS>
     </CALL>
