@@ -1,2 +1,2 @@
-./Chapter12cpp execute -ix tests/Complex.pas
+./Chapter12cpp execute -ix tests/ComplexType.pas
 makefile:112: recipe for target 'execute' failed

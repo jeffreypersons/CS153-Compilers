@@ -20,9 +20,9 @@
 
 ### more elaborate test of complex data types
 
-    make execute src=tests/Complex.pas > tests/complex_out.txt
+    make execute src=tests/ComplexType.pas > tests/complextype_out.txt
     
-    printf '%b\n' "$(cat tests/complex_out.txt)"
+    printf '%b\n' "$(cat tests/complextype_out.txt)"
 
 
 ### test complex builtins
