@@ -1,4 +1,4 @@
-PROGRAM ComplexBuiltIn;
+PROGRAM BaseTest;
 
 TYPE
     mystring = ARRAY[1..3] OF char;
