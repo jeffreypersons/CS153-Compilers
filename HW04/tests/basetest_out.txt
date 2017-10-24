@@ -1,5 +1,5 @@
 ./Chapter12cpp execute -ix tests/BaseTest.pas
-001 PROGRAM ComplexBuiltIn;
+001 PROGRAM BaseTest;
 002 
 003 TYPE
 004     mystring = ARRAY[1..3] OF char;
@@ -86,7 +86,7 @@
 
 ===== CROSS-REFERENCE TABLE =====
 
-*** PROGRAM complexbuiltin ***
+*** PROGRAM basetest ***
 
 Identifier       Line numbers    Type specification
 ----------       ------------    ------------------
@@ -133,7 +133,7 @@ z                009 011 011
 
 ===== INTERMEDIATE CODE =====
 
-*** PROGRAM complexbuiltin ***
+*** PROGRAM basetest ***
 
 <COMPOUND line="14">
     <ASSIGN line="15" type_id="real">
@@ -162,7 +162,7 @@ z                009 011 011
     </ASSIGN>
     <CALL line="19" id="print" level="1">
         <PARAMETERS>
-            <STRING_CONSTANT value="  x" type_id="$anon_7fea6144" />
+            <STRING_CONSTANT value="  x" type_id="$anon_7f248144" />
             <VARIABLE id="x" level="1" type_id="complex" />
         </PARAMETERS>
     </CALL>
@@ -182,7 +182,7 @@ z                009 011 011
     </ASSIGN>
     <CALL line="22" id="print" level="1">
         <PARAMETERS>
-            <STRING_CONSTANT value="  y" type_id="$anon_7fea72b4" />
+            <STRING_CONSTANT value="  y" type_id="$anon_7f2492b4" />
             <VARIABLE id="y" level="1" type_id="complex" />
         </PARAMETERS>
     </CALL>

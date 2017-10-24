@@ -51,7 +51,7 @@
 
                   49 source lines.
                    0 syntax errors.
-                0.00 seconds total parsing time.
+                0.01 seconds total parsing time.
 
 ===== CROSS-REFERENCE TABLE =====
 
@@ -119,7 +119,7 @@ z                009 011 011
     </ASSIGN>
     <CALL line="15" id="print" level="1">
         <PARAMETERS>
-            <STRING_CONSTANT value="  x" type_id="$anon_7ed148f4" />
+            <STRING_CONSTANT value="  x" type_id="$anon_7fdd68f4" />
             <VARIABLE id="x" level="1" type_id="complex" />
         </PARAMETERS>
     </CALL>
@@ -139,7 +139,7 @@ z                009 011 011
     </ASSIGN>
     <CALL line="16" id="print" level="1">
         <PARAMETERS>
-            <STRING_CONSTANT value="  y" type_id="$anon_7ed15a74" />
+            <STRING_CONSTANT value="  y" type_id="$anon_7fdd7a74" />
             <VARIABLE id="y" level="1" type_id="complex" />
         </PARAMETERS>
     </CALL>

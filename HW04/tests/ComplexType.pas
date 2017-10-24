@@ -1,4 +1,4 @@
-PROGRAM Complex;
+PROGRAM ComplexType;
 
 TYPE
     complex = RECORD
