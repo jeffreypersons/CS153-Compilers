@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
+
+project(hello_test)
+
+#make sure release build type. Only available binaries for antlr4
+set(CMAKE_BUILD_TYPE RELEASE)
+
+#make sure on windows it builds as console
+if(WIN32)
+#   set_target_properties(hello_test PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
+#   set_target_properties(hello_test PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
+#   set_target_properties(hello_test PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
+endif(WIN32)
+
+find_path(ANTLR_LDIR [NO_DEFAULT_PATH])
+find_path(ANTLR_IDIR [NO_DEFAULT_PATH])
+link_directories(${ANTLR_LDIR})
+include_directories(${ANTLR_IDIR})
+link_libraries(antlr4-runtime)
+
+add_executable(
+	hello_test
+	Hello.cpp
+	HelloListener.cpp
+	HelloBaseListener.cpp
+	HelloLexer.cpp
+	HelloParser.cpp
+	)
