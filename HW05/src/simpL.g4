@@ -1,4 +1,6 @@
 grammar simpL;
+
+// todo: update the BNF grammar description once the rest of the grammar file is done
 /* The grammar for our language is as follows (in BNF):
 <command>     -> <declaration> | <simple_expr>
 <declaration> -> <primitive identifier> | <primitive assignment>
@@ -19,6 +21,7 @@ grammar simpL;
 <text>  -> ID
 */
 
+// starting rule
 program : command+;
 
 // full command or statement ends with the EOS character
@@ -26,21 +29,21 @@ command	: (declaration | statement)* EOS;
 
 // declarations and assignments
 declaration : primitive identifier | assignment;
-assignment: assign_num | assign_text;
+assignment  : assign_num | assign_text;
 
 // statements and expressions
 statement     : simple_expr | compound_expr;
-simple_expr   : boolean_expression | arithmetic_expression;
-compound_expr : if_stmt | funcdef;
-if_stmt   : IF LPAREN simple_expr RPAREN statement (ELSE_IF LPAREN simple_expr RPAREN)* (ELSE statement)?;
-funcdef   : DEF ID LPAREN paramlist RPAREN LBRACKET statement RBRACKET;
-paramlist : (primitive ID (',' primitive ID)*)?;
-arithmetic_expression : value (arithmetic_operator value)+;
-boolean_expression    : value boolean_operator value | identifier boolean_operator identifier;
+simple_expr   : bool_expr   | arith_expr;
+compound_expr : if_stmt     | func_def;
+if_stmt       : IF LPAREN simple_expr RPAREN statement (ELSE_IF LPAREN simple_expr RPAREN)* (ELSE statement)?;
+func_def      : DEF ID LPAREN param_list RPAREN LBRACKET statement RBRACKET;
+param_list    : (primitive ID (',' primitive ID)*)?;
+arith_expr    : value (arith_operator value)+;
+bool_expr     : value bool_operator value | identifier bool_operator identifier;
 
 // groupings of reserved symbols
-boolean_operator 	: EQUIV | NOT | GT | LT | LTE | GTE;
-arithmetic_operator : ADD | SUB | MUL | DIV | POW;
+bool_operator  : EQUIV | NOT | GT  | LT  | LTE | GTE;
+arith_operator : ADD   | SUB | MUL | DIV | POW;
 
 // basic labels
 basic_type    : text | value;
@@ -48,9 +51,9 @@ identifier    : ID;
 primitive     : value_keyword | word_keyword ;
 value_keyword : NUMBER;
 word_keyword  : TEXT;
-assign_num    : NUMBER ID ASSIGN (value | arithmetic_expression);
+assign_num    : NUMBER ID ASSIGN (value | arith_expr);
 assign_text   : TEXT ID ASSIGN text;
-value         : NUMERICAL;
+value         : NUMERIC;
 text          : ID;
 
 // reserved words and symbols
@@ -85,7 +88,6 @@ DIV : '/';
 POW : '^';
 
 // other
-ID 	      : [a-zA-Z]+[0-9a-zA-Z]*;
-WS 	      : [ \t\r\n]+ -> skip;
-NUMERICAL : ([0-9]+ | [0-9]+.[0-9]+);
-
+ID 	    : [a-zA-Z]+[0-9a-zA-Z]*;
+WS 	    : [ \t\r\n]+ -> skip;
+NUMERIC : ([0-9]+ | [0-9]+.[0-9]+);
