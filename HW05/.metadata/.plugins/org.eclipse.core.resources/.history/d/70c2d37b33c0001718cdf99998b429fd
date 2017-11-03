@@ -12,13 +12,13 @@ grammar simpL;
 <boolean_operator> -> EQUIVILANCE | NOT | GT | LT | LTE | GTE
 <arithmetic_expression> -> ADD | SUB | MUL | DIV | POW
 <assignment_operator> -> ASSIGN
-<basic_type> -> <text> | <value>
+<basic_type> -> <word> | <value>
 <identifier> -> ID
 <primitive> -> <value_keyword> | <word_keyword>
 <value_keyword> -> NUMBER
-<word_keyword> -> TEXT
+<word_keyword> -> WORD
 <value> -> NUMERICAL
-<text> -> ID
+<word> -> ID
 */
 
 
@@ -29,41 +29,37 @@ command	: (declaration | statement) EOS;
 
 // declaration
 declaration : primitive (identifier | assignment);
-assignment: assign_num | assign_text;
+assignment: identifier assignment_operator basic_type;
 
 statement : simple_expr | compound_expr;
 simple_expr	: boolean_expression | arithmetic_expression;
-compound_expr : if_stmt | funcdef;
-if_stmt : IF LPAREN simple_expr RPAREN statement (ELSE_IF LPAREN simple_expr RPAREN)* (ELSE statement)?;
-funcdef:DEF ID LPAREN simple_expr RPAREN LBRACKET statement RBRACKET;
+compound_expr : if_stmt;
+if_stmt : IF LPAREN simple_expr RPAREN statement (ELSE_IF LPAREN simple_expr RPAREN)*(ELSE statement)?;
 arithmetic_expression 	: value arithmetic_operator value;
 boolean_expression: value boolean_operator value | identifier boolean_operator identifier;
 
 // groupings of reserved symbols
 boolean_operator 	: EQUIVILANCE | NOT | GT | LT | LTE | GTE;
 arithmetic_operator : ADD | SUB | MUL | DIV | POW;
+assignment_operator: ASSIGN;
 
 // basic labels
-basic_type: text | value;
+basic_type: word | value;
 identifier: ID;
 primitive : value_keyword | word_keyword ;
 value_keyword: NUMBER;
-word_keyword: TEXT;
-assign_num: NUMBER ID ASSIGN (NUMBER | arithmetic_expression);
-assign_text: TEXT ID ASSIGN TEXT;
+word_keyword: WORD;
 value : NUMERICAL;
-text: ID; // change to string
+word: ID; // change to string
 
 // Reserved Words and symbols
 NUMBER 	: 	'number';
-TEXT	:	'text';
+WORD	:	'word';
 EOS		: '.'; // end of statement as opposed to ;
 ASSIGN	: '=';
 CONV	: '"';
 LPAREN  : '(';
 RPAREN  : ')';
-LBRACKET: '{';
-RBRACKET: '}';
 IF      : 'if';
 ELSE    : 'else';
 ELSE_IF : 'else if';
