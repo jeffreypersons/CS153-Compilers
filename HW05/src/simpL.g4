@@ -88,6 +88,6 @@ DIV : '/';
 POW : '^';
 
 // other
-ID 	    : [a-zA-Z]+[0-9a-zA-Z]*;
+ID      : [a-zA-Z]+[0-9a-zA-Z]*;
 WS 	    : [ \t\r\n]+ -> skip;
 NUMERIC : ([0-9]+ | [0-9]+.[0-9]+);
