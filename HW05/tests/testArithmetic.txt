@@ -1,0 +1,11 @@
+//This is a sample code No.1
+//check simple arithmetic
+
+def __main()__
+    a = 100 + 200   //300
+    b = 100 - 50    //50
+    c = 100 - 150   //-50
+    e = 100 * 2     //200
+    f = 100 / 2     //50
+    g = 100 % 3     //1
+    h = 2 ^ 2       //4
