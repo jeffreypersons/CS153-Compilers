@@ -25,7 +25,7 @@ program : command+;
 command	: (declaration | statement) EOS;
 
 // declarations and assignments
-declaration : primitive (identifier | assignment);
+declaration : primitive identifier | assignment;
 assignment: assign_num | assign_text;
 
 // statements and expressions
@@ -35,7 +35,7 @@ compound_expr : if_stmt | funcdef;
 if_stmt   : IF LPAREN simple_expr RPAREN statement (ELSE_IF LPAREN simple_expr RPAREN)* (ELSE statement)?;
 funcdef   : DEF ID LPAREN paramlist RPAREN LBRACKET statement RBRACKET;
 paramlist : (primitive ID (',' primitive ID)*)?;
-arithmetic_expression : value arithmetic_operator value;
+arithmetic_expression : value (arithmetic_operator value)+;
 boolean_expression    : value boolean_operator value | identifier boolean_operator identifier;
 
 // groupings of reserved symbols
@@ -48,8 +48,8 @@ identifier    : ID;
 primitive     : value_keyword | word_keyword ;
 value_keyword : NUMBER;
 word_keyword  : TEXT;
-assign_num    : NUMBER ID ASSIGN (NUMBER | arithmetic_expression);
-assign_text   : TEXT ID ASSIGN TEXT;
+assign_num    : NUMBER ID ASSIGN (value | arithmetic_expression);
+assign_text   : TEXT ID ASSIGN text;
 value         : NUMERICAL;
 text          : ID;
 
