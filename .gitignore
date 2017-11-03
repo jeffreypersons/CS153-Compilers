@@ -53,6 +53,9 @@ CMakeFiles/cmake.check_cache
 .idea/
 
 # eclipse
+.metadata/*
+.metadata/
+*/.metadata/*
 .metadata
 bin/
 tmp/
