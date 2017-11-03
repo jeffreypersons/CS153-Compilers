@@ -40,10 +40,6 @@ ouput.txt
 __MACOSX/
 xcuserdata/
 
-# jetbrains
-*.iml
-.idea/
-
 # cache, logging, and debugging
 *.bak
 *.log
@@ -51,3 +47,24 @@ CMakeCache.txt
 CMakeLists.txt
 cmake-build-debug/
 CMakeFiles/cmake.check_cache
+
+# jetbrains
+*.iml
+.idea/
+
+# eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.project
+.settings/
+.loadpath
+.recommenders
+.externalToolBuilders/
+*.launch
+.recommenders/
