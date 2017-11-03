@@ -22,7 +22,7 @@ grammar simpL;
 program : command+;
 
 // full command or statement ends with the EOS character
-command	: (declaration | statement) EOS;
+command	: (declaration | statement)* EOS;
 
 // declarations and assignments
 declaration : primitive identifier | assignment;
