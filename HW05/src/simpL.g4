@@ -27,7 +27,7 @@ program : command+;
 command	: (declaration | statement) EOS;
 
 // declaration
-declaration : primitive identifier | assignment;
+declaration : primitive (identifier | assignment);
 assignment: assign_num | assign_text;
 
 statement : simple_expr | compound_expr;
