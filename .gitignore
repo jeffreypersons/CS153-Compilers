@@ -56,6 +56,10 @@ CMakeFiles/cmake.check_cache
 .metadata
 bin/
 tmp/
+.syncinfo
+*.snap
+*.xml.*
+*.xmi
 *.tmp
 *.bak
 *.swp
