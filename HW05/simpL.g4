@@ -2,10 +2,10 @@ grammar simpL;
 
 //Follow this grammer
 /*
-<command> -> <declaration> | <expression>
+<command> -> <declaration> | <simple_expr>
 <declaration> -> <primitive identifier> | <primitive assignment>
 <assignment> -> <identifier> <assignment_operatior> <basic_type>
-<expression> -> <boolean_expression> | <arithmetic_expression>
+<simple_expr> -> <boolean_expression> | <arithmetic_expression>
 <arithmetic_expression> -><value> <arithmetic_operator> <basic_type>
 <boolean_expression> -> <value> <boolean_operator> <value> |
                             <identifier> <boolean_operator> <identifier>
@@ -25,15 +25,18 @@ grammar simpL;
 program : command+;
 
 // full command or statement ends with the EOS character
-command	: (declaration | expression) EOS;
+command	: (declaration | statement) EOS;
 
 // declaration
-declaration : (primitive identifier | primitive assignment);
+declaration : primitive identifier | primitive assignment;
 assignment: identifier assignment_operator basic_type;
 
-expression	: boolean_expression | arithmetic_expression;
+statement : simple_expr | compound_expr;
+simple_expr	: boolean_expression | arithmetic_expression;
+compound_expr : if_stmt;
+if_stmt : IF LPAREN simple_expr RPAREN statement | ELSE_IF LPAREN simple_expr RPAREN statement | ELSE statement;
 arithmetic_expression 	: value arithmetic_operator value;
-boolean_expression: value boolean_operator value | identifier boolean_operator identifer;
+boolean_expression: value boolean_operator value | identifier boolean_operator identifier;
 
 // groupings of reserved symbols
 boolean_operator 	: EQUIVILANCE | NOT | GT | LT | LTE | GTE;
@@ -61,6 +64,7 @@ IF      : 'if';
 ELSE    : 'else';
 ELSE_IF : 'else if';
 DEF     : 'def';
+RETURN  : 'return';
 
 // boolean operators
 EQUIVILANCE	: 'is';

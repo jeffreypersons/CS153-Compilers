@@ -7,6 +7,7 @@ import wci.util.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 
+
 public class CompilerVisitor extends PclBaseVisitor<Integer>
 {
     private SymTabStack symTabStack;
