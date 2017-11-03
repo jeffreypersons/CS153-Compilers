@@ -1,24 +1,23 @@
 grammar simpL;
 
-//Following this grammer
-/*
-<command> -> <declaration> | <simple_expr>
+/* The grammar for our language is as follows (in BNF):
+<command>     -> <declaration> | <simple_expr>
 <declaration> -> <primitive identifier> | <primitive assignment>
-<assignment> -> <identifier> <assignment_operatior> <basic_type>
+<assignment>  -> <identifier> <assignment_operatior> <basic_type>
 <simple_expr> -> <boolean_expression> | <arithmetic_expression>
-<arithmetic_expression> -><value> <arithmetic_operator> <basic_type>
-<boolean_expression> -> <value> <boolean_operator> <value> |
-                            <identifier> <boolean_operator> <identifier>
+<arithmetic_expression> -> <value> <arithmetic_operator> <basic_type>
+<boolean_expression>    -> <value> <boolean_operator> <value> |
+                           <identifier> <boolean_operator> <identifier>
 <boolean_operator> -> EQUIVILANCE | NOT | GT | LT | LTE | GTE
 <arithmetic_expression> -> ADD | SUB | MUL | DIV | POW
 <assignment_operator> -> ASSIGN
 <basic_type> -> <text> | <value>
 <identifier> -> ID
-<primitive> -> <value_keyword> | <word_keyword>
+<primitive>  -> <value_keyword> | <word_keyword>
 <value_keyword> -> NUMBER
-<word_keyword> -> TEXT
+<word_keyword>  -> TEXT
 <value> -> NUMERICAL
-<text> -> ID
+<text>  -> ID
 */
 
 
