@@ -1,6 +1,6 @@
 grammar simpL;
 
-// todo: update the BNF grammar description once the rest of the grammar file is done
+// TODO: update the BNF grammar description once the rest of the grammar file is done
 /* The grammar for our language is as follows (in BNF):
 <command>     -> <declaration> | <simple_expr>
 <declaration> -> <primitive identifier> | <primitive assignment>
