@@ -1,6 +1,6 @@
 grammar simpL;
 
-//Following this grammer
+//Follow this grammer
 /*
 <command> -> <declaration> | <simple_expr>
 <declaration> -> <primitive identifier> | <primitive assignment>
@@ -35,8 +35,7 @@ statement : simple_expr | compound_expr;
 simple_expr	: boolean_expression | arithmetic_expression;
 compound_expr : if_stmt | funcdef;
 if_stmt : IF LPAREN simple_expr RPAREN statement (ELSE_IF LPAREN simple_expr RPAREN)* (ELSE statement)?;
-funcdef:DEF ID LPAREN paramlist RPAREN LBRACKET statement RBRACKET;
-paramlist: (primitive ID (',' primitive ID)*)?;
+funcdef:DEF ID LPAREN simple_expr RPAREN LBRACKET statement RBRACKET;
 arithmetic_expression 	: value arithmetic_operator value;
 boolean_expression: value boolean_operator value | identifier boolean_operator identifier;
 
