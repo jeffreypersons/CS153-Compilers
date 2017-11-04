@@ -29,13 +29,13 @@ command	: (declaration | statement)* EOS;
 body	: (declaration | statement)*;
 
 // declarations and assignments
-declaration : primitive identifier | assignment;
+declaration : (NUMBER | TEXT) ID | assignment;
 assignment  : assign_num | assign_text;
 
 // statements and expressions
 statement     : simple_expr | compound_expr;
 simple_expr   : bool_expr   | arith_expr;
-compound_expr : if_stmt     | func_def;
+compound_expr : func_def 	| if_stmt;
 if_stmt       : IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET (ELSE_IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET)* (ELSE LBRACKET body RBRACKET)?;
 func_def      : DEF ID LPAREN param_list RPAREN LBRACKET body RBRACKET;
 param_list    : (primitive ID (',' primitive ID)*)?;
