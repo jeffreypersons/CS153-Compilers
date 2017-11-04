@@ -36,7 +36,7 @@ assignment  : assign_num | assign_text;
 statement     : simple_expr | compound_expr;
 simple_expr   : bool_expr   | arith_expr;
 compound_expr : if_stmt     | func_def;
-if_stmt       : IF LPAREN simple_expr RPAREN body (ELSE_IF LPAREN simple_expr RPAREN body)* (ELSE body)?;
+if_stmt       : IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET (ELSE_IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET)* (ELSE LBRACKET body RBRACKET)?;
 func_def      : DEF ID LPAREN param_list RPAREN LBRACKET body RBRACKET;
 param_list    : (primitive ID (',' primitive ID)*)?;
 arith_expr    : (value | ID) (arith_operator (value | ID))+;

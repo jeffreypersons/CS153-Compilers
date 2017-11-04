@@ -4,10 +4,16 @@ def a(number b, text c)
 	text e = 'test';
 
 	if(b is d)
+	{
 		b = b + 1;
+	}
 	else if(b > d)
+	{
 		b = b - 1;
+	}
 	else
+	{
 		b = d;
+	}
 }
 ;
