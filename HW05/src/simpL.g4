@@ -36,10 +36,10 @@ assignment  : assign_num | assign_text;
 statement     : simple_expr | compound_expr;
 simple_expr   : bool_expr   | arith_expr;
 compound_expr : if_stmt     | func_def;
-if_stmt       : IF LPAREN simple_expr RPAREN body (ELSE_IF LPAREN simple_expr RPAREN)* (ELSE statement)?;
+if_stmt       : IF LPAREN simple_expr RPAREN body (ELSE_IF LPAREN simple_expr RPAREN body)* (ELSE body)?;
 func_def      : DEF ID LPAREN param_list RPAREN LBRACKET body RBRACKET;
 param_list    : (primitive ID (',' primitive ID)*)?;
-arith_expr    : value (arith_operator value)+;
+arith_expr    : (value | ID) (arith_operator (value | ID))+;
 bool_expr     : value bool_operator value | identifier bool_operator identifier;
 
 // groupings of reserved symbols
@@ -52,8 +52,8 @@ identifier    : ID;
 primitive     : value_keyword | word_keyword ;
 value_keyword : NUMBER;
 word_keyword  : TEXT;
-assign_num    : NUMBER ID ASSIGN (value | arith_expr) EOS;
-assign_text   : TEXT ID ASSIGN text EOS;
+assign_num    : NUMBER? ID ASSIGN (value | arith_expr | ID) EOS;
+assign_text   : TEXT? ID ASSIGN (text | ID) EOS;
 value         : NUMERIC;
 text          : '\'' ID '\'';
 

@@ -1,0 +1,12 @@
+def a(number b, text c)
+{
+	number d = b;
+	text e = c;
+
+	if(b is d)
+		b = b + 1;
+	else if(b > d)
+		b = b - 1;
+	else
+		b = d;
+}.
