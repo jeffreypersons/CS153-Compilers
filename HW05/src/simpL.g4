@@ -26,6 +26,7 @@ program : command+;
 
 // full command or statement ends with the EOS character
 command	: (declaration | statement)* EOS;
+body	: (declaration | statement)*;
 
 // declarations and assignments
 declaration : primitive identifier | assignment;
@@ -35,8 +36,8 @@ assignment  : assign_num | assign_text;
 statement     : simple_expr | compound_expr;
 simple_expr   : bool_expr   | arith_expr;
 compound_expr : if_stmt     | func_def;
-if_stmt       : IF LPAREN simple_expr RPAREN statement (ELSE_IF LPAREN simple_expr RPAREN)* (ELSE statement)?;
-func_def      : DEF ID LPAREN param_list RPAREN LBRACKET statement RBRACKET;
+if_stmt       : IF LPAREN simple_expr RPAREN body (ELSE_IF LPAREN simple_expr RPAREN)* (ELSE statement)?;
+func_def      : DEF ID LPAREN param_list RPAREN LBRACKET body RBRACKET;
 param_list    : (primitive ID (',' primitive ID)*)?;
 arith_expr    : value (arith_operator value)+;
 bool_expr     : value bool_operator value | identifier bool_operator identifier;
@@ -51,10 +52,10 @@ identifier    : ID;
 primitive     : value_keyword | word_keyword ;
 value_keyword : NUMBER;
 word_keyword  : TEXT;
-assign_num    : NUMBER ID ASSIGN (value | arith_expr);
-assign_text   : TEXT ID ASSIGN text;
+assign_num    : NUMBER ID ASSIGN (value | arith_expr) EOS;
+assign_text   : TEXT ID ASSIGN text EOS;
 value         : NUMERIC;
-text          : ID;
+text          : '\'' ID '\'';
 
 // reserved words and symbols
 NUMBER   : 'number';
