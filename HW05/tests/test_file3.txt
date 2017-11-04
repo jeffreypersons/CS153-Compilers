@@ -1,0 +1,11 @@
+number a;
+number b;
+number c;
+number d;
+number mySum;
+
+a = 1;
+b = a;
+c = b;
+mySum = a + b + c;
+mySum = mySum + mySum + mySum;

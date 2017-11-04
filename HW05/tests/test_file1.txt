@@ -22,4 +22,3 @@ def e()
 		number i = 7;
 	}
 }
-;
