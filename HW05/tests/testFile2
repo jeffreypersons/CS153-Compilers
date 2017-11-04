@@ -9,4 +9,5 @@ def a(number b, text c)
 		b = b - 1;
 	else
 		b = d;
-}.
+}
+;

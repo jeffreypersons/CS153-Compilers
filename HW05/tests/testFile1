@@ -15,4 +15,5 @@ def e()
 		number i = 6;
 	else
 		number i = 7;
-}.
+}
+;
