@@ -3,12 +3,14 @@ _Starring Jeff, Itaru, Ben, and Ki Sung_
 
 
 ## WHAT YOU SHOULD ALWAYS DO
-_Incremental, staged pull requests AND commits -- that is, never just blindly select all and commit.
-Rather, if you have a lot of changes, do it in blocks (eg updated readme, improved parser field names, etc)._
+- Update from the parent branch AND update current branch before you push (or even commit) anything.
+  **This means git pull and git merge master all the time, before you make/push changes!!**
+- _Incremental, staged pull requests AND commits -- that is, never just blindly select all and commit.
+  Rather, if you have a lot of changes, do it in blocks (eg updated readme, improved parser field names, etc)._
 
 ## How to contribute using Git from terminal
 0. use git clone on the repo, using credentials and this url
-1. use _git checkout_ with `your-new-feature-branch-name` from master to create branch
+1. use _git checkout -b_ with `your-new-feature-branch-name` from master to create branch
 2. use git add to index the files, commit to update locally, and push to push the changes
 3. then do a compare and pull request from the _GitHub website_
 4. add the relevant code reviewers, and implement any of their requested changes
