@@ -53,6 +53,7 @@ CMakeFiles/cmake.check_cache
 .idea/
 
 # eclipse
+target/
 *.launch
 .metadata/*
 .metadata/
@@ -75,5 +76,3 @@ local.properties
 .loadpath
 .recommenders
 .externalToolBuilders/
-*.launch
-.recommenders/
