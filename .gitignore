@@ -1,20 +1,36 @@
-# course related
-ouput.txt
-*Chapter*cpp
-
+# ========================== language specific ===========================
 # pascal
 *.lpi
 *.lps
+
+# java
+*.class
+
+# c++
+*.gch
+*.pch
+
+# ========================== compiler generated ==========================
+# executables
+*Chapter*cpp
+*.app
+*.exe
+*.out
+*.app.*
+*.exe.*
+*.out.*
+
+# compiler output folders
+bin/
+tmp/
+out/
+target/
 
 # compiled object files
 *.o
 *.lo
 *.slo
 *.obj
-
-# precompiled headers
-*.gch
-*.pch
 
 # compiled dynamic libraries
 *.so
@@ -27,19 +43,6 @@ ouput.txt
 *.lai
 *.lib
 
-# executables
-*.app
-*.exe
-*.out
-*.app.*
-*.exe.*
-*.out.*
-
-# mac osx
-.DS_Store
-__MACOSX/
-xcuserdata/
-
 # cache, logging, and debugging
 *.bak
 *.log
@@ -48,32 +51,33 @@ CMakeLists.txt
 cmake-build-debug/
 CMakeFiles/cmake.check_cache
 
+# ============================= ide specific =============================
 # jetbrains
 *.iml
 .idea/
 
 # eclipse
-.classpath
-target/
-*.launch
-.metadata/*
-.metadata/
-/.metadata/
-*/.metadata/*
-.metadata
-bin/
-tmp/
-.syncinfo
 *.snap
-*.xml.*
-*.xmi
 *.tmp
 *.bak
 *.swp
+*.launch
 *~.nib
-local.properties
+*.xmi
+*.xml.*
 .project
-.settings/
+.syncinfo
+.classpath
 .loadpath
 .recommenders
+local.properties
+.metadata/
+.settings/
 .externalToolBuilders/
+.recommenders/
+
+# ========================== platform specific ===========================
+# mac osx
+.DS_Store
+__MACOSX/
+xcuserdata/
