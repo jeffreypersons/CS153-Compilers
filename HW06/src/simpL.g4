@@ -24,7 +24,7 @@ grammar simpL;
 // starting rule
 program : command+;
 
-// full command or statement ends with the EOS character
+// full command or statement ends with the EOL character
 command	: (declaration | statement)* EOL;
 body	: (declaration | statement)*;
 
@@ -36,10 +36,11 @@ assignment  : assign_num | assign_text;
 statement     : simple_expr | compound_expr;
 simple_expr   : bool_expr   | arith_expr;
 compound_expr : func_def 	| if_stmt;
-if_stmt       : IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET (ELSE_IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET)* (ELSE LBRACKET body RBRACKET)?;
+if_stmt       : IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET
+                    (ELSE_IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET)* (ELSE LBRACKET body RBRACKET)?;
 func_def      : DEF ID LPAREN param_list RPAREN LBRACKET body RBRACKET;
 param_list    : (primitive ID (',' primitive ID)*)?;
-arith_expr    : (value | ID) (arith_operator (value | ID))+;
+arith_expr    : (value | ID)  (arith_operator (value | ID))+;
 bool_expr     : value bool_operator value | identifier bool_operator identifier;
 
 // groupings of reserved symbols
@@ -47,20 +48,20 @@ bool_operator  : EQUIV | NOT | GT  | LT  | LTE | GTE;
 arith_operator : ADD   | SUB | MUL | DIV | POW;
 
 // basic labels
-basic_type    : text | value;
-identifier    : ID;
-primitive     : value_keyword | word_keyword;
-value_keyword : NUMBER;
-word_keyword  : TEXT;
-assign_num    : NUMBER? ID ASSIGN (value | arith_expr | ID) EOL;
-assign_text   : TEXT? ID ASSIGN (text | ID) EOL;
-value         : NUMERIC;
-text          : '\'' ID '\'';
+basic_type     : text | value;
+identifier     : ID;
+primitive      : number_keyword | text_keyword;
+number_keyword : NUMBER;
+text_keyword   : TEXT;
+assign_num     : NUMBER? ID ASSIGN (value | arith_expr | ID) EOL;
+assign_text    : TEXT? ID ASSIGN (text | ID) EOL;
+value          : NUMERIC;
+text           : '\'' ID '\'';
 
 // reserved words and symbols
 NUMBER   : 'number';
 TEXT     : 'text';
-EOL      : '\n';
+EOL      : '\n' | '\r\n';
 ASSIGN   : '=';
 CONV     : '\'';
 LPAREN   : '(';
@@ -90,5 +91,5 @@ POW : '^';
 
 // other
 ID      : [a-zA-Z]+[0-9a-zA-Z]*;
-WS 	    : [ \t\r]+ -> skip;
+WS 	    : [ \t]+ -> skip;
 NUMERIC : ([0-9]+ | [0-9]+.[0-9]+);

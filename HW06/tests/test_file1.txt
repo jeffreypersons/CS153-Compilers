@@ -1,6 +1,5 @@
 number a
 text b
-
 number c = 1
 text d = 'test'
 
