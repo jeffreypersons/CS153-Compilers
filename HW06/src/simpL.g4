@@ -25,7 +25,7 @@ grammar simpL;
 program : command+;
 
 // full command or statement ends with the EOS character
-command	: (declaration | statement)* EOS;
+command	: (declaration | statement)* EOL;
 body	: (declaration | statement)*;
 
 // declarations and assignments
@@ -49,18 +49,18 @@ arith_operator : ADD   | SUB | MUL | DIV | POW;
 // basic labels
 basic_type    : text | value;
 identifier    : ID;
-primitive     : value_keyword | word_keyword ;
+primitive     : value_keyword | word_keyword;
 value_keyword : NUMBER;
 word_keyword  : TEXT;
-assign_num    : NUMBER? ID ASSIGN (value | arith_expr | ID) EOS;
-assign_text   : TEXT? ID ASSIGN (text | ID) EOS;
+assign_num    : NUMBER? ID ASSIGN (value | arith_expr | ID) EOL;
+assign_text   : TEXT? ID ASSIGN (text | ID) EOL;
 value         : NUMERIC;
 text          : '\'' ID '\'';
 
 // reserved words and symbols
 NUMBER   : 'number';
 TEXT     : 'text';
-EOS      : ';';
+EOL      : '\n';
 ASSIGN   : '=';
 CONV     : '\'';
 LPAREN   : '(';
@@ -90,5 +90,5 @@ POW : '^';
 
 // other
 ID      : [a-zA-Z]+[0-9a-zA-Z]*;
-WS 	    : [ \t\r\n]+ -> skip;
+WS 	    : [ \t\r]+ -> skip;
 NUMERIC : ([0-9]+ | [0-9]+.[0-9]+);
