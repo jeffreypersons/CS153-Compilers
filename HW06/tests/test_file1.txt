@@ -7,8 +7,8 @@ text d = 'test'
 def e()
 {
     number f = 3
-    text g = 'tmp'
-    if (1 > 0)
+    text g = 'my string'
+    if (f > 0)
     {
         number h = 5
     }
