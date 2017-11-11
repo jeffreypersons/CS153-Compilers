@@ -1,0 +1,4 @@
+
+def sum_of_squares(Number a, Number b) {
+    return a ^ 2 + b ^ 2
+}
