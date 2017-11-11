@@ -4,6 +4,7 @@ number c
 number d
 number mySum
 
+# HI I'm Takeshi! this is my #1 favorite test program...;!
 a = 1
 b = a
 c = b
