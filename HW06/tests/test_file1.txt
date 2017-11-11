@@ -1,25 +1,22 @@
-number a;
-text b;
-
-number c = 1;
-text d = 'test';
+number a
+text b
+number c = 1
+text d = 'test'
 
 def e()
 {
-	number f = 3;
-	text g = 'tmp';
-	if(1 > 0)
-	{
-		number h = 5;
-	}
-
-	if(1 < 0)
-	{
-		number i = 6;
-	}
-	else
-	{
-		number i = 7;
-	}
+    number f = 3
+    text g = 'my string'
+    if (f > 0)
+    {
+        number h = 5
+    }
+    if (1 < 0)
+    {
+        number i = 6
+    }
+    else
+    {
+        number i = 7
+    }
 }
-;
