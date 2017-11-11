@@ -18,7 +18,7 @@ compound_expr : func_def 	| if_stmt;
 if_stmt       : IF OPEN_PAREN simple_expr CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE
                     (ELSE_IF OPEN_PAREN simple_expr CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE)* (ELSE OPEN_BRACE body CLOSE_BRACE)?;
 func_def      : DEF IDENTIFIER OPEN_PAREN param_list CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE;
-param_list    : (primitive IDENTIFIER (',' primitive IDENTIFIER)*)?;
+param_list    : (primitive IDENTIFIER (SEPARATOR primitive IDENTIFIER)*)?;
 arith_expr    : arith_expr (ADD | SUB) term | term;
 term          : term (MUL | DIV) power | power;
 power         : factor POW power | factor;
@@ -40,6 +40,15 @@ assign_text    : TEXT? IDENTIFIER ASSIGN (text | IDENTIFIER) NEWLINE;
 value          : NUMERIC;
 text           : QUOTE IDENTIFIER QUOTE;
 
+BOOLEAN : 'Boolean';
+NUMBER  : 'Number';
+TEXT    : 'Text';
+IF       : 'if';
+ELSE     : 'else';
+ELSE_IF  : 'else if';
+DEF      : 'def';
+RETURN   : 'return';
+
 // comparison and boolean operators (note that earlier the definition, earlier the precedence)
 GT      : '>';
 LT      : '<';
@@ -47,11 +56,8 @@ LTE     : '<=';
 GTE     : '>=';
 EQUIV   : 'is';
 NOT     : 'not';
-OR      : 'or';
 AND     : 'and';
-BOOLEAN : 'boolean';
-NUMBER  : 'number';
-TEXT    : 'text';
+OR      : 'or';
 
 // arithmetic operators
 ADD : '+';
@@ -70,14 +76,10 @@ OPEN_BRACE  : '{';
 CLOSE_BRACE : '}';
 OPEN_BRACK  : '[';
 CLOSE_BRACK : ']';
-IF       : 'if';
-ELSE     : 'else';
-ELSE_IF  : 'else if';
-DEF      : 'def';
-RETURN   : 'return';
 
-// fragments
+// todo: add fragments
 IDENTIFIER : [_a-zA-Z]+[_0-9a-zA-Z]*;
 NEWLINE    : '\n' | '\r\n';
 WHITESPACE : [ \t]+ -> skip;
 NUMERIC    : ([0-9]+ | [0-9]+.[0-9]+);
+COMMENT    : '#' ~[\r\n]* -> skip;
