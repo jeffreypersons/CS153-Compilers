@@ -40,7 +40,10 @@ if_stmt       : IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET
                     (ELSE_IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET)* (ELSE LBRACKET body RBRACKET)?;
 func_def      : DEF IDENTIFIER LPAREN param_list RPAREN LBRACKET body RBRACKET;
 param_list    : (primitive IDENTIFIER (',' primitive IDENTIFIER)*)?;
-arith_expr    : (value | IDENTIFIER)  (arith_operator (value | IDENTIFIER))+;
+arith_expr    : arith_expr (ADD | SUB) term | term;
+term          : term (MUL | DIV) power | power;
+power         : factor POW power | factor;
+factor        : LPAREN arith_expr RPAREN | IDENTIFIER | NUMERIC;
 bool_expr     : value bool_operator value | identifier bool_operator identifier;
 
 // groupings of reserved symbols
