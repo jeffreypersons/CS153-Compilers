@@ -15,14 +15,14 @@ assignment  : assign_num | assign_text;
 statement     : simple_expr | compound_expr;
 simple_expr   : bool_expr   | arith_expr;
 compound_expr : func_def 	| if_stmt;
-if_stmt       : IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET
-                    (ELSE_IF LPAREN simple_expr RPAREN LBRACKET body RBRACKET)* (ELSE LBRACKET body RBRACKET)?;
-func_def      : DEF IDENTIFIER LPAREN param_list RPAREN LBRACKET body RBRACKET;
+if_stmt       : IF OPEN_PAREN simple_expr CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE
+                    (ELSE_IF OPEN_PAREN simple_expr CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE)* (ELSE OPEN_BRACE body CLOSE_BRACE)?;
+func_def      : DEF IDENTIFIER OPEN_PAREN param_list CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE;
 param_list    : (primitive IDENTIFIER (',' primitive IDENTIFIER)*)?;
 arith_expr    : arith_expr (ADD | SUB) term | term;
 term          : term (MUL | DIV) power | power;
 power         : factor POW power | factor;
-factor        : LPAREN arith_expr RPAREN | IDENTIFIER | NUMERIC;
+factor        : OPEN_PAREN arith_expr CLOSE_PAREN | IDENTIFIER | NUMERIC;
 bool_expr     : value bool_operator value | identifier bool_operator identifier;
 
 // groupings of reserved symbols
@@ -45,12 +45,12 @@ NUMBER   : 'number';
 TEXT     : 'text';
 ASSIGN   : '=';
 CONV     : '\'';
-LPAREN   : '(';
-RPAREN   : ')';
-LBRACKET : '{';
-RBRACKET : '}';
-LSQUARE_BRACKET : '[';
-RSQUARE_BRACKET : ']';
+OPEN_PAREN  : '(';
+CLOSE_PAREN : ')';
+OPEN_BRACE  : '{';
+CLOSE_BRACE : '}';
+OPEN_BRACK  : '[';
+CLOSE_BRACK : ']';
 IF       : 'if';
 ELSE     : 'else';
 ELSE_IF  : 'else if';
