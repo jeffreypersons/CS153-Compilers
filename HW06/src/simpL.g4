@@ -38,13 +38,32 @@ text_keyword   : TEXT;
 assign_num     : NUMBER? IDENTIFIER ASSIGN (value | arith_expr | IDENTIFIER) NEWLINE;
 assign_text    : TEXT? IDENTIFIER ASSIGN (text | IDENTIFIER) NEWLINE;
 value          : NUMERIC;
-text           : '\'' IDENTIFIER '\'';
+text           : QUOTE IDENTIFIER QUOTE;
+
+// comparison and boolean operators (note that earlier the definition, earlier the precedence)
+GT      : '>';
+LT      : '<';
+LTE     : '<=';
+GTE     : '>=';
+EQUIV   : 'is';
+NOT     : 'not';
+OR      : 'or';
+AND     : 'and';
+BOOLEAN : 'boolean';
+NUMBER  : 'number';
+TEXT    : 'text';
+
+// arithmetic operators
+ADD : '+';
+SUB : '-';
+MUL : '*';
+DIV : '/';
+POW : '^';
 
 // reserved words and symbols
-NUMBER   : 'number';
-TEXT     : 'text';
-ASSIGN   : '=';
-CONV     : '\'';
+ASSIGN      : '=';
+QUOTE       : '\'';
+SEPARATOR   : ',';
 OPEN_PAREN  : '(';
 CLOSE_PAREN : ')';
 OPEN_BRACE  : '{';
@@ -57,22 +76,7 @@ ELSE_IF  : 'else if';
 DEF      : 'def';
 RETURN   : 'return';
 
-// boolean operators
-EQUIV  : 'is';
-NOT    : 'not';
-GT     : '>';
-LT     : '<';
-LTE    : '<=';
-GTE    : '>=';
-
-// arithmetic operators
-ADD : '+';
-SUB : '-';
-MUL : '*';
-DIV : '/';
-POW : '^';
-
-// other
+// fragments
 IDENTIFIER : [_a-zA-Z]+[_0-9a-zA-Z]*;
 NEWLINE    : '\n' | '\r\n';
 WHITESPACE : [ \t]+ -> skip;
