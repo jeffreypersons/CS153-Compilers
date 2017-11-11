@@ -49,6 +49,8 @@ LPAREN   : '(';
 RPAREN   : ')';
 LBRACKET : '{';
 RBRACKET : '}';
+LSQUARE_BRACKET : '[';
+RSQUARE_BRACKET : ']';
 IF       : 'if';
 ELSE     : 'else';
 ELSE_IF  : 'else if';
