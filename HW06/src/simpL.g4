@@ -44,7 +44,12 @@ arith_expr    : arith_expr (ADD | SUB) term | term;
 term          : term (MUL | DIV) power | power;
 power         : factor POW power | factor;
 factor        : LPAREN arith_expr RPAREN | IDENTIFIER | NUMERIC;
-bool_expr     : value bool_operator value | identifier bool_operator identifier;
+
+bool_expr     : bool_expr OR bool_term | bool_term;
+bool_term     : bool_term AND not_factor | not_factor;
+not_factor    : NOT not_factor | bool_factor;
+bool_factor   : BOOL | LPAREN bool_expr RPAREN | comparision;
+comparision   : arith_expr | arith_expr bool_operator arith_expr;
 
 // groupings of reserved symbols
 bool_operator  : EQUIV | NOT | GT  | LT  | LTE | GTE;
@@ -75,6 +80,7 @@ ELSE     : 'else';
 ELSE_IF  : 'else if';
 DEF      : 'def';
 RETURN   : 'return';
+BOOL     : 'True' | 'False';
 
 // boolean operators
 EQUIV  : 'is';
@@ -83,6 +89,8 @@ GT     : '>';
 LT     : '<';
 LTE    : '<=';
 GTE    : '>=';
+OR     : 'or';
+AND    : 'and';
 
 // arithmetic operators
 ADD : '+';
