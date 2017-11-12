@@ -6,15 +6,15 @@ grammar simpL;
 
 // starting rule
 program : command*;
-command	: (declaration | statement)* NEWLINE;
+command	: (declaration | statement)* STMTEND;
 body	: (declaration | statement)*;
 
 // declarations and assignments
 declaration : basic_type_name IDENTIFIER | assignment;
-assignment  :
-    TEXT? IDENTIFIER ASSIGN (TEXT_VALUE | IDENTIFIER) NEWLINE
-    | NUMBER? IDENTIFIER ASSIGN (NUMBER_VALUE | arith_expr | IDENTIFIER) NEWLINE
-    | BOOLEAN? IDENTIFIER ASSIGN (BOOLEAN_VALUE | IDENTIFIER) NEWLINE;
+assignment
+    : TEXT? IDENTIFIER ASSIGN (TEXT_VALUE | IDENTIFIER) STMTEND
+    | NUMBER? IDENTIFIER ASSIGN (NUMBER_VALUE | arith_expr | IDENTIFIER) STMTEND
+    | BOOLEAN? IDENTIFIER ASSIGN (BOOLEAN_VALUE | IDENTIFIER) STMTEND;
 
 // statements and expressions
 statement     : simple_expr | compound_expr;
@@ -66,7 +66,6 @@ OPEN_BRACE  : '{';
 CLOSE_BRACE : '}';
 OPEN_BRACK  : '[';
 CLOSE_BRACK : ']';
-NEWLINE     : '\n' | '\r\n';
 
 // comparison and boolean operators (note that earlier the definition, earlier the precedence)
 GT        : '>';
@@ -91,5 +90,9 @@ WHITESPACE : [ \t]+ -> skip;
 COMMENT    : '#' ~[\r\n] -> skip;
 // variable name (defined last so that any of the above keywords can't be used)
 IDENTIFIER : [_a-zA-Z]+[_0-9a-zA-Z]*;
+STMTEND : NEWLINE+;
 
-// TODO: add fragments
+// fragments (helper definitions)
+fragment DIGIT   : [0-9];
+fragment NEWLINE : '\n' | '\r\n';
+
