@@ -5,7 +5,7 @@
 grammar simpL;
 
 // starting rule
-program : command+;
+program : command*;
 command	: (declaration | statement)* NEWLINE;
 body	: (declaration | statement)*;
 
