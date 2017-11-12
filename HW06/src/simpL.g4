@@ -1,11 +1,10 @@
 /*
- * Notes:
- * - Earlier the definition, greater the precedence
- * - Identifier is defined to avoid name clashes with other keywords
- * 
- * TODO: add string concatenation
- * TODO: change how we deal with expressions and statements, breakup by type
- * TODO: add return value to function definition
+Notes:
+- Earlier the definition, greater the precedence
+- Identifier is defined to avoid name clashes with other keywords
+- It's important to distinguish between the lexer and parser stage. That means things like
+  valid types is NOT to be distinguished here, but rather determined in the parsing stage,
+  instead. This greatly promotes separation of concerns, and simplifies the lexer grammar.
  */
 grammar simpL;
 
@@ -95,4 +94,3 @@ fragment DIGIT      : '0'..'9';
 fragment LETTER     : 'a'..'z' | 'A'..'Z';
 fragment NEWLINE    : '\n' | '\r\n';
 fragment WHITESPACE : [ \t]+;
-
