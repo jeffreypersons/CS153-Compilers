@@ -1,6 +1,10 @@
 /*
+ * Notes:
+ * - Earlier the definition, greater the precedence
+ * - Identifier is defined to avoid name clashes with other keywords
+ * 
  * TODO: add string concatenation
- * TODO: refactor how we deal with expressions
+ * TODO: change how we deal with expressions and statements, breakup by type
  * TODO: add return value to function definition
  */
 grammar simpL;
@@ -11,26 +15,25 @@ command : (declaration | statement)* EOS;
 body    : (declaration | statement)*;
 
 // declarations and assignments
-declaration : basic_type_name IDENTIFIER | assignment;
+declaration : basic_type_name NAME | assignment;
 assignment
-    : TEXT? IDENTIFIER ASSIGN (TEXT_VALUE | IDENTIFIER) EOS
-    | NUMBER? IDENTIFIER ASSIGN (NUMBER_VALUE | arith_expr | IDENTIFIER) EOS
-    | BOOLEAN? IDENTIFIER ASSIGN (BOOLEAN_VALUE | IDENTIFIER) EOS;
+    : TEXT? NAME ASSIGN (TEXT_VALUE | NAME) EOS
+    | NUMBER? NAME ASSIGN (NUMBER_VALUE | arith_expr | NAME) EOS
+    | BOOLEAN? NAME ASSIGN (BOOLEAN_VALUE | NAME) EOS;
 
 // statements and expressions
 statement     : simple_expr | compound_expr;
 simple_expr   : bool_expr   | arith_expr;
 compound_expr : func_def    | if_stmt;
-if_stmt       : IF OPEN_PAREN simple_expr CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE
-                    (ELSE_IF OPEN_PAREN simple_expr CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE)* (ELSE OPEN_BRACE body CLOSE_BRACE)?;
-func_def      : DEF IDENTIFIER OPEN_PAREN param_list CLOSE_PAREN
-                    OPEN_BRACE body CLOSE_BRACE;
-param_list    : (basic_type_name IDENTIFIER (SEPARATOR basic_type_name IDENTIFIER)*)?;
+if_stmt       : IF LPAREN simple_expr RPAREN LCURL body RCURL
+                    (ELSE_IF LPAREN simple_expr RPAREN LCURL body RCURL)* (ELSE LCURL body RCURL)?;
+func_def      : DEF NAME LPAREN param_list RPAREN LCURL body RCURL;
+param_list    : (basic_type_name NAME (SEPARATOR basic_type_name NAME)*)?;
 arith_expr    : arith_expr (ADD | SUB) term | term;
 term          : term (MUL | DIV) power | power;
 power         : factor POW power | factor;
-factor        : OPEN_PAREN arith_expr CLOSE_PAREN | IDENTIFIER | NUMBER_VALUE;
-bool_expr     : BOOLEAN_VALUE bool_operator BOOLEAN_VALUE | identifier bool_operator identifier;
+factor        : LPAREN arith_expr RPAREN | NAME | NUMBER_VALUE;
+bool_expr     : BOOLEAN_VALUE bool_operator BOOLEAN_VALUE | NAME bool_operator NAME;
 
 // groupings of reserved symbols
 bool_operator  : AND   | OR     | NOT;
@@ -38,7 +41,6 @@ arith_operator : ADD   | SUB    | MUL | DIV | POW;
 comp_operator  : IS_EQ | NOT_EQ | GT  | LT  | LTE | GTE;
 
 // basic labels
-identifier       : IDENTIFIER;
 basic_type_name  : TEXT       | NUMBER       | BOOLEAN;
 basic_type_value : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
 
@@ -58,17 +60,17 @@ DEF     : 'def';
 RETURN  : 'return';
 
 // reserved symbols
-ASSIGN      : '=';
-QUOTE       : '\'';
-SEPARATOR   : ',';
-OPEN_PAREN  : '(';
-CLOSE_PAREN : ')';
-OPEN_BRACE  : '{';
-CLOSE_BRACE : '}';
-OPEN_BRACK  : '[';
-CLOSE_BRACK : ']';
+ASSIGN    : '=';
+QUOTE     : '\'';
+SEPARATOR : ',';
+LPAREN    : '(';
+RPAREN    : ')';
+LCURL     : '{';
+RCURL     : '}';
+LSQUARE   : '[';
+RSQUARE   : ']';
 
-// comparison and boolean operators (note that earlier the definition, earlier the precedence)
+// comparison and boolean operators
 GT     : '>';
 LT     : '<';
 LTE    : '<=';
@@ -86,14 +88,13 @@ MUL : '*';
 DIV : '/';
 POW : '^';
 
-// text input
-WHITESPACE : [ \t]+ -> skip;
-COMMENT    : '#' ~[\r\n]* -> skip;
-// variable name (defined last so that any of the above keywords can't be used)
-IDENTIFIER : [_a-zA-Z]+[_0-9a-zA-Z]*;
-EOS : NEWLINE+;
+// misc
+EOS        : NEWLINE+;
+SKIP       : (WHITESPACE | COMMENT) -> skip;
+NAME       : [_a-zA-Z]+[_0-9a-zA-Z]*;
+COMMENT    : '#' ~[\r\n]*;
+WHITESPACE : [ \t]+;
 
 // fragments (helper definitions)
 fragment DIGIT   : [0-9];
 fragment NEWLINE : '\n' | '\r\n';
-
