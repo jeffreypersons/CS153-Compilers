@@ -52,7 +52,7 @@ comp_operator  : IS_EQ | NOT_EQ | GT  | LT  | LTE | GTE;
 type  : TEXT | NUMBER | BOOLEAN;
 value : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
 TEXT_VALUE    : QUOTE ~[QUOTE]* QUOTE;
-NUMBER_VALUE  : ([0-9]+ | [0-9]+.[0-9]+);
+NUMBER_VALUE  : (DIGIT+ | DIGIT+.DIGIT+);
 BOOLEAN_VALUE : 'true' | 'false';
 
 // reserved words
@@ -67,7 +67,6 @@ RETURN  : 'return';
 
 // reserved symbols
 ASSIGN    : '=';
-QUOTE     : '\'';
 SEPARATOR : ',';
 LPAREN    : '(';
 RPAREN    : ')';
@@ -92,13 +91,16 @@ MUL    : '*';
 DIV    : '/';
 POW    : '^';
 
-// misc
-EOS        : NEWLINE+;
-SKIP       : (WHITESPACE | COMMENT) -> skip;
-NAME       : [_a-zA-Z]+[_0-9a-zA-Z]*;
-COMMENT    : '#' ~[\r\n]*;
-WHITESPACE : [ \t]+;
+// fundamental tokens
+SKIP    : (WHITESPACE | COMMENT) -> skip;
+NAME    : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
+COMMENT : '#' ~[NEWLINE]*;
 
 // fragments (helper definitions)
-fragment DIGIT   : [0-9];
-fragment NEWLINE : '\n' | '\r\n';
+fragment EOS        : NEWLINE+;
+fragment QUOTE      : '\'';
+fragment DIGIT      : '0'..'9';
+fragment LETTER     : 'a'..'z' | 'A'..'Z';
+fragment NEWLINE    : '\n' | '\r\n';
+fragment WHITESPACE : [ \t]+;
+
