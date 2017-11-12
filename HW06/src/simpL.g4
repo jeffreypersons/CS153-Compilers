@@ -1,15 +1,20 @@
+/*
+ * TODO: add string concatenation
+ * TODO: refactor how we deal with expressions
+ */
 grammar simpL;
 
 // starting rule
 program : command+;
-
-// full command or statement ends with the EOL character
 command	: (declaration | statement)* NEWLINE;
 body	: (declaration | statement)*;
 
 // declarations and assignments
-declaration : (NUMBER | TEXT) IDENTIFIER | assignment;
-assignment  : assign_num | assign_text;
+declaration : basic_type_name IDENTIFIER | assignment;
+assignment  :
+    TEXT? IDENTIFIER ASSIGN (TEXT_VALUE | IDENTIFIER) NEWLINE
+    | NUMBER? IDENTIFIER ASSIGN (NUMBER_VALUE | arith_expr | IDENTIFIER) NEWLINE
+    | BOOLEAN? IDENTIFIER ASSIGN (BOOLEAN_VALUE | IDENTIFIER) NEWLINE;
 
 // statements and expressions
 statement     : simple_expr | compound_expr;
@@ -17,56 +22,41 @@ simple_expr   : bool_expr   | arith_expr;
 compound_expr : func_def 	| if_stmt;
 if_stmt       : IF OPEN_PAREN simple_expr CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE
                     (ELSE_IF OPEN_PAREN simple_expr CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE)* (ELSE OPEN_BRACE body CLOSE_BRACE)?;
-func_def      : DEF IDENTIFIER OPEN_PAREN param_list CLOSE_PAREN OPEN_BRACE body CLOSE_BRACE;
-param_list    : (primitive IDENTIFIER (SEPARATOR primitive IDENTIFIER)*)?;
+func_def      : DEF IDENTIFIER OPEN_PAREN param_list CLOSE_PAREN
+                    OPEN_BRACE body CLOSE_BRACE;
+param_list    : (basic_type_name IDENTIFIER (SEPARATOR basic_type_name IDENTIFIER)*)?;
 arith_expr    : arith_expr (ADD | SUB) term | term;
 term          : term (MUL | DIV) power | power;
 power         : factor POW power | factor;
-factor        : OPEN_PAREN arith_expr CLOSE_PAREN | IDENTIFIER | NUMERIC;
-bool_expr     : value bool_operator value | identifier bool_operator identifier;
+factor        : OPEN_PAREN arith_expr CLOSE_PAREN | IDENTIFIER | NUMBER_VALUE;
+bool_expr     : BOOLEAN_VALUE bool_operator BOOLEAN_VALUE | identifier bool_operator identifier;
 
 // groupings of reserved symbols
-bool_operator  : EQUIV | NOT | GT  | LT  | LTE | GTE;
-arith_operator : ADD   | SUB | MUL | DIV | POW;
+comp_operator  : IS_EQUAL  | NOT_EQUAL | GT  | LT  | LTE | GTE;
+bool_operator  : AND | OR  | NOT;
+arith_operator : ADD | SUB | MUL | DIV | POW;
 
 // basic labels
-basic_type     : text | value;
-identifier     : IDENTIFIER;
-primitive      : number_keyword | text_keyword;
-number_keyword : NUMBER;
-text_keyword   : TEXT;
-assign_num     : NUMBER? IDENTIFIER ASSIGN (value | arith_expr | IDENTIFIER) NEWLINE;
-assign_text    : TEXT? IDENTIFIER ASSIGN (text | IDENTIFIER) NEWLINE;
-value          : NUMERIC;
-text           : QUOTE IDENTIFIER QUOTE;
+identifier       : IDENTIFIER;
+basic_type_name  : TEXT       | NUMBER       | BOOLEAN;
+basic_type_value : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
 
-BOOLEAN : 'Boolean';
-NUMBER  : 'Number';
+// values
+TEXT_VALUE    : QUOTE ~[QUOTE]* QUOTE;
+NUMBER_VALUE  : ([0-9]+ | [0-9]+.[0-9]+);
+BOOLEAN_VALUE : 'true' | 'false';
+
+// reserved words
 TEXT    : 'Text';
-IF       : 'if';
-ELSE     : 'else';
-ELSE_IF  : 'else if';
-DEF      : 'def';
-RETURN   : 'return';
+NUMBER  : 'Number';
+BOOLEAN : 'Boolean';
+IF      : 'if';
+ELSE    : 'else';
+ELSE_IF : 'else if';
+DEF     : 'def';
+RETURN  : 'return';
 
-// comparison and boolean operators (note that earlier the definition, earlier the precedence)
-GT      : '>';
-LT      : '<';
-LTE     : '<=';
-GTE     : '>=';
-EQUIV   : 'is';
-NOT     : 'not';
-AND     : 'and';
-OR      : 'or';
-
-// arithmetic operators
-ADD : '+';
-SUB : '-';
-MUL : '*';
-DIV : '/';
-POW : '^';
-
-// reserved words and symbols
+// reserved symbols
 ASSIGN      : '=';
 QUOTE       : '\'';
 SEPARATOR   : ',';
@@ -76,10 +66,31 @@ OPEN_BRACE  : '{';
 CLOSE_BRACE : '}';
 OPEN_BRACK  : '[';
 CLOSE_BRACK : ']';
+NEWLINE     : '\n' | '\r\n';
 
-// todo: add fragments
-IDENTIFIER : [_a-zA-Z]+[_0-9a-zA-Z]*;
-NEWLINE    : '\n' | '\r\n';
+// comparison and boolean operators (note that earlier the definition, earlier the precedence)
+GT        : '>';
+LT        : '<';
+LTE       : '<=';
+GTE       : '>=';
+NOT       : 'not';
+IS_EQUAL  : '!=';
+NOT_EQUAL : '==';
+AND       : 'and';
+OR        : 'or';
+
+// arithmetic operators
+ADD : '+';
+SUB : '-';
+MUL : '*';
+DIV : '/';
+POW : '^';
+
+// text input
 WHITESPACE : [ \t]+ -> skip;
-NUMERIC    : ([0-9]+ | [0-9]+.[0-9]+);
 COMMENT    : '#' ~[\r\n]* -> skip;
+
+// variable name (defined last so that any of the above keywords can't be used)
+IDENTIFIER : [_a-zA-Z]+[_0-9a-zA-Z]*;
+
+// TODO: add fragments
