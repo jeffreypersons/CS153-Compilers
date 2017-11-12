@@ -1,12 +1,12 @@
-number a
-text b
-number c = 1
-text d = 'test'
+Number a
+Text b
+Number c = 1
+Text d = 'test'
 
 def e()
 {
-    number f = 3
-    text g = 'my string'
+    Number f = 3
+    Text g = 'my string'
     if (f > 0)
     {
         number h = 5
