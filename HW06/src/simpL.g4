@@ -28,15 +28,14 @@ declaration : type (NAME EOS | assignment EOS);
 assignment  : NAME ASSIGN expression;
 
 // statements and expressions
-statement     : simple_stmt | compound_stmt;
-simple_stmt   : bool_expr   | arith_expr;
+statement     : expression | compound_stmt;
+expression    : bool_expr   | arith_expr;
 compound_stmt : func_def    | if_stmt;
-if_stmt       : 'if' LPAREN simple_stmt RPAREN LCURL block RCURL
-                    ('else if' LPAREN simple_stmt RPAREN LCURL block RCURL)* ('else' LCURL block RCURL)?;
+if_stmt       : 'if' LPAREN expression RPAREN LCURL block RCURL
+                    ('else if' LPAREN expression RPAREN LCURL block RCURL)* ('else' LCURL block RCURL)?;
 func_def      : 'def' NAME LPAREN param_list RPAREN LCURL block RCURL;
 param_list    : (type NAME (SEPARATOR type NAME)*)?;
 
-expression    : arith_expr | bool_expr;
 arith_expr    : arith_expr (ADD | SUB) term | term;
 term          : term (MUL | DIV) power | power;
 power         : factor POW power | factor;
