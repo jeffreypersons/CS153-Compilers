@@ -19,16 +19,13 @@ grammar simpL;
  * - function calls/simple expressions
  */
 // starting rule
-program : command*;
-command : (declaration | statement)* EOS;
-block   : (declaration | statement)*;
+program : block;
+block   : statement* return_statement?;
+return_statement : RETURN expression EOS;
 
 // declarations and assignments
-declaration : basic_type_name NAME | assignment;
-assignment
-    : TEXT? NAME ASSIGN (TEXT_VALUE | NAME) EOS
-    | NUMBER? NAME ASSIGN (NUMBER_VALUE | arith_expr | NAME) EOS
-    | BOOLEAN? NAME ASSIGN (BOOLEAN_VALUE | NAME) EOS;
+declaration : basic_type_name (NAME EOS | assignment EOS);
+assignment  : NAME ASSIGN expression;
 
 // statements and expressions
 statement     : simple_stmt | compound_stmt;
@@ -38,6 +35,8 @@ if_stmt       : IF LPAREN simple_stmt RPAREN LCURL block RCURL
                     (ELSE_IF LPAREN simple_stmt RPAREN LCURL block RCURL)* (ELSE LCURL block RCURL)?;
 func_def      : DEF NAME LPAREN param_list RPAREN LCURL block RCURL;
 param_list    : (basic_type_name NAME (SEPARATOR basic_type_name NAME)*)?;
+
+expression    : arith_expr | bool_expr;
 arith_expr    : arith_expr (ADD | SUB) term | term;
 term          : term (MUL | DIV) power | power;
 power         : factor POW power | factor;
