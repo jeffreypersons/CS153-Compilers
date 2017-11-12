@@ -48,11 +48,9 @@ bool_operator  : AND   | OR     | NOT;
 arith_operator : ADD   | SUB    | MUL | DIV | POW;
 comp_operator  : IS_EQ | NOT_EQ | GT  | LT  | LTE | GTE;
 
-// basic labels
+// data types and values
 type  : TEXT | NUMBER | BOOLEAN;
 value : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
-
-// values
 TEXT_VALUE    : QUOTE ~[QUOTE]* QUOTE;
 NUMBER_VALUE  : ([0-9]+ | [0-9]+.[0-9]+);
 BOOLEAN_VALUE : 'true' | 'false';
@@ -78,7 +76,7 @@ RCURL     : '}';
 LSQUARE   : '[';
 RSQUARE   : ']';
 
-// comparison and boolean operators
+// operators
 GT     : '>';
 LT     : '<';
 LTE    : '<=';
@@ -88,13 +86,11 @@ IS_EQ  : '!=';
 NOT_EQ : '==';
 AND    : 'and';
 OR     : 'or';
-
-// arithmetic operators
-ADD : '+';
-SUB : '-';
-MUL : '*';
-DIV : '/';
-POW : '^';
+ADD    : '+';
+SUB    : '-';
+MUL    : '*';
+DIV    : '/';
+POW    : '^';
 
 // misc
 EOS        : NEWLINE+;
