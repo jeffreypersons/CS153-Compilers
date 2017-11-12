@@ -87,7 +87,7 @@ DIV : '/';
 POW : '^';
 
 // text input
-WHITESPACE : [ \t\r\n]+ -> skip;
+WHITESPACE : [ \t]+ -> skip;
 COMMENT    : '#' ~[\r\n]* -> skip;
 
 // variable name (defined last so that any of the above keywords can't be used)
