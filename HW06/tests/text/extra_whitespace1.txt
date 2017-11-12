@@ -1,0 +1,24 @@
+
+Text a = 'jeff'
+    Text b = 'jeff'
+
+Number c = 3
+Number  d  =  3
+
+Number e = 100
+    
+       
+def     f()
+{
+
+    
+}
+
+def g(      )
+{
+Number d = 3.0
+}
+    
+        
+        
+ 
