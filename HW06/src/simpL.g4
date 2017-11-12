@@ -24,7 +24,7 @@ block   : statement* return_statement?;
 return_statement : RETURN expression EOS;
 
 // declarations and assignments
-declaration : basic_type_name (NAME EOS | assignment EOS);
+declaration : type (NAME EOS | assignment EOS);
 assignment  : NAME ASSIGN expression;
 
 // statements and expressions
@@ -34,7 +34,7 @@ compound_stmt : func_def    | if_stmt;
 if_stmt       : IF LPAREN simple_stmt RPAREN LCURL block RCURL
                     (ELSE_IF LPAREN simple_stmt RPAREN LCURL block RCURL)* (ELSE LCURL block RCURL)?;
 func_def      : DEF NAME LPAREN param_list RPAREN LCURL block RCURL;
-param_list    : (basic_type_name NAME (SEPARATOR basic_type_name NAME)*)?;
+param_list    : (type NAME (SEPARATOR type NAME)*)?;
 
 expression    : arith_expr | bool_expr;
 arith_expr    : arith_expr (ADD | SUB) term | term;
@@ -49,8 +49,8 @@ arith_operator : ADD   | SUB    | MUL | DIV | POW;
 comp_operator  : IS_EQ | NOT_EQ | GT  | LT  | LTE | GTE;
 
 // basic labels
-basic_type_name  : TEXT       | NUMBER       | BOOLEAN;
-basic_type_value : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
+type  : TEXT | NUMBER | BOOLEAN;
+value : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
 
 // values
 TEXT_VALUE    : QUOTE ~[QUOTE]* QUOTE;
