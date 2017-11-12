@@ -9,10 +9,19 @@
  */
 grammar simpL;
 
+/*
+ * types of statements:
+ * - simple statements: assignment, return
+ * - compound statements:
+ *   - func def, loop, etc (anything with a block enclosed with {})
+ * 
+ * types of expressions:
+ * - function calls/simple expressions
+ */
 // starting rule
 program : command*;
 command : (declaration | statement)* EOS;
-body    : (declaration | statement)*;
+block   : (declaration | statement)*;
 
 // declarations and assignments
 declaration : basic_type_name NAME | assignment;
@@ -22,12 +31,12 @@ assignment
     | BOOLEAN? NAME ASSIGN (BOOLEAN_VALUE | NAME) EOS;
 
 // statements and expressions
-statement     : simple_expr | compound_expr;
-simple_expr   : bool_expr   | arith_expr;
-compound_expr : func_def    | if_stmt;
-if_stmt       : IF LPAREN simple_expr RPAREN LCURL body RCURL
-                    (ELSE_IF LPAREN simple_expr RPAREN LCURL body RCURL)* (ELSE LCURL body RCURL)?;
-func_def      : DEF NAME LPAREN param_list RPAREN LCURL body RCURL;
+statement     : simple_stmt | compound_stmt;
+simple_stmt   : bool_expr   | arith_expr;
+compound_stmt : func_def    | if_stmt;
+if_stmt       : IF LPAREN simple_stmt RPAREN LCURL block RCURL
+                    (ELSE_IF LPAREN simple_stmt RPAREN LCURL block RCURL)* (ELSE LCURL block RCURL)?;
+func_def      : DEF NAME LPAREN param_list RPAREN LCURL block RCURL;
 param_list    : (basic_type_name NAME (SEPARATOR basic_type_name NAME)*)?;
 arith_expr    : arith_expr (ADD | SUB) term | term;
 term          : term (MUL | DIV) power | power;
