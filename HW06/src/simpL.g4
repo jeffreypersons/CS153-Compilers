@@ -31,16 +31,20 @@ assignment
     : NAME ASSIGN expression EOL
     ;
 if_stmt
-    : 'if' LPAREN expression RPAREN EOL
+    : (
+      'if' LPAREN expression RPAREN EOL
        LCURL EOL
            block
        RCURL EOL
-      ('else if' LPAREN expression RPAREN EOL
+      )
+      (
+      'else if' LPAREN expression RPAREN EOL
        LCURL EOL
            block
        RCURL EOL
       )*
-      ('else' EOL
+      (
+      'else' EOL
         LCURL EOL
             block
         RCURL EOL
