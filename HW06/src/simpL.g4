@@ -9,16 +9,7 @@ Notes:
  */
 grammar simpL;
 
-/*
- * types of statements:
- * - simple statements: assignment, return
- * - compound statements:
- *   - func def, loop, etc (anything with a block enclosed with {})
- * 
- * types of expressions:
- * - function calls/simple expressions
- */
-// starting rule
+// fundamental rules
 program : block;
 block   : statement* return_stmt?;
 
@@ -28,7 +19,10 @@ statement
     | if_stmt
     | declaration
     | assignment
-    | expression
+    | expression_statement
+    ;
+expression_statement
+    : expression EOL
     ;
 declaration
     : type NAME (ASSIGN expression)? EOL
@@ -118,8 +112,8 @@ DIV    : '/';
 POW    : '^';
 
 // fundamental tokens
-EOL          : NEWLINE | EOF;
-SKIP         : (WHITESPACE | LINE_COMMENT) -> skip;
+EOL          : EOF | NEWLINE+;
+SKIP         : (WHITESPACE | LINE_COMMENT)+ -> skip;
 NAME         : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
 LINE_COMMENT : '#' ~[EOL]*;
 
@@ -128,4 +122,4 @@ fragment QUOTE      : '\'';
 fragment DIGIT      : '0'..'9';
 fragment LETTER     : 'a'..'z' | 'A'..'Z';
 fragment NEWLINE    : '\n' | '\r\n';
-fragment WHITESPACE : [ \t]+;
+fragment WHITESPACE : [ \t];
