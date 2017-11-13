@@ -82,7 +82,7 @@ TEXT          : 'Text';
 NUMBER        : 'Number';
 BOOLEAN       : 'Boolean';
 TEXT_VALUE    : QUOTE ~[QUOTE]* QUOTE;
-NUMBER_VALUE  : (DIGIT+ | DIGIT+.DIGIT+);
+NUMBER_VALUE  : DIGIT+ | DIGIT+.DIGIT+;
 BOOLEAN_VALUE : 'true'  | 'false';
 
 // reserved symbols
@@ -112,7 +112,7 @@ DIV    : '/';
 POW    : '^';
 
 // fundamental tokens
-EOL          : EOF | NEWLINE+;
+EOL          : NEWLINE+;
 SKIP         : (WHITESPACE | LINE_COMMENT)+ -> skip;
 NAME         : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
 LINE_COMMENT : '#' ~[EOL]*;

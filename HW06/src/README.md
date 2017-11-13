@@ -1,5 +1,8 @@
 # Syntax Description
 
+### Format
+- requires files to end with a line break
+
 ### DataTypes
 
 ### Arithmetic
