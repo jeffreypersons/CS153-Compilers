@@ -9,11 +9,8 @@ Notes:
  */
 grammar simpL;
 
-// fundamental rules
-program : block;
-block   : statement* return_stmt?;
+program : statement*;
 
-// statements
 statement
     : func_def
     | if_stmt
@@ -30,26 +27,26 @@ assignment
 if_stmt
     : ('if' LPAREN expression RPAREN EOL
        LCURL EOL
-           block
+           statement*
        RCURL EOL)
       (
        'else if' LPAREN expression RPAREN EOL
        LCURL EOL
-           block
+           statement*
        RCURL EOL
       )*
       (
        'else' EOL
        LCURL EOL
-           block
+           statement*
        RCURL EOL
       )?
     ;
-return_stmt : 'return' expression EOL;
 func_def
     : 'def' NAME LPAREN (type NAME (SEPARATOR type NAME)*)? RPAREN EOL
       LCURL EOL
-          block
+          statement*
+          ('return' expression EOL)?
       RCURL EOL
     ;
 
