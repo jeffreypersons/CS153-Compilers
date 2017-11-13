@@ -21,7 +21,7 @@ def g(      )
 Number d = 3.0
 }
     
-    def h(Boolean boolean, Text text)
+    def h(Boolean b, Text t)
     {
     }
         

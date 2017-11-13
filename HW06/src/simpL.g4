@@ -50,29 +50,25 @@ func_def
       RCURL EOL
     ;
 
-// expressions: note that as of version 4.1, ANTLR rewrites the below as unambiguous rules 
+// expressions: note that as of version 4.1, ANTLR rewrites the below as unambiguous rules
+// TODO: to make the evaluation rules more clear, incorporate ANTLR syntax for left/right associativity
 expr
     : NAME
-    | value
+    | LITERAL
     | func_call
     | LPAREN expr RPAREN
     | expr POW expr
     | expr (MUL | DIV) expr
     | expr (ADD | SUB) expr
     | expr (LT  | GT | LTE | GTE) expr
-    | expr (IS_EQ | NOT_EQ) expr
+    | expr (EQ | NEQ) expr
     | NOT expr
     | expr AND expr
     | expr OR expr
     ;
 func_call : NAME LPAREN (expr)* RPAREN;
-
-// token groups by category
-type  : TEXT       | NUMBER       | BOOLEAN;
-value : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
-bool_operator  : AND   | OR     | NOT;
-arith_operator : ADD   | SUB    | MUL | DIV | POW;
-comp_operator  : IS_EQ | NOT_EQ | GT  | LT  | LTE | GTE;
+type    : TEXT       | NUMBER       | BOOLEAN;
+LITERAL : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
 
 // data types and values
 NONE          : 'None';
@@ -94,20 +90,20 @@ LSQUARE   : '[';
 RSQUARE   : ']';
 
 // operators
-GT     : '>';
-LT     : '<';
-LTE    : '<=';
-GTE    : '>=';
-NOT    : 'not';
-IS_EQ  : '!=';
-NOT_EQ : '==';
-AND    : 'and';
-OR     : 'or';
-ADD    : '+';
-SUB    : '-';
-MUL    : '*';
-DIV    : '/';
-POW    : '^';
+POW : '^';
+MUL : '*';
+DIV : '/';
+ADD : '+';
+SUB : '-';
+LT  : '<';
+GT  : '>';
+LTE : '<=';
+GTE : '>=';
+EQ  : '==';
+NEQ : '!=';
+NOT : 'not';
+AND : 'and';
+OR  : 'or';
 
 // fundamental tokens
 EOL          : NEWLINE+;
