@@ -29,14 +29,15 @@ statement
     | assignment
     ;
 declaration
-    : type (NAME EOS | assignment EOS)
+    : type NAME (ASSIGN expression)? EOS
     ;
 assignment
     : NAME ASSIGN expression EOS
     ;
 if_stmt
     : 'if' LPAREN expression RPAREN EOS LCURL block RCURL EOS
-      ('else if' LPAREN expression RPAREN LCURL block RCURL EOS)* ('else' LCURL block RCURL EOS)?
+      ('else if' LPAREN expression RPAREN LCURL block RCURL EOS)*
+      ('else' EOS LCURL block RCURL EOS)?
     ;
 return_stmt : 'return' expression EOS;
 func_def
@@ -101,14 +102,14 @@ DIV    : '/';
 POW    : '^';
 
 // fundamental tokens
-EOS     : NEWLINE | EOF;
-SKIP    : (COMMENT | WHITESPACE | NEWLINE) -> skip;
-NAME    : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
-COMMENT : '#' ~[NEWLINE | EOF]* (NEWLINE | EOF);
+EOS          : EOL;
+SKIP         : (WHITESPACE | LINE_COMMENT) -> skip;
+NAME         : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
+LINE_COMMENT : '#' ~[EOL]*;
 
 // fragments (helper definitions)
 fragment QUOTE      : '\'';
 fragment DIGIT      : '0'..'9';
 fragment LETTER     : 'a'..'z' | 'A'..'Z';
-fragment NEWLINE    : '\n' | '\r\n';
+fragment EOL        : '\n' | '\r\n' | EOF;
 fragment WHITESPACE : [ \t]+;
