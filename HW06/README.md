@@ -5,7 +5,8 @@
 ### Operators
 --------- Operator Precedence (HI to LO) ---------
 | order |  operator  |          meaning          |
-|   1   |     ^      |      exponentiation       |
+|   0   |    ()      |         parenthesis       |
+|   1   |     ^      |        exponentiation     |
 |   2   |    * /     |     multiply and divide   |
 |   3   |    + -     |      add and subtract     |
 |   4   | < > <= >=  |         comparison        |
