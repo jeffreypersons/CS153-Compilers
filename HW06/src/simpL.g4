@@ -34,7 +34,6 @@ declaration
 assignment
     : NAME ASSIGN expression EOS
     ;
-
 if_stmt
     : 'if' LPAREN expression RPAREN EOS
        LCURL EOS
@@ -47,14 +46,16 @@ if_stmt
       )*
       ('else' EOS
         LCURL EOS
-        block
+            block
         RCURL EOS
       )?
     ;
 return_stmt : 'return' expression EOS;
 func_def
     : 'def' NAME LPAREN (type NAME (SEPARATOR type NAME)*)? RPAREN EOS
-      LCURL block RCURL EOS
+      LCURL EOS
+          block
+      RCURL EOS
     ;
 
 // expressions
