@@ -10,7 +10,6 @@ Notes:
 grammar simpL;
 
 program : stmt*;
-
 stmt
     : func_def
     | if_stmt
@@ -61,14 +60,14 @@ expr
     | expr (MUL | DIV) expr
     | expr (ADD | SUB) expr
     | expr (LT  | GT | LTE | GTE) expr
-    | expr (EQ | NEQ) expr
+    | expr (EQ  | NEQ) expr
     | NOT expr
     | expr AND expr
     | expr OR expr
     ;
 func_call : NAME LPAREN (expr (SEPARATOR expr)*)? RPAREN;
-TYPE    : TEXT       | NUMBER       | BOOLEAN;
-LITERAL : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
+TYPE      : TEXT       | NUMBER       | BOOLEAN;
+LITERAL   : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
 
 // data types and values
 NONE          : 'None';
@@ -80,7 +79,6 @@ NUMBER_VALUE  : DIGIT+ | DIGIT+.DIGIT+;
 BOOLEAN_VALUE : 'true' | 'false';
 
 // reserved symbols
-ASSIGN    : '=';
 SEPARATOR : ',';
 LPAREN    : '(';
 RPAREN    : ')';
@@ -90,20 +88,21 @@ LSQUARE   : '[';
 RSQUARE   : ']';
 
 // operators
-POW : '^';
-MUL : '*';
-DIV : '/';
-ADD : '+';
-SUB : '-';
-LT  : '<';
-GT  : '>';
-LTE : '<=';
-GTE : '>=';
-EQ  : '==';
-NEQ : '!=';
-NOT : 'not';
-AND : 'and';
-OR  : 'or';
+POW    : '^';
+MUL    : '*';
+DIV    : '/';
+ADD    : '+';
+SUB    : '-';
+LT     : '<';
+GT     : '>';
+LTE    : '<=';
+GTE    : '>=';
+EQ     : '==';
+NEQ    : '!=';
+NOT    : 'not';
+AND    : 'and';
+OR     : 'or';
+ASSIGN : '=';
 
 // fundamental tokens
 EOL          : NEWLINE+;
