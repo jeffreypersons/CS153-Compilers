@@ -1,5 +1,6 @@
 /*
 Notes:
+- All curly braces must be on their own line, and all statements must terminate with a newline
 - Earlier the definition, greater the precedence
 - Identifier is defined to avoid name clashes with other keywords
 - It's important to distinguish between the lexer and parser stage. That means things like
@@ -27,40 +28,42 @@ statement
     | if_stmt
     | declaration
     | assignment
+    | expression
     ;
 declaration
-    : type NAME (ASSIGN expression)? EOS
+    : type NAME (ASSIGN expression)? EOL
     ;
 assignment
-    : NAME ASSIGN expression EOS
+    : NAME ASSIGN expression EOL
     ;
 if_stmt
-    : 'if' LPAREN expression RPAREN EOS
-       LCURL EOS
+    : 'if' LPAREN expression RPAREN EOL
+       LCURL EOL
            block
-       RCURL EOS
-      ('else if' LPAREN expression RPAREN EOS
-       LCURL EOS
+       RCURL EOL
+      ('else if' LPAREN expression RPAREN EOL
+       LCURL EOL
            block
-       RCURL EOS
+       RCURL EOL
       )*
-      ('else' EOS
-        LCURL EOS
+      ('else' EOL
+        LCURL EOL
             block
-        RCURL EOS
+        RCURL EOL
       )?
     ;
-return_stmt : 'return' expression EOS;
+return_stmt : 'return' expression EOL;
 func_def
-    : 'def' NAME LPAREN (type NAME (SEPARATOR type NAME)*)? RPAREN EOS
-      LCURL EOS
+    : 'def' NAME LPAREN (type NAME (SEPARATOR type NAME)*)? RPAREN EOL
+      LCURL EOL
           block
-      RCURL EOS
+      RCURL EOL
     ;
 
 // expressions
 expression
-    : value
+    : NAME
+    | value
     | func_call
     | bool_expr
     | arith_expr
@@ -115,7 +118,7 @@ DIV    : '/';
 POW    : '^';
 
 // fundamental tokens
-EOS          : EOL;
+EOL          : NEWLINE | EOF;
 SKIP         : (WHITESPACE | LINE_COMMENT) -> skip;
 NAME         : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
 LINE_COMMENT : '#' ~[EOL]*;
@@ -124,5 +127,5 @@ LINE_COMMENT : '#' ~[EOL]*;
 fragment QUOTE      : '\'';
 fragment DIGIT      : '0'..'9';
 fragment LETTER     : 'a'..'z' | 'A'..'Z';
-fragment EOL        : '\n' | '\r\n' | EOF;
+fragment NEWLINE    : '\n' | '\r\n';
 fragment WHITESPACE : [ \t]+;
