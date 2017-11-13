@@ -19,27 +19,37 @@ grammar simpL;
  */
 // starting rule
 program : block;
-block   : statement* return_statement?;
-return_statement : 'return' expression EOS;
+block   : statement* return_stmt?;
 
-// declarations and assignments
+// statements
+statement
+    : func_def
+    | if_stmt
+    | declaration
+    | assignment
+    ;
 declaration : type (NAME EOS | assignment EOS);
-assignment  : NAME ASSIGN expression;
+assignment  : NAME ASSIGN expression EOS;
+if_stmt
+    : 'if' LPAREN expression RPAREN EOS LCURL block RCURL EOS
+      ('else if' LPAREN expression RPAREN LCURL block RCURL EOS)* ('else' LCURL block RCURL EOS)?
+    ;
+return_stmt : 'return' expression EOS;
+func_def : 'def' NAME LPAREN (type NAME (SEPARATOR type NAME)*)? RPAREN LCURL block RCURL EOS;
 
-// statements and expressions
-statement     : expression | compound_stmt;
-expression    : bool_expr   | arith_expr;
-compound_stmt : func_def    | if_stmt;
-if_stmt       : 'if' LPAREN expression RPAREN LCURL block RCURL
-                    ('else if' LPAREN expression RPAREN LCURL block RCURL)* ('else' LCURL block RCURL)?;
-func_def      : 'def' NAME LPAREN param_list RPAREN LCURL block RCURL;
-param_list    : (type NAME (SEPARATOR type NAME)*)?;
-
-arith_expr    : arith_expr (ADD | SUB) term | term;
-term          : term (MUL | DIV) power | power;
-power         : factor POW power | factor;
-factor        : LPAREN arith_expr RPAREN | NAME | NUMBER_VALUE;
-bool_expr     : BOOLEAN_VALUE bool_operator BOOLEAN_VALUE | NAME bool_operator NAME;
+// expressions
+expression
+    : value
+    | func_call
+    | bool_expr
+    | arith_expr
+    ;
+func_call  : NAME LPAREN (expression)* RPAREN;
+arith_expr : arith_expr (ADD | SUB) term | term;
+term       : term (MUL | DIV) power | power;
+power      : factor POW power | factor;
+factor     : LPAREN arith_expr RPAREN | NAME | NUMBER_VALUE;
+bool_expr  : BOOLEAN_VALUE bool_operator BOOLEAN_VALUE | NAME bool_operator NAME;
 
 // token groups by category
 type  : TEXT       | NUMBER       | BOOLEAN;
@@ -48,13 +58,14 @@ bool_operator  : AND   | OR     | NOT;
 arith_operator : ADD   | SUB    | MUL | DIV | POW;
 comp_operator  : IS_EQ | NOT_EQ | GT  | LT  | LTE | GTE;
 
-// data types
-TEXT    : 'Text';
-NUMBER  : 'Number';
-BOOLEAN : 'Boolean';
+// data types and values
+NONE          : 'None';
+TEXT          : 'Text';
+NUMBER        : 'Number';
+BOOLEAN       : 'Boolean';
 TEXT_VALUE    : QUOTE ~[QUOTE]* QUOTE;
 NUMBER_VALUE  : (DIGIT+ | DIGIT+.DIGIT+);
-BOOLEAN_VALUE : 'true' | 'false';
+BOOLEAN_VALUE : 'true'  | 'false';
 
 // reserved symbols
 ASSIGN    : '=';
@@ -84,9 +95,9 @@ POW    : '^';
 
 // fundamental tokens
 EOS     : NEWLINE | EOF;
-SKIP    : (WHITESPACE | COMMENT | NEWLINE) -> skip;
+SKIP    : (COMMENT | WHITESPACE | NEWLINE) -> skip;
 NAME    : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
-COMMENT : '#' ~[NEWLINE | EOF]*;
+COMMENT : '#' ~[NEWLINE | EOF]* (NEWLINE | EOF);
 
 // fragments (helper definitions)
 fragment QUOTE      : '\'';
