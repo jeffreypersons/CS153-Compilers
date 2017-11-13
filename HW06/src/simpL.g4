@@ -19,10 +19,7 @@ statement
     | if_stmt
     | declaration
     | assignment
-    | expression_statement
-    ;
-expression_statement
-    : expression EOL
+    | expression EOL
     ;
 declaration
     : type NAME (ASSIGN expression)? EOL
