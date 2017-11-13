@@ -34,10 +34,22 @@ declaration
 assignment
     : NAME ASSIGN expression EOS
     ;
+
 if_stmt
-    : 'if' LPAREN expression RPAREN EOS LCURL block RCURL EOS
-      ('else if' LPAREN expression RPAREN LCURL block RCURL EOS)*
-      ('else' EOS LCURL block RCURL EOS)?
+    : 'if' LPAREN expression RPAREN EOS
+       LCURL EOS
+           block
+       RCURL EOS
+      ('else if' LPAREN expression RPAREN EOS
+       LCURL EOS
+           block
+       RCURL EOS
+      )*
+      ('else' EOS
+        LCURL EOS
+        block
+        RCURL EOS
+      )?
     ;
 return_stmt : 'return' expression EOS;
 func_def
