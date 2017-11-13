@@ -4,11 +4,11 @@
 
 ### Operators
 --------- Operator Precedence (HI to LO) ---------
-| order |  operator  |          meaning          |
+| order |  operator  |           meaning         |
 |   0   |    ()      |         parenthesis       |
 |   1   |     ^      |        exponentiation     |
 |   2   |    * /     |     multiply and divide   |
-|   3   |    + -     |      add and subtract     |
+|   3   |    + -     |       add and subtract    |
 |   4   | < > <= >=  |         comparison        |
 |   5   |   == !=    |          equality         |
 |   6   |    not     |      logical negation     |

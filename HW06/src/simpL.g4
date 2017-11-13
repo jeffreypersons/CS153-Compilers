@@ -53,20 +53,22 @@ func_def
       RCURL EOL
     ;
 
-// expressions
+// expressions: note that as of version 4.1, ANTLR rewrites the below as unambiguous rules 
 expression
     : NAME
     | value
     | func_call
-    | bool_expr
-    | arith_expr
+    | LPAREN expression RPAREN
+    | expression POW expression
+    | expression (MUL | DIV) expression
+    | expression (ADD | SUB) expression
+    | expression (LT  | GT | LTE | GTE) expression
+    | expression (IS_EQ | NOT_EQ) expression
+    | NOT expression
+    | expression AND expression
+    | expression OR expression
     ;
-func_call  : NAME LPAREN (expression)* RPAREN;
-arith_expr : arith_expr (ADD | SUB) term | term;
-term       : term (MUL | DIV) power | power;
-power      : factor POW power | factor;
-factor     : LPAREN arith_expr RPAREN | NAME | NUMBER_VALUE;
-bool_expr  : BOOLEAN_VALUE bool_operator BOOLEAN_VALUE | NAME bool_operator NAME;
+func_call : NAME LPAREN (expression)* RPAREN;
 
 // token groups by category
 type  : TEXT       | NUMBER       | BOOLEAN;
