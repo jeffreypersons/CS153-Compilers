@@ -19,7 +19,7 @@ stmt
     | expr EOL
     ;
 declaration
-    : type NAME (ASSIGN expr)? EOL
+    : TYPE NAME (ASSIGN expr)? EOL
     ;
 assignment
     : NAME ASSIGN expr EOL
@@ -43,7 +43,7 @@ if_stmt
       )?
     ;
 func_def
-    : 'def' NAME LPAREN (type NAME (SEPARATOR type NAME)*)? RPAREN EOL
+    : 'def' NAME LPAREN (TYPE NAME (SEPARATOR TYPE NAME)*)? RPAREN EOL
       LCURL EOL
           stmt*
           ('return' expr EOL)?
@@ -66,8 +66,8 @@ expr
     | expr AND expr
     | expr OR expr
     ;
-func_call : NAME LPAREN (expr)* RPAREN;
-type    : TEXT       | NUMBER       | BOOLEAN;
+func_call : NAME LPAREN (expr (SEPARATOR expr)*)? RPAREN;
+TYPE    : TEXT       | NUMBER       | BOOLEAN;
 LITERAL : TEXT_VALUE | NUMBER_VALUE | BOOLEAN_VALUE;
 
 // data types and values
