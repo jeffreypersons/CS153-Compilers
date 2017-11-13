@@ -28,14 +28,21 @@ statement
     | declaration
     | assignment
     ;
-declaration : type (NAME EOS | assignment EOS);
-assignment  : NAME ASSIGN expression EOS;
+declaration
+    : type (NAME EOS | assignment EOS)
+    ;
+assignment
+    : NAME ASSIGN expression EOS
+    ;
 if_stmt
     : 'if' LPAREN expression RPAREN EOS LCURL block RCURL EOS
       ('else if' LPAREN expression RPAREN LCURL block RCURL EOS)* ('else' LCURL block RCURL EOS)?
     ;
 return_stmt : 'return' expression EOS;
-func_def : 'def' NAME LPAREN (type NAME (SEPARATOR type NAME)*)? RPAREN LCURL block RCURL EOS;
+func_def
+    : 'def' NAME LPAREN (type NAME (SEPARATOR type NAME)*)? RPAREN EOS
+      LCURL block RCURL EOS
+    ;
 
 // expressions
 expression
