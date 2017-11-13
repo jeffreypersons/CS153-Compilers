@@ -83,7 +83,7 @@ NONE          : 'None';
 TEXT          : 'Text';
 NUMBER        : 'Number';
 BOOLEAN       : 'Boolean';
-TEXT_VALUE    : QUOTE ~[QUOTE]* QUOTE;
+TEXT_VALUE    : QUOTE .*? QUOTE;
 NUMBER_VALUE  : DIGIT+ | DIGIT+.DIGIT+;
 BOOLEAN_VALUE : 'true' | 'false';
 
