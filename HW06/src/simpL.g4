@@ -83,7 +83,7 @@ NUMBER        : 'Number';
 BOOLEAN       : 'Boolean';
 TEXT_VALUE    : QUOTE ~[QUOTE]* QUOTE;
 NUMBER_VALUE  : DIGIT+ | DIGIT+.DIGIT+;
-BOOLEAN_VALUE : 'true'  | 'false';
+BOOLEAN_VALUE : 'true' | 'false';
 
 // reserved symbols
 ASSIGN    : '=';
@@ -113,9 +113,9 @@ POW    : '^';
 
 // fundamental tokens
 EOL          : NEWLINE+;
-SKIP         : (WHITESPACE | LINE_COMMENT)+ -> skip;
+SKIP         : (LINE_COMMENT | WHITESPACE+) -> skip;
 NAME         : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
-LINE_COMMENT : '#' ~[EOL]*;
+LINE_COMMENT : '#' .*? NEWLINE;
 
 // fragments (helper definitions)
 fragment QUOTE      : '\'';
