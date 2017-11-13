@@ -9,63 +9,63 @@ Notes:
  */
 grammar simpL;
 
-program : statement*;
+program : stmt*;
 
-statement
+stmt
     : func_def
     | if_stmt
     | declaration
     | assignment
-    | expression EOL
+    | expr EOL
     ;
 declaration
-    : type NAME (ASSIGN expression)? EOL
+    : type NAME (ASSIGN expr)? EOL
     ;
 assignment
-    : NAME ASSIGN expression EOL
+    : NAME ASSIGN expr EOL
     ;
 if_stmt
-    : ('if' LPAREN expression RPAREN EOL
+    : ('if' LPAREN expr RPAREN EOL
        LCURL EOL
-           statement*
+           stmt*
        RCURL EOL)
       (
-       'else if' LPAREN expression RPAREN EOL
+       'else if' LPAREN expr RPAREN EOL
        LCURL EOL
-           statement*
+           stmt*
        RCURL EOL
       )*
       (
        'else' EOL
        LCURL EOL
-           statement*
+           stmt*
        RCURL EOL
       )?
     ;
 func_def
     : 'def' NAME LPAREN (type NAME (SEPARATOR type NAME)*)? RPAREN EOL
       LCURL EOL
-          statement*
-          ('return' expression EOL)?
+          stmt*
+          ('return' expr EOL)?
       RCURL EOL
     ;
 
 // expressions: note that as of version 4.1, ANTLR rewrites the below as unambiguous rules 
-expression
+expr
     : NAME
     | value
     | func_call
-    | LPAREN expression RPAREN
-    | expression POW expression
-    | expression (MUL | DIV) expression
-    | expression (ADD | SUB) expression
-    | expression (LT  | GT | LTE | GTE) expression
-    | expression (IS_EQ | NOT_EQ) expression
-    | NOT expression
-    | expression AND expression
-    | expression OR expression
+    | LPAREN expr RPAREN
+    | expr POW expr
+    | expr (MUL | DIV) expr
+    | expr (ADD | SUB) expr
+    | expr (LT  | GT | LTE | GTE) expr
+    | expr (IS_EQ | NOT_EQ) expr
+    | NOT expr
+    | expr AND expr
+    | expr OR expr
     ;
-func_call : NAME LPAREN (expression)* RPAREN;
+func_call : NAME LPAREN (expr)* RPAREN;
 
 // token groups by category
 type  : TEXT       | NUMBER       | BOOLEAN;
