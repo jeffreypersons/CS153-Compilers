@@ -107,7 +107,7 @@ OR  : 'or';
 
 // fundamental tokens
 EOL          : NEWLINE+;
-SKIP         : (LINE_COMMENT | WHITESPACE+) -> skip;
+WS         : (LINE_COMMENT | WHITESPACE+) -> skip;
 NAME         : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
 LINE_COMMENT : '#' .*? NEWLINE;
 
