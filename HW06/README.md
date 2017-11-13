@@ -3,10 +3,10 @@
 ## Syntax Description
 
 ### Operators
---------- Operator Precedence (hi to lo) ---------
+--------- Operator Precedence (HI to LO) ---------
 | order |  operator  |          meaning          |
 |   1   |     ^      |      exponentiation       |
-|   2   |    * /     |   multipliply and divide  |
+|   2   |    * /     |     multiply and divide   |
 |   3   |    + -     |      add and subtract     |
 |   4   | < > <= >=  |         comparison        |
 |   5   |   == !=    |          equality         |
