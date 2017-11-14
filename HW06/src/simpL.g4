@@ -94,14 +94,15 @@ OR     : 'or';
 ASSIGN : '=';
 
 // fundamental tokens
-EOL          : NEWLINE+;
-SKIP         : (LINE_COMMENT | WHITESPACE+) -> skip;
-NAME         : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
-LINE_COMMENT : '#' .*? NEWLINE;
+EOL           : NEWLINE+;
+SKIP          : (LINE_COMMENT | WHITESPACE+) -> skip;
+NAME          : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
+WHITESPACE    : ([ \t]+)          -> skip;
+LINE_COMMENT  : ('#' .*? NEWLINE) -> skip;
+BLOCK_COMMENT : ('##' .*? '##')   -> skip;
 
 // fragments (helper definitions)
-fragment QUOTE      : '\'';
-fragment DIGIT      : '0'..'9';
-fragment LETTER     : 'a'..'z' | 'A'..'Z';
-fragment NEWLINE    : '\n' | '\r\n';
-fragment WHITESPACE : [ \t];
+fragment QUOTE   : '\'';
+fragment DIGIT   : '0'..'9';
+fragment LETTER  : 'a'..'z' | 'A'..'Z';
+fragment NEWLINE : '\n' | '\r\n';
