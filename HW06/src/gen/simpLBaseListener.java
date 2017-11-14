@@ -15,104 +15,116 @@ public class simpLBaseListener implements simpLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProgram(simpLParser.ProgramContext ctx) { System.out.println("entered Program");}
+	@Override public void enterProgram(simpLParser.ProgramContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProgram(simpLParser.ProgramContext ctx) { System.out.println("left Program");}
+	@Override public void exitProgram(simpLParser.ProgramContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStmt(simpLParser.StmtContext ctx) { System.out.println("Entered statement");}
+	@Override public void enterStmt(simpLParser.StmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStmt(simpLParser.StmtContext ctx) { System.out.println("left statement");}
+	@Override public void exitStmt(simpLParser.StmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDeclaration(simpLParser.DeclarationContext ctx) { System.out.println("Entered declaration");}
+	@Override public void enterDeclaration(simpLParser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDeclaration(simpLParser.DeclarationContext ctx) { System.out.println("left declaration");}
+	@Override public void exitDeclaration(simpLParser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignment(simpLParser.AssignmentContext ctx) { System.out.println("Entered assignment");}
+	@Override public void enterAssignment(simpLParser.AssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignment(simpLParser.AssignmentContext ctx) { System.out.println("left assignment");}
+	@Override public void exitAssignment(simpLParser.AssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIf_stmt(simpLParser.If_stmtContext ctx) { System.out.println("Entered if statement");}
+	@Override public void enterIf_stmt(simpLParser.If_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIf_stmt(simpLParser.If_stmtContext ctx) { System.out.println("left if statement");}
+	@Override public void exitIf_stmt(simpLParser.If_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunc_def(simpLParser.Func_defContext ctx) { System.out.println("Entered function");}
+	@Override public void enterFunc_def(simpLParser.Func_defContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunc_def(simpLParser.Func_defContext ctx) { System.out.println("left function");}
+	@Override public void exitFunc_def(simpLParser.Func_defContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr(simpLParser.ExprContext ctx) { System.out.println("Entered expression");}
+	@Override public void enterBlock(simpLParser.BlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr(simpLParser.ExprContext ctx) { System.out.println("left expression");}
+	@Override public void exitBlock(simpLParser.BlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunc_call(simpLParser.Func_callContext ctx) { System.out.println("Entered func call");}
+	@Override public void enterExpr(simpLParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunc_call(simpLParser.Func_callContext ctx) { System.out.println("left func call");}
+	@Override public void exitExpr(simpLParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunc_call(simpLParser.Func_callContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunc_call(simpLParser.Func_callContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEveryRule(ParserRuleContext ctx) {}
+	@Override public void enterEveryRule(ParserRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
