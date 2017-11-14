@@ -3,6 +3,7 @@
 ## Syntax Description
 
 ### Operators
+```
 --------- Operator Precedence (HI to LO) ---------
 | order |  operator  |           meaning         |
 |   0   |    ()      |         parenthesis       |
@@ -15,7 +16,7 @@
 |   7   |    and     |     logical conjunction   |
 |   8   |    or      |     logical disjunction   |
 --------------------------------------------------
-
+```
 ### Format
 - requires files to end with a line break
 

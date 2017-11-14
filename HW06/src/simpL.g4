@@ -95,9 +95,8 @@ ASSIGN : '=';
 
 // fundamental tokens
 EOL           : NEWLINE+;
-SKIP          : (LINE_COMMENT | WHITESPACE+) -> skip;
 NAME          : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
-WHITESPACE    : ([ \t]+)          -> skip;
+WHITESPACE    : (LINE_COMMENT | [ \t]+) -> skip;
 LINE_COMMENT  : ('#' .*? NEWLINE) -> skip;
 BLOCK_COMMENT : ('##' .*? '##')   -> skip;
 
