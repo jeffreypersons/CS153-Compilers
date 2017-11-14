@@ -1,6 +1,7 @@
-# Assignment #6: Final Project ??, with ANTLR 4
+# simpL Programming Language Overview
 
 ## Syntax Description
+- Coming Soon
 
 ### Operators
 ```
@@ -18,11 +19,12 @@
 --------------------------------------------------
 ```
 ### Format
-- requires files to end with a line break
+- requires ALL statements and files to end with a line break, and braces MUST be on
+  separate line
 
 ### DataTypes
-
-### Arithmetic
+- Number, Text
+- Map, List, Struct, Func (first class function) to arrive in future
 
 ### Conditionals
 - single 'if';
