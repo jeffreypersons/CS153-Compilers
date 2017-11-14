@@ -24,31 +24,20 @@ assignment
     : NAME ASSIGN expr EOL
     ;
 if_stmt
-    : ('if' LPAREN expr RPAREN EOL
-       LCURL EOL
-           stmt*
-       RCURL EOL)
-      (
-       'else if' LPAREN expr RPAREN EOL
-       LCURL EOL
-           stmt*
-       RCURL EOL
-      )*
-      (
-       'else' EOL
-       LCURL EOL
-           stmt*
-       RCURL EOL
-      )?
+    : ('if' LPAREN expr RPAREN block)
+      ('else if' LPAREN expr RPAREN block)*
+      ('else' block)?
     ;
 func_def
-    : 'def' NAME LPAREN (TYPE NAME (SEPARATOR TYPE NAME)*)? RPAREN EOL
-      LCURL EOL
-          stmt*
-          ('return' expr EOL)?
-      RCURL EOL
+    : 'def' NAME LPAREN (TYPE NAME (SEPARATOR TYPE NAME)*)? RPAREN block
     ;
-
+// any number of statements enclosed in braces, ending with an optional return
+block
+    : EOL LCURL EOL
+          stmt*
+          ('return' expr)?
+      EOL RCURL EOL
+    ;
 // expressions: note that as of version 4.1, ANTLR rewrites the below as unambiguous rules
 // TODO: to make the evaluation rules more clear, incorporate ANTLR syntax for left/right associativity
 expr
