@@ -1,6 +1,6 @@
-def a(number b, text c)
+def a(Number b, Text c)
 {
-    number d = b;
+    Number d = b;
     text e = 'test'
     if (b is d)
     {

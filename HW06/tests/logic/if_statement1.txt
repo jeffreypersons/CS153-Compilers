@@ -1,0 +1,26 @@
+Number a
+Text b
+Number c = 1
+Text d = 'test'
+
+def e()
+{
+    Number f = 3
+    Text g = 'my string'
+    if (f > 0)
+    {
+        Number h = 5
+    }
+    else if (1 < 0)
+    {
+        Number i = 6
+    }
+    else
+    {
+        Number i = 7
+    }
+    
+    if (True)
+    {
+    }
+}
