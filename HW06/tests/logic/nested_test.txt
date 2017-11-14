@@ -1,0 +1,17 @@
+def f()
+{
+    if (True)
+    {
+    }
+    else if (True)
+    {
+    }
+    else
+    {
+    }
+}
+# todo: make else if -> elif
+# get rid of paranthesis requirement for conditionals
+# check if the nested issue has to do with empty blocks/newlines in braces (try single line vs no line, etc)
+# add syntax for return types for functions
+# add support for python-like indentation
