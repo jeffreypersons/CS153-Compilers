@@ -10,4 +10,6 @@ b = a
 c = b
 mySum = a + b + c
 mySum = mySum + mySum + mySum
+d = mySum
+mySum = mySum
 # /end of file  !

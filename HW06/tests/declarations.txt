@@ -1,0 +1,10 @@
+Number v1
+Number v2
+Number z1 = 1
+Number z2 = 2
+
+z1 = v1
+z2 = v2
+
+Number z
+z = v1 * v2 / z1 / z2

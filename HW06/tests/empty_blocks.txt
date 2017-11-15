@@ -1,0 +1,24 @@
+##
+
+##
+def g()
+{
+}
+
+#
+def f()
+{
+    if (True)
+    {
+    }
+    elif (True)
+    {
+    }
+    else
+    {
+    }
+    if (False)
+    {
+    
+    }
+}
