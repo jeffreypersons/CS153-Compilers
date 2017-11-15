@@ -2,13 +2,12 @@ Number a
 Number b
 Number c
 Number d
-Number mySum
 
 # HI I'm Takeshi! this is my #1 favorite test program...;!
 a = 10 - 2 ^ 2
 b = a / 3
 c = b * 4
-mySum = a + b + c
+Number mySum = a + b + c
 mySum = mySum + mySum + mySum
 d = mySum
 mySum = mySum
