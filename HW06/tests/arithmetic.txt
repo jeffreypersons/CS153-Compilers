@@ -5,9 +5,9 @@ Number d
 Number mySum
 
 # HI I'm Takeshi! this is my #1 favorite test program...;!
-a = 1
-b = a
-c = b
+a = 10 - 2 ^ 2
+b = a / 3
+c = b * 4
 mySum = a + b + c
 mySum = mySum + mySum + mySum
 d = mySum
