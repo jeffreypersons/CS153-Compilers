@@ -25,7 +25,7 @@ assignment
     ;
 if_stmt
     : ('if' LPAREN expr RPAREN block)
-      ('else if' LPAREN expr RPAREN block)*
+      ('elif' LPAREN expr RPAREN block)*
       ('else' block)?
     ;
 func_def

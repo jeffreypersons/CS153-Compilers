@@ -36,7 +36,7 @@ if (<expression>)
 {
     <0 or more statements>
 }
-else if (<expression>)
+eliff (<expression>)
 {
     <0 or more statements>
 }
