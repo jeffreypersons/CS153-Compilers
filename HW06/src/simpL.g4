@@ -24,8 +24,8 @@ assignment
     : NAME ASSIGN expr EOL
     ;
 if_stmt
-    : ('if' LPAREN expr RPAREN block)
-      ('elif' LPAREN expr RPAREN block)*
+    : ('if' expr block)
+      ('elif' expr block)*
       ('else' block)?
     ;
 func_def

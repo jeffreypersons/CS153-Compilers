@@ -1,14 +1,14 @@
 def numStatus(Number x)
 {
     Text status = ''
-    if (x < 100)
+    if x < 100
     {
         status = 'x in range(-inf, 100)'
-        if (75 < x)
+        if 75 < x
         {
             status = 'x in range(75, 100)'
         }
-        elif (50 < x)
+        elif 50 < x
         {
             status = 'x in range(50, 75)'
         }

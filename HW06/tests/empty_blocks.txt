@@ -8,15 +8,16 @@ def g()
 #
 def f()
 {
-    if (True)
+    if True
     {
     }
-    elif (True)
+    elif True
     {
     }
     else
     {
     }
+    # parens still allowed because it is an expression
     if (False)
     {
     
