@@ -32,11 +32,11 @@
 - and ending in an optional 'else'
 - Note: As of current grammar, no Egyptian style brace format is supported
 ```
-if (<expression>)
+if <expression>
 {
     <0 or more statements>
 }
-else if (<expression>)
+elif <expression>
 {
     <0 or more statements>
 }

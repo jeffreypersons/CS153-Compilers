@@ -1,6 +1,0 @@
-
-Text a = 'jeff'
-Text b = 'jeff'
-def f()
-{
-}

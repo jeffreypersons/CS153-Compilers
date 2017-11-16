@@ -1,0 +1,25 @@
+##
+
+##
+def g()
+{
+}
+
+#
+def f()
+{
+    if True
+    {
+    }
+    elif True
+    {
+    }
+    else
+    {
+    }
+    # parens still allowed because it is an expression
+    if False
+    {
+    
+    }
+}
