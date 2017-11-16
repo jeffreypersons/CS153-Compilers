@@ -67,6 +67,16 @@ public interface simpLListener extends ParseTreeListener {
 	 */
 	void exitFunc_def(simpLParser.Func_defContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link simpLParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlock(simpLParser.BlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link simpLParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlock(simpLParser.BlockContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link simpLParser#expr}.
 	 * @param ctx the parse tree
 	 */
