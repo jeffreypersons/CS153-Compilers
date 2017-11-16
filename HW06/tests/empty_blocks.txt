@@ -18,7 +18,7 @@ def f()
     {
     }
     # parens still allowed because it is an expression
-    if (False)
+    if False
     {
     
     }

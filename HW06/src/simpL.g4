@@ -6,6 +6,7 @@ Notes:
 - It's important to distinguish between the lexer and parser stage. That means things like
   valid types is NOT to be distinguished here, but rather determined in the parsing stage,
   instead. This greatly promotes separation of concerns, and simplifies the lexer grammar.
+- ANTLR unfortunately lacks support for negated tokens (eg, we have to do ~('\'') instead of ~QUOTE)
  */
 grammar simpL;
 
@@ -63,7 +64,7 @@ NONE          : 'None';
 TEXT          : 'Text';
 NUMBER        : 'Number';
 BOOLEAN       : 'Boolean';
-TEXT_VALUE    : QUOTE .*? QUOTE;
+TEXT_VALUE    : QUOTE (~('\\'| '\r' | '\n') | '\\\'' | '\\\\')* QUOTE;  // ' and \ must be escaped with \
 NUMBER_VALUE  : DIGIT+ | DIGIT+.DIGIT+;
 BOOLEAN_VALUE : 'true' | 'false';
 
@@ -105,4 +106,4 @@ fragment QUOTE         : '\'';
 fragment DIGIT         : '0'..'9';
 fragment LETTER        : 'a'..'z' | 'A'..'Z';
 fragment NEWLINE       : '\n' | '\r\n';
-fragment STRING_ESCAPE : '\'' | '\\';  // escapes substrings ' and \\
+fragment BACKSLASH     : '\\';
