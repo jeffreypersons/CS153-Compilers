@@ -1,9 +1,0 @@
-
-# single line comment.
-
-##
-This
-is a
-block
-comment.
-##
