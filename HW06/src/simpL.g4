@@ -101,8 +101,8 @@ WHITESPACE    : (LINE_COMMENT | [ \t]+) -> skip;
 LINE_COMMENT  : ('#' .*? NEWLINE) -> skip;
 BLOCK_COMMENT : ('##' .*? '##')   -> skip;
 // fragments (helper definitions)
-fragment QUOTE         : '\'';
-fragment DIGIT         : '0'..'9';
-fragment LETTER        : 'a'..'z' | 'A'..'Z';
-fragment NEWLINE       : '\n' | '\r\n';
-fragment BACKSLASH     : '\\';
+fragment QUOTE     : '\'';
+fragment DIGIT     : '0'..'9';
+fragment LETTER    : 'a'..'z' | 'A'..'Z';
+fragment NEWLINE   : '\n' | '\r\n';
+fragment BACKSLASH : '\\';
