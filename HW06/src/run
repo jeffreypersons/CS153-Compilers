@@ -1,0 +1,5 @@
+compile:
+javac -cp "./simpL/frontend/;./gen/;../lib/antlr-4.7-complete.jar" simpLMain.java
+
+run:
+java -cp "./simpL/frontend/;./gen/;.;../lib/antlr-4.7-complete.jar" simpLMain
