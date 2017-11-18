@@ -19,5 +19,6 @@ public class simpLMain
     	ParseTree tree = parser.program();
     	sVisitor visitor = new sVisitor();
     	visitor.visit(tree);
+    	System.out.println("necessary locals: " + visitor.memory.size() + "\n\t" + visitor.memory);
 	}
 }
