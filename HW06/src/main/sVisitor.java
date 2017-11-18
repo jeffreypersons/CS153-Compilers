@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 public class sVisitor extends simpLBaseVisitor<TerminalNode>
 {
-	java.util.Map<String, Value> memory = new java.util.HashMap<String, Value>();
+	public java.util.Map<String, Value> memory = new java.util.HashMap<String, Value>();
 	/**
 	 * {@inheritDoc}
 	 *
