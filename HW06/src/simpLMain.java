@@ -9,18 +9,23 @@ import java.util.ArrayList;
 
 public class simpLMain
 {
-	static final String test_program = "test_program.txt";
 	public static void main(String[] args) throws Exception
 	{
+        if(args.length == 0)
+        { 
+            System.out.println("Improper arguments");
+            return;
+        }
+        String filename = args[0];
         ArrayList<String> program = new ArrayList<String>();
-		simpLLexer lexer = new simpLLexer(CharStreams.fromFileName(test_program));
+		simpLLexer lexer = new simpLLexer(CharStreams.fromFileName(filename));
     	simpLParser parser = new simpLParser( new CommonTokenStream( lexer ) );
     	parser.addParseListener(new simpLBaseListener());
     	ParseTree tree = parser.program();
     	cVisitor visitor = new cVisitor();
 
-        PrintWriter a = new PrintWriter("test_program.j");
-        a.write(CodeEmitter.Program("test_program"));
+        PrintWriter a = new PrintWriter(filename + ".j");
+        a.write(CodeEmitter.Program(filename));
     	visitor.visit(tree);
         for(String str : visitor.getText())
         {
