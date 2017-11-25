@@ -25,7 +25,19 @@ public class ValueBuilder
 		else if(token.getType() == simpLParser.LITERAL)
 		{
 			// add checks for all possible literals
-			return new Number(Double.parseDouble(token.getText()));
+			Value val;
+			try
+			{
+				val = new Number(Double.parseDouble(token.getText()));
+			}catch (Exception e)
+			{
+				val = new Text(token.getText());
+			}
+			return val;
+		}
+		else if(token.getType() == simpLParser.TEXT)
+		{
+			return new Text(token.getText());
 		}
 		else return new Number(0);
 	}
