@@ -1,12 +1,16 @@
 /** Used for varaibles. Returns the value stored in the map */
 public class Variable implements Value<Value>
 {
+	final String cast;
 	String identifier;
 	Value a;
-	public Variable(String identifier, Value value)
+	int slot_number;
+	public Variable(String identifier, Value value, String cast)
 	{
+		this.cast = cast;
 		this.a = value;
 		this.identifier = identifier;
+		this.slot_number = -1;
 	}
 
 	public void setValue(Value value)
@@ -27,5 +31,20 @@ public class Variable implements Value<Value>
 	public String getType()
 	{
 		return "IDENTIFIER";
+	}
+
+	public String getCast()
+	{
+		return this.cast;
+	}
+
+	public void setSlot(int slot)
+	{
+		this.slot_number = slot;
+	}
+
+	public int getSlot()
+	{
+		return this.slot_number;
 	}
 }
