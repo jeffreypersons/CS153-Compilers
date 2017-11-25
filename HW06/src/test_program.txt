@@ -1,4 +1,5 @@
-Text a = 15 - 3 ^ 3
-Number b = a
-b = b + b
-b = a + b * a
+Number test = 103 + 3
+test = 5 + 5
+Number testa = test * test
+test = testa - 123
+print(test)
