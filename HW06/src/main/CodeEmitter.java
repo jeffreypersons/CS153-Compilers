@@ -82,6 +82,12 @@ public class CodeEmitter
 	{
 	}
 
+	/**
+	 * Prints basic operations in assembly code. In the future create class and invoke virtual from inside assembly.
+	 * Only temporary
+	 * @param  lib_name [which library to print the assembly code]
+	 * @return          [the library as text in assembly]
+	 */
 	public static String GetLibraryCode(String lib_name)
 	{
 		StringBuilder construct = new StringBuilder("");
@@ -130,6 +136,12 @@ public class CodeEmitter
 		return construct.toString();
 	}
 
+	/**
+	 * Declares a variable using a slot number
+	 * @param  value [variable that will be assigned]
+	 * @param  num   [slot number]
+	 * @return       [assembly code for that slot]
+	 */
 	public static String DeclareVariable(Variable value, int num)
 	{
 		//StringBuilder construct = new StringBuilder("ldc " + value.getValue().getValue() + "\n");
@@ -142,6 +154,11 @@ public class CodeEmitter
 		return construct.toString();
 	}
 
+	/**
+	 * Creates assembly code for assigning either a string or a number to a variable
+	 * @param  value [variable that will be assigned new value]
+	 * @return       [assembly that will cause new value put into that slot or variable]
+	 */
 	public static String AssignVariable(Variable value)
 	{
 		if(value.getSlot() < 0) ;//throw error here. Undeclared variable
@@ -152,16 +169,31 @@ public class CodeEmitter
 		return store_type + value.getSlot();
 	}	
 
+	/**
+	 * Put a constant string onto the stack
+	 * @param  in [string to put onto stack]
+	 * @return    [assembly code to put string on stack]
+	 */
 	public static String LoadConstant(String in)
 	{
 		return "ldc " + "\"" + in + "\"";
 	}
 
+	/**
+	 * Load constant onto stack
+	 * @param  in number to put onto stack
+	 * @return    assembly code to push requested number onto stack
+	 */
 	public static String LoadConstant(double in)
 	{
 		return "ldc " + in;
 	}
 
+	/**
+	 * Create print command based on the type that is being passed into the function
+	 * @param  type String description that matches possible types. e.g. NUMBER or TEXT
+	 * @return      Return the appropriate println command in jasmin assembly code
+	 */
 	public static String Print(String type)
 	{
 		StringBuilder construct = new StringBuilder("");
@@ -180,9 +212,11 @@ public class CodeEmitter
 		return construct.toString();
 	}
 
+	// if number used fstore else use astore assuming address to string. Can change type to 
+	// array in the future
 	public static String PutVarStack(Variable a)
 	{
-		// just for numbers no checking
+		// no checking
 		Value val = a.getValue();
 		String load_type = "";
 		if(val.getType().equals("NUMBER")) load_type = "fload ";
