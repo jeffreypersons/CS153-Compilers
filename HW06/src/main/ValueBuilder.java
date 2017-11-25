@@ -15,7 +15,8 @@ public class ValueBuilder
 	{
 		if(token.getType() == simpLParser.NAME)
 		{
-			return new Variable(token.getText(), map.get(token.getText()));
+			// add check for cast to determine
+			return map.get(token.getText());
 		}
 		if(token.getType() == simpLParser.NUMBER)
 		{
