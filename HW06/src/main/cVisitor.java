@@ -4,6 +4,8 @@ import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 import java.util.ArrayList;
+import java.util.List;
+
 public class cVisitor extends simpLBaseVisitor<TerminalNode>
 {
 	private static int stack_size = 0;
@@ -138,7 +140,9 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 			//throw new Exception("UNDELCARED IDENTIFIER");
 		}
 		Variable var = (Variable) memory.get(identifier);
-		var.setValue(val);
+		if(var.getCast().equals(val.getType())) var.setValue(val);
+		else System.out.println("Improper cast!"); // throw error here - different type
+		//var.setValue(val);
 		memory.put(identifier, var);
 		text.add(CodeEmitter.AssignVariable(var));
 		decStackSize(2);
@@ -355,6 +359,8 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 	{ 
 		TerminalNode a = null;
 		String name = ctx.NAME().toString();
+		Value val = null;
+		Variable var = null;
 		if(name.equals("println"))
 		{
 			// print ln - evaluate all expressions in function currently only evalutes the first one
@@ -363,23 +369,27 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 		}
 		else if(name.equals("print"))
 		{
-			a = visit(ctx.expr(0));
-			Value val = ValueBuilder.getValue(a.getSymbol(), memory);
-			if(a.getSymbol().getType() == simpLParser.NUMBER)
+			List<simpLParser.ExprContext> expressions = ctx.expr();
+			for(simpLParser.ExprContext exp : expressions)
 			{
-				text.add(CodeEmitter.Print("NUMBER"));
-			}
-			else if(a.getSymbol().getType() == simpLParser.NAME)
-			{
-				Variable var = (Variable) val;
-				val = var.getValue();
-				text.add(CodeEmitter.PutVarStack(var));
-				text.add(CodeEmitter.Print(val.getType()));
-			}
-			else
-			{
-				CodeEmitter.LoadConstant(val.getValue().toString());
-				text.add(CodeEmitter.Print("TEXT"));
+				a = visit(exp);
+				val = ValueBuilder.getValue(a.getSymbol(), memory);
+				if(a.getSymbol().getType() == simpLParser.NUMBER)
+				{
+					text.add(CodeEmitter.Print("NUMBER"));
+				}
+				else if(a.getSymbol().getType() == simpLParser.NAME)
+				{
+					var = (Variable) val;
+					val = var.getValue();
+					text.add(CodeEmitter.PutVarStack(var));
+					text.add(CodeEmitter.Print(val.getType()));
+				}
+				else
+				{
+					CodeEmitter.LoadConstant(val.getValue().toString());
+					text.add(CodeEmitter.Print("TEXT"));
+				}
 			}
 		}
 		else if(name.equals("read"))
