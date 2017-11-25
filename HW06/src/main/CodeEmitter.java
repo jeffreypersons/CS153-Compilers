@@ -134,7 +134,10 @@ public class CodeEmitter
 	{
 		//StringBuilder construct = new StringBuilder("ldc " + value.getValue().getValue() + "\n");
 		StringBuilder construct = new StringBuilder("");
-		construct.append("fstore " + num + "\n");
+		String store_type = "";
+		if(value.getValue().getType().equals("NUMBER")) store_type = "fstore ";
+		else store_type = "astore ";
+		construct.append(store_type + num + "\n");
 		value.setSlot(num);
 		return construct.toString();
 	}
@@ -142,7 +145,11 @@ public class CodeEmitter
 	public static String AssignVariable(Variable value)
 	{
 		if(value.getSlot() < 0) ;//throw error here. Undeclared variable
-		return "fstore " + value.getSlot();
+		Value val = value.getValue();
+		String store_type = "";
+		if(val.getType().equals("NUMBER")) store_type = "fstore ";
+		else store_type = "astore ";
+		return store_type + value.getSlot();
 	}	
 
 	public static String LoadConstant(String in)
@@ -164,7 +171,7 @@ public class CodeEmitter
 			construct.append("swap\n");
 			construct.append("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
 		}
-		if(type.equals("NUMBER"))
+		else if(type.equals("NUMBER"))
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
@@ -176,6 +183,10 @@ public class CodeEmitter
 	public static String PutVarStack(Variable a)
 	{
 		// just for numbers no checking
-		return "fload " + a.getSlot();
+		Value val = a.getValue();
+		String load_type = "";
+		if(val.getType().equals("NUMBER")) load_type = "fload ";
+		else load_type = "aload ";
+		return load_type + a.getSlot();
 	}
 }
