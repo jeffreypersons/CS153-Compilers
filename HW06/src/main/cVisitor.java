@@ -99,22 +99,22 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 		// No check typing - need to add
 		String name = ctx.NAME().toString();
 		Value val = null;
-		if(!ctx.TYPE().getSymbol().getText().equals("Number"))
-		{
-			System.out.println("INVALID DECLARATION - ONLY SUPPORT OF NUMBER IMPLEMENTED");
-		}
+		Variable var = null;
+		int parser_type = 0;
 		if(ctx.ASSIGN() != null)
 		{
 			val = getOperandValue(visit(ctx.expr()).getSymbol());
-			Variable var = new Variable(name, val, "NUMBER");
+			var = new Variable(name, val, val.getType());
 			text.add(CodeEmitter.DeclareVariable(var, locals));
+			parser_type = simpLParser.NUMBER;
 			memory.put(name, var);
 			//System.out.println("creating " + name + " and setting to " + val.getValue());
 		}
 		else memory.put(name, null);
 		IncLocals();
 		if(val != null) return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, "0"));
-		else return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, Double.toString((double)val.getValue())));
+		else if(parser_type == simpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(parser_type, Double.toString((double)val.getValue())));
+		else return new TerminalNodeImpl(new CommonToken(parser_type, val.getValue().toString()));
 	}
 	/**
 	 * {@inheritDoc}
@@ -128,6 +128,9 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 		// TODO: check validity based on variable cast using .getCast() method
 		String identifier = ctx.NAME().getSymbol().getText();
 		Value val = getOperandValue(visit(ctx.expr()).getSymbol());
+		int parser_type = 0;
+		if(val.getType().equals("NUMBER")) parser_type = simpLParser.NUMBER;
+		else parser_type = simpLParser.TEXT;
 		incStackSize(2);
 		if (memory.get(identifier) == null)
 		{
@@ -139,7 +142,8 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 		memory.put(identifier, var);
 		text.add(CodeEmitter.AssignVariable(var));
 		decStackSize(2);
-		return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, Double.toString((double)val.getValue())));
+		if(parser_type == simpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, Double.toString((double)val.getValue())));
+		else return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, val.getValue().toString()));
 	}
 	/**
 	 * {@inheritDoc}
@@ -180,8 +184,12 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 			if(val.getType().equals("IDENTIFIER"))
 			{
 				Variable var = (Variable) val;
-				text.add(CodeEmitter.PutVarStack(var));
 				Value operand = var.getValue();
+				 text.add(CodeEmitter.PutVarStack(var));
+				if(!operand.getType().equals("NUMBER"))
+				{
+					return new TerminalNodeImpl(new CommonToken(simpLParser.TEXT, (String)operand.getValue()));
+				}
 				result = (double)operand.getValue();
 			}
 			else result = (double) val.getValue();
@@ -191,9 +199,17 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 		{
 			// check if number of text for now assuming number
 			Value operand = getOperandValue(ctx.LITERAL().getSymbol());
-			double result = (double)operand.getValue();
-			text.add(CodeEmitter.LoadConstant(result));
-			return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, Double.toString(result)));
+			if(operand.getType().equals("NUMBER"))
+			{
+				double result = (double)operand.getValue();
+				text.add(CodeEmitter.LoadConstant(result));
+				return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, Double.toString(result)));
+			}
+			else
+			{
+				text.add(CodeEmitter.LoadConstant(operand.getValue().toString()));
+				return new TerminalNodeImpl(new CommonToken(simpLParser.TEXT, (String)operand.getValue()));
+			}
 		}
 		else if(ctx.LPAREN() != null)
 		{
@@ -356,8 +372,14 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 			else if(a.getSymbol().getType() == simpLParser.NAME)
 			{
 				Variable var = (Variable) val;
+				val = var.getValue();
 				text.add(CodeEmitter.PutVarStack(var));
-				text.add(CodeEmitter.Print("NUMBER"));
+				text.add(CodeEmitter.Print(val.getType()));
+			}
+			else
+			{
+				CodeEmitter.LoadConstant(val.getValue().toString());
+				text.add(CodeEmitter.Print("TEXT"));
 			}
 		}
 		else if(name.equals("read"))
