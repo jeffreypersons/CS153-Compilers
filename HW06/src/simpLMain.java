@@ -50,7 +50,7 @@ public class simpLMain
         // ignoring starting dots, and end at the first dot found
         int dotIndex = rawName.substring(1).indexOf('.');
         int start = rawName.startsWith(".")? 1 : 0;
-        int end = dotIndex == -1? rawName.length() : dotIndex;
+        int end = dotIndex == -1? rawName.length() : dotIndex + 1;
         return rawName.substring(start, end);
     }
 }
