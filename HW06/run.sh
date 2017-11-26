@@ -17,4 +17,6 @@ export CLASSPATH="./lib/jasmin-2.4-complete.jar:./lib/antlr-4.7-complete.jar:./s
 find ./src -name '*.class' -type f -delete
 javac ./src/main/*.java
 javac ./src/simpLMain.java
-java simpLMain tests/compile_test.txt
+java simpLMain tests/basic_compile.txt
+
+# simpL.g4 -o ./src/gen -listener -visitor -encoding UTF-8
