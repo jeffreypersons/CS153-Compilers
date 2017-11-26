@@ -142,15 +142,12 @@ public class CodeEmitter
 	 * @param  num   [slot number]
 	 * @return       [assembly code for that slot]
 	 */
-	public static String DeclareVariable(Variable value, int num)
+	public static String DeclareVariable(Variable var, int num)
 	{
 		//StringBuilder construct = new StringBuilder("ldc " + value.getValue().getValue() + "\n");
 		StringBuilder construct = new StringBuilder("");
-		String store_type = "";
-		if(value.getValue().getType().equals("NUMBER")) store_type = "fstore ";
-		else store_type = "astore ";
-		construct.append(store_type + num + "\n");
-		value.setSlot(num);
+		var.setSlot(num);
+		construct.append(AssignVariable(var) + "\n");
 		return construct.toString();
 	}
 
@@ -159,14 +156,16 @@ public class CodeEmitter
 	 * @param  value [variable that will be assigned new value]
 	 * @return       [assembly that will cause new value put into that slot or variable]
 	 */
-	public static String AssignVariable(Variable value)
+	public static String AssignVariable(Variable var)
 	{
-		if(value.getSlot() < 0) ;//throw error here. Undeclared variable
-		Value val = value.getValue();
+		if(var.getSlot() < 0) ;//throw error here. Undeclared variable
+		Value val = var.getValue();
 		String store_type = "";
+		System.out.println(val.getValue());
 		if(val.getType().equals("NUMBER")) store_type = "fstore ";
+		else if(val.getType().equals("BOOLEAN")) store_type = "istore ";
 		else store_type = "astore ";
-		return store_type + value.getSlot();
+		return store_type + var.getSlot();
 	}	
 
 	/**
@@ -177,6 +176,15 @@ public class CodeEmitter
 	public static String LoadConstant(String in)
 	{
 		return "ldc " + "\"" + in + "\"";
+	}
+
+	public static String LoadConstant(Boolean a)
+	{
+		if(a)
+		{
+			return "ldc " + 1;
+		}
+		else return "ldc " + 0;
 	}
 
 	/**
@@ -207,7 +215,13 @@ public class CodeEmitter
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/println(F)V\n"); // only prints number right now get type from evaluation node
+			construct.append("invokevirtual java/io/PrintStream/println(F)V\n");
+		}
+		else if(type.equals("BOOLEAN"))
+		{
+			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
+			construct.append("swap\n");
+			construct.append("invokevirtual java/io/PrintStream/println(I)V\n");
 		}
 		return construct.toString();
 	}
@@ -220,6 +234,7 @@ public class CodeEmitter
 		Value val = a.getValue();
 		String load_type = "";
 		if(val.getType().equals("NUMBER")) load_type = "fload ";
+		else if(val.getType().equals("BOOLEAN")) load_type = "iload ";
 		else load_type = "aload ";
 		return load_type + a.getSlot();
 	}
