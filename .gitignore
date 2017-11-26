@@ -25,6 +25,7 @@ bin/
 tmp/
 out/
 target/
+classes/
 
 # compiled object files
 *.o
