@@ -1,0 +1,5 @@
+Number foo = 103 + 3
+foo = 5 + 5
+Number bar = foo * foo
+bar = bar - 123
+print(test)
