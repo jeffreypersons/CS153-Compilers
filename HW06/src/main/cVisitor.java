@@ -100,23 +100,23 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 	{
 		// No check typing - need to add
 		String name = ctx.NAME().toString();
+		CommonToken token = new CommonToken(visit(ctx.expr()).getSymbol());
 		Value val = null;
 		Variable var = null;
-		int parser_type = 0;
 		if(ctx.ASSIGN() != null)
 		{
-			val = getOperandValue(visit(ctx.expr()).getSymbol());
+			val = getOperandValue(token);
 			var = new Variable(name, val, val.getType());
 			text.add(CodeEmitter.DeclareVariable(var, locals));
-			parser_type = simpLParser.NUMBER;
 			memory.put(name, var);
 			//System.out.println("creating " + name + " and setting to " + val.getValue());
 		}
-		else memory.put(name, null);
+		else memory.put(name, null); // add typing regardless of assignment or not
 		IncLocals();
 		if(val != null) return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, "0"));
-		else if(parser_type == simpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(parser_type, Double.toString((double)val.getValue())));
-		else return new TerminalNodeImpl(new CommonToken(parser_type, val.getValue().toString()));
+		//else if(parser_type == simpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(parser_type, Double.toString((double)val.getValue())));
+		//else return new TerminalNodeImpl(new CommonToken(parser_type, val.getValue().toString()));
+		return new TerminalNodeImpl(token);
 	}
 	/**
 	 * {@inheritDoc}
@@ -155,7 +155,10 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public TerminalNode visitIf_stmt(simpLParser.If_stmtContext ctx) { return super.visitChildren(ctx); }
+	@Override public TerminalNode visitIf_stmt(simpLParser.If_stmtContext ctx)
+	{
+		return super.visitChildren(ctx);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -189,12 +192,16 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 			{
 				Variable var = (Variable) val;
 				Value operand = var.getValue();
-				 text.add(CodeEmitter.PutVarStack(var));
-				if(!operand.getType().equals("NUMBER"))
+				text.add(CodeEmitter.PutVarStack(var));
+				if(operand.getType().equals("BOOLEAN"))
+				{
+					return new TerminalNodeImpl(new CommonToken(simpLParser.BOOLEAN, operand.getValue().toString()));
+				}
+				else if(!operand.getType().equals("NUMBER"))
 				{
 					return new TerminalNodeImpl(new CommonToken(simpLParser.TEXT, (String)operand.getValue()));
 				}
-				result = (double)operand.getValue();
+				else result = (double)operand.getValue();
 			}
 			else result = (double) val.getValue();
 			return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, Double.toString(result)));
@@ -202,12 +209,19 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 		else if(ctx.LITERAL() != null)
 		{
 			// check if number of text for now assuming number
+			//CommonToken token = new CommonToken(ctx.LITERAL().getSymbol());
 			Value operand = getOperandValue(ctx.LITERAL().getSymbol());
 			if(operand.getType().equals("NUMBER"))
 			{
 				double result = (double)operand.getValue();
 				text.add(CodeEmitter.LoadConstant(result));
 				return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, Double.toString(result)));
+			}
+			else if(operand.getType().equals("BOOLEAN"))
+			{
+				Boolean result = (Boolean) operand.getValue();
+				text.add(CodeEmitter.LoadConstant(result));
+				return new TerminalNodeImpl(new CommonToken(simpLParser.BOOLEAN, Boolean.toString(result)));
 			}
 			else
 			{
@@ -384,6 +398,10 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 					val = var.getValue();
 					text.add(CodeEmitter.PutVarStack(var));
 					text.add(CodeEmitter.Print(val.getType()));
+				}
+				else if(a.getSymbol().getType() == simpLParser.BOOLEAN)
+				{
+					text.add(CodeEmitter.Print("BOOLEAN"));
 				}
 				else
 				{
