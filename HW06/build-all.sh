@@ -25,7 +25,6 @@ fi
 chmod +x ./scripts/gen-antlr.sh
 chmod +x ./scripts/build-src.sh
 
-# generate antlr sources, wait a little, and them compile everything in src dir
+# generate antlr sources, and them compile everything in src dir
 ./scripts/gen-antlr.sh
-sleep 2
 ./scripts/build-src.sh
