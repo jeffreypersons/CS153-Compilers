@@ -36,15 +36,28 @@ public class ValueBuilder
 				val = new Number(Double.parseDouble(token.getText()));
 			}catch (Exception e)
 			{
-				val = new Text(token.getText());
+				String text = token.getText().toString();
+				if(text.equals("true") || text.equals("false"))
+				{
+					val = new Bool(text);
+				}
+				else val = new Text(text);
 			}
 			return val;
+		}
+		else if(token.getType() == simpLParser.BOOLEAN)
+		{
+			return new Bool(token.getText());
 		}
 		else if(token.getType() == simpLParser.TEXT)
 		{
 			return new Text(token.getText());
 		}
-		else return new Number(0);
+		else
+		{
+			System.out.println("NO VALID CAST " + token.getType());
+			return new Number(0);
+		}
 	}
 
 	// add values for primities
