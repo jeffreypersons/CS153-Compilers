@@ -1,7 +1,10 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import gen.simpLBaseVisitor;
+import gen.simpLParser;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.antlr.v4.runtime.CommonToken;

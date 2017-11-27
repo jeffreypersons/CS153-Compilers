@@ -1,10 +1,14 @@
 package main;
 
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
+
+import gen.simpLBaseVisitor;
+import gen.simpLParser;
+
+
 public class sVisitor extends simpLBaseVisitor<TerminalNode>
 {
 	public java.util.Map<String, Value> memory = new java.util.HashMap<String, Value>();

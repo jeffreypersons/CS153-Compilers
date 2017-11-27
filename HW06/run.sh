@@ -2,7 +2,7 @@
 # =================== Download Single Directory from Github ====================
 # build and run HW06
 # use `chmod +x ./<file_name>.sh` before running for first time
-# use `sed -i 's/\r$// ./<file>` if newline errors (eg $'\r')
+# use `sed -i 's/\r$//' ./<file>` if newline errors (eg $'\r')
 # ==============================================================================
 
 # ensure current working directory is HW06

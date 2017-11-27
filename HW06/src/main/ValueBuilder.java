@@ -2,6 +2,9 @@ package main;
 
 import org.antlr.v4.runtime.Token;
 
+import gen.simpLParser;
+
+
 /**
  * Used to construct wrapped objects. Works properly for interpreter may not be needed for compilation
  */
