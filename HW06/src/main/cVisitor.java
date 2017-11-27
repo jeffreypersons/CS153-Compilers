@@ -1,10 +1,12 @@
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
+package main;
+
+import java.util.ArrayList;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
-import java.util.ArrayList;
-import java.util.List;
+//import gen.simpLBaseVisitor;
 
 public class cVisitor extends simpLBaseVisitor<TerminalNode>
 {

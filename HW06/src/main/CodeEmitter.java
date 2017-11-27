@@ -1,3 +1,5 @@
+package main;
+
 public class CodeEmitter
 {
 	private static final String SET_NAME = ".class public ";

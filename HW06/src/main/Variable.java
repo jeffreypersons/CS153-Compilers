@@ -1,3 +1,5 @@
+package main;
+
 /** Used for varaibles. Returns the value stored in the map */
 public class Variable implements Value<Value>
 {

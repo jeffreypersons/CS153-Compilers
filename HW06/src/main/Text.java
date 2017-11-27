@@ -1,3 +1,5 @@
+package main;
+
 public class Text implements Value<String>
 {
 	String value;

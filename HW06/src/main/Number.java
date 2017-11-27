@@ -1,3 +1,5 @@
+package main;
+
 /**
  * Wrapper used to store numeric values
  */
