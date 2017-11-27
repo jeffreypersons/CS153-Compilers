@@ -1,4 +1,4 @@
-# simpL Programming Language Overview
+# SimpL Programming Language Overview
 
 ## Syntax Description
 - Coming Soon
