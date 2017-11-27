@@ -22,12 +22,17 @@ fi
 source_file_name=$1
 
 # configure classpath from dependencies and build paths
-export CLASSPATH="./lib/jasmin-2.4-complete.jar:./lib/antlr-4.7-complete.jar:./src/:./src/main:./src/gen/"
+export CLASSPATH="./lib/jasmin-2.4-complete.jar:./lib/antlr-4.7-complete.jar:./src/:./src/main:./src/gen/:$CLASSPATH"
+
+# generate Java code according to the SimpL grammar file
+# output is written to src/gen, consisting of code for tokens/parsers/listeners/visitors
+java -jar lib/antlr-4.7-complete.jar src/SimpL.g4 -long-messages -listener -visitor -encoding utf-8 -o src/gen -package gen
 
 # delete any existing class files and compile source
-find  ./src -name '*.class' -type f -delete
+find ./src -name '*.class' -type f -delete
 javac ./src/main/*.java
 javac ./src/SimpLMain.java
-java  SimpLMain ${source_file_name}
+java SimpLMain ${source_file_name}
 
-# SimpL.g4 -o ./src/gen -listener -visitor -encoding UTF-8
+# todo: incorporate the below jasmin assemble command
+# java -jar lib/jasmin-2.4-complete.jar <file_name.j>
