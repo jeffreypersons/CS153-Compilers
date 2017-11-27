@@ -1,3 +1,6 @@
+import java.util.Map;
+import java.util.HashMap;
+
 public class CodeEmitter
 {
 	private static final String SET_NAME = ".class public ";
@@ -7,6 +10,9 @@ public class CodeEmitter
 	private static final String END_FUNCTION = ".end method\n";
 	private static final String STACK_SIZE = ".limit stack ";
 	public static String program_name = "a";
+	private static Map<String,String> boolean_operations, if_operations;
+	private static Boolean isInitialized = false;
+
 	public static String Program(String name)
 	{
 		CodeEmitter.program_name = name;
@@ -265,7 +271,7 @@ public class CodeEmitter
 
 	public static String BooleanOperation(String type)
 	{
-		if(type.toUpperCase().equals("OR")) return "ior";
+		/*if(type.toUpperCase().equals("OR")) return "ior";
 		else if(type.toUpperCase().equals("AND")) return "iand";
 		else if(type.toUpperCase().equals("LT")) return "swap\nfcmpg\niconst_1\nisub"; // if equal change to negative 1
 		else if(type.toUpperCase().equals("GT")) return "swap\nfcmpg\niconst_1\niadd"; // if equal change to negative 1
@@ -273,22 +279,44 @@ public class CodeEmitter
 		else if(type.toUpperCase().equals("GTE")) return "fcmpg"; // change to 1 if equal
 		else if(type.toUpperCase().equals("EQ")) return "fcmpg"; 
 		else if(type.toUpperCase().equals("NEQ")) return "fcmpg";
-		else if(type.toUpperCase().equals("NOT")) return "ineg";
-		else return "";
+		else if(type.toUpperCase().equals("NOT")) return "ineg";*/
+		String result = boolean_operations.get(type.toUpperCase());
+		if(result == null) result = "";
+		return result;
 	}
 
 	public static String IfOperation(String type, String label)
 	{
 		String compare_type = "";
-		if(type.toUpperCase().equals("GT")) compare_type = "ifgt";
-		else if(type.toUpperCase().equals("LT")) compare_type = "iflt";
-		else if(type.toUpperCase().equals("GTE")) compare_type = "ifgt";
-		else if(type.toUpperCase().equals("LTE")) compare_type = "iflt";
-		else if(type.toUpperCase().equals("EQ")) compare_type = "ifne";
-		else if(type.toUpperCase().equals("NEQ")) compare_type = "ifeq";
-		else if(type.toUpperCase().equals("NOT")) compare_type = "iconst_1\nisub\niflt";
+		type = type.toUpperCase();
+		if(type.equals("GT")) compare_type = "ifgt";
+		else if(type.equals("LT")) compare_type = "iflt";
+		else if(type.equals("GTE")) compare_type = "ifgt";
+		else if(type.equals("LTE")) compare_type = "iflt";
+		else if(type.equals("EQ")) compare_type = "ifne";
+		else if(type.equals("NEQ")) compare_type = "ifeq";
+		else if(type.equals("NOT")) compare_type = "iconst_1\nisub\niflt";
 		else compare_type = "iflt";
 		return compare_type + " " + label.replaceAll(":", "");
+	}
+
+	public static void Initialize()
+	{
+		// temporary will use to change all the equals statements to use a preconstructed hash map.
+		// specifically the if, while, and boolean operations
+		if(isInitialized) return;
+
+		if_operations = new HashMap<String, String>();
+		boolean_operations = new HashMap<String, String>();
+
+		String[] ops = {"GT", "LT", "GTE", "LTE", "EQ", "NEQ", "NOT", "OR", "AND"};
+		String[] if_ops = {"ifg", "iflt", "ifgt", "iflt", "ifne", "ifeq", "iconst_1\nisub\niflt"};
+		String[] bool_ops = {"swap\nfcmpg\niconst_1\niadd", "swap\nfcmpg\niconst_1\nisub", "fcmpg", "swap\nfcmpg", "fcmpg", "fcmpg", "ineg", "ior", "iand"};
+
+		for(int x = 0; x < if_ops.length; x++) if_operations.put(ops[x], if_ops[x]);
+		for(int x = 0; x < bool_ops.length; x++) boolean_operations.put(ops[x], bool_ops[x]);
+
+		isInitialized = true;
 	}
 
 	public static String GetLabel(int num)

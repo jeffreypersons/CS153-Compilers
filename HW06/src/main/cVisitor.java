@@ -16,6 +16,13 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 	private static int cond_label_count = 0;
 	private java.util.Map<String, Value> memory = new java.util.HashMap<String, Value>();
 	private java.util.Map<String, Integer> if_memory = new java.util.HashMap<String, Integer>(); 
+
+	public cVisitor()
+	{
+		super();
+		CodeEmitter.Initialize();
+	}
+
 	public void IncLabelCount()
 	{
 		label_count++;
@@ -162,6 +169,23 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 		if(parser_type == simpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, Double.toString((double)val.getValue())));
 		else return new TerminalNodeImpl(new CommonToken(simpLParser.NUMBER, val.getValue().toString()));
 	}
+
+	@Override public TerminalNode visitWhile_loop(simpLParser.While_loopContext ctx)
+	{
+		String label = CodeEmitter.GetLabel(label_count);
+		IncLabelCount();		
+ 		String exit_label = CodeEmitter.GetLabel(label_count);
+ 		IncLabelCount();
+
+		text.add(label);
+		String expr_type = visit(ctx.expr()).getSymbol().getText().toString();
+		text.add(CodeEmitter.IfOperation(expr_type, exit_label));
+		visit(ctx.block());
+ 		text.add(CodeEmitter.GetGoTo(label));
+ 		text.add(exit_label);
+		return new TerminalNodeImpl(new CommonToken(simpLParser.BOOLEAN, "loop"));
+	}
+
 	/**
 	 * {@inheritDoc}
 	 *
