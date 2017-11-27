@@ -35,7 +35,6 @@ public class ValueBuilder
 				if(text.equals("true") || text.equals("false"))
 				{
 					val = new Bool(text);
-					System.out.println("BOOL " + val.getValue());
 				}
 				else val = new Text(text);
 			}
