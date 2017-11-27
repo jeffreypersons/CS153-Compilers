@@ -10,7 +10,8 @@ public class CodeEmitter
 	private static final String END_FUNCTION = ".end method\n";
 	private static final String STACK_SIZE = ".limit stack ";
 	public static String program_name = "a";
-	private static Map<String,String> boolean_operations, if_operations;
+	private static Map<String, String> boolean_operations, if_operations;
+	private static Map<String, HashMap<String,String>> type_ops;
 	private static Boolean isInitialized = false;
 
 	public static String Program(String name)
@@ -167,9 +168,7 @@ public class CodeEmitter
 		if(var.getSlot() < 0) ;//throw error here. Undeclared variable
 		Value val = var.getValue();
 		String store_type = "";
-		if(val.getType().equals("NUMBER")) store_type = "fstore ";
-		else if(val.getType().equals("BOOLEAN")) store_type = "istore ";
-		else store_type = "astore ";
+		store_type = type_ops.get(val.getType()).get("store");
 		return store_type + var.getSlot();
 	}	
 
@@ -263,23 +262,12 @@ public class CodeEmitter
 		// no checking
 		Value val = a.getValue();
 		String load_type = "";
-		if(val.getType().equals("NUMBER")) load_type = "fload ";
-		else if(val.getType().equals("BOOLEAN")) load_type = "iload ";
-		else load_type = "aload ";
+		load_type = type_ops.get(val.getType()).get("load");
 		return load_type + a.getSlot();
 	}
 
 	public static String BooleanOperation(String type)
 	{
-		/*if(type.toUpperCase().equals("OR")) return "ior";
-		else if(type.toUpperCase().equals("AND")) return "iand";
-		else if(type.toUpperCase().equals("LT")) return "swap\nfcmpg\niconst_1\nisub"; // if equal change to negative 1
-		else if(type.toUpperCase().equals("GT")) return "swap\nfcmpg\niconst_1\niadd"; // if equal change to negative 1
-		else if(type.toUpperCase().equals("LTE")) return "swap\nfcmpg"; // change to 1 if equal
-		else if(type.toUpperCase().equals("GTE")) return "fcmpg"; // change to 1 if equal
-		else if(type.toUpperCase().equals("EQ")) return "fcmpg"; 
-		else if(type.toUpperCase().equals("NEQ")) return "fcmpg";
-		else if(type.toUpperCase().equals("NOT")) return "ineg";*/
 		String result = boolean_operations.get(type.toUpperCase());
 		if(result == null) result = "";
 		return result;
@@ -289,14 +277,6 @@ public class CodeEmitter
 	{
 		String compare_type = "";
 		type = type.toUpperCase();
-		/*if(type.equals("GT")) compare_type = "ifgt";
-		else if(type.equals("LT")) compare_type = "iflt";
-		else if(type.equals("GTE")) compare_type = "ifgt";
-		else if(type.equals("LTE")) compare_type = "iflt";
-		else if(type.equals("EQ")) compare_type = "ifne";
-		else if(type.equals("NEQ")) compare_type = "ifeq";
-		else if(type.equals("NOT")) compare_type = "iconst_1\nisub\niflt";
-		else compare_type = "iflt";*/
 		compare_type = if_operations.get(type);
 		if(compare_type == null) compare_type = "iflt";
 		return compare_type + " " + label.replaceAll(":", "");
@@ -310,14 +290,28 @@ public class CodeEmitter
 
 		if_operations = new HashMap<String, String>();
 		boolean_operations = new HashMap<String, String>();
+		type_ops = new HashMap<String, HashMap<String,String>>();
 
 		String[] ops = {"GT", "LT", "GTE", "LTE", "EQ", "NEQ", "NOT", "OR", "AND"};
 		String[] if_ops = {"ifgt", "iflt", "ifgt", "iflt", "ifne", "ifeq", "iconst_1\nisub\niflt"};
 		String[] bool_ops = {"swap\nfcmpg\niconst_1\niadd", "swap\nfcmpg\niconst_1\nisub", "fcmpg", "swap\nfcmpg", "fcmpg", "fcmpg", "ineg", "ior", "iand"};
+		String[] types = {"NUMBER", "TEXT", "BOOLEAN"};
+		String[] load_commands = {"fload ", "aload ", "iload "};
+		String[] store_commands = {"fstore ", "astore ", "istore "};
+		String[] command_types = {"store", "load"};
+
+		HashMap<String, String> loads;
 
 		for(int x = 0; x < if_ops.length; x++) if_operations.put(ops[x], if_ops[x]);
 		for(int x = 0; x < bool_ops.length; x++) boolean_operations.put(ops[x], bool_ops[x]);
+		for(int x = 0; x < types.length; x++) 
+		{
+			loads = new HashMap<String, String>();
+			loads.put(command_types[0], store_commands[x]);
+			loads.put(command_types[1], load_commands[x]);
 
+			type_ops.put(types[x], loads);
+		}
 		isInitialized = true;
 	}
 
