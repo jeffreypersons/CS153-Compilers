@@ -289,28 +289,30 @@ public class CodeEmitter
 	{
 		String compare_type = "";
 		type = type.toUpperCase();
-		if(type.equals("GT")) compare_type = "ifgt";
+		/*if(type.equals("GT")) compare_type = "ifgt";
 		else if(type.equals("LT")) compare_type = "iflt";
 		else if(type.equals("GTE")) compare_type = "ifgt";
 		else if(type.equals("LTE")) compare_type = "iflt";
 		else if(type.equals("EQ")) compare_type = "ifne";
 		else if(type.equals("NEQ")) compare_type = "ifeq";
 		else if(type.equals("NOT")) compare_type = "iconst_1\nisub\niflt";
-		else compare_type = "iflt";
+		else compare_type = "iflt";*/
+		compare_type = if_operations.get(type);
+		if(compare_type == null) compare_type = "iflt";
 		return compare_type + " " + label.replaceAll(":", "");
 	}
 
 	public static void Initialize()
 	{
-		// temporary will use to change all the equals statements to use a preconstructed hash map.
-		// specifically the if, while, and boolean operations
+
+		// construct hashmaps for all boolean and if operations
 		if(isInitialized) return;
 
 		if_operations = new HashMap<String, String>();
 		boolean_operations = new HashMap<String, String>();
 
 		String[] ops = {"GT", "LT", "GTE", "LTE", "EQ", "NEQ", "NOT", "OR", "AND"};
-		String[] if_ops = {"ifg", "iflt", "ifgt", "iflt", "ifne", "ifeq", "iconst_1\nisub\niflt"};
+		String[] if_ops = {"ifgt", "iflt", "ifgt", "iflt", "ifne", "ifeq", "iconst_1\nisub\niflt"};
 		String[] bool_ops = {"swap\nfcmpg\niconst_1\niadd", "swap\nfcmpg\niconst_1\nisub", "fcmpg", "swap\nfcmpg", "fcmpg", "fcmpg", "ineg", "ior", "iand"};
 
 		for(int x = 0; x < if_ops.length; x++) if_operations.put(ops[x], if_ops[x]);
