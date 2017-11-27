@@ -8,12 +8,13 @@ Notes:
   instead. This greatly promotes separation of concerns, and simplifies the lexer grammar.
 - ANTLR unfortunately lacks support for negated tokens (eg, we have to do ~('\'') instead of ~QUOTE)
  */
-grammar simpL;
+grammar SimpL;
 
 program : stmt*;
 stmt
     : func_def
     | if_stmt
+    | while_loop
     | declaration
     | assignment
     | expr EOL
@@ -23,6 +24,9 @@ declaration
     ;
 assignment
     : NAME ASSIGN expr EOL
+    ;
+while_loop
+    : 'while' expr block
     ;
 if_stmt
     : ('if' expr block)

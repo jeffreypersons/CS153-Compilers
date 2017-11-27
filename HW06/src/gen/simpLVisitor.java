@@ -34,6 +34,12 @@ public interface simpLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssignment(simpLParser.AssignmentContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link simpLParser#while_loop}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile_loop(simpLParser.While_loopContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link simpLParser#if_stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

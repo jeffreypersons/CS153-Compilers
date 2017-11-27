@@ -47,6 +47,16 @@ public interface simpLListener extends ParseTreeListener {
 	 */
 	void exitAssignment(simpLParser.AssignmentContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link simpLParser#while_loop}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile_loop(simpLParser.While_loopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link simpLParser#while_loop}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile_loop(simpLParser.While_loopContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link simpLParser#if_stmt}.
 	 * @param ctx the parse tree
 	 */
