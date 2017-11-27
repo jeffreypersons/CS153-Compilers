@@ -16,10 +16,10 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 	private static int stack_size = 0;
 	private static int necessary_stack_size = 0;
 	private static int locals = 1;
-	private static ArrayList<String> text;
+	private static List<String> text;
 	private java.util.Map<String, Value> memory = new java.util.HashMap<String, Value>();
 
-	public ArrayList<String> getText()
+	public List<String> getText()
 	{
 		return text;
 	}
