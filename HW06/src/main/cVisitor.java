@@ -132,6 +132,7 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 		Value val = getOperandValue(visit(ctx.expr()).getSymbol());
 		int parser_type = 0;
 		if(val.getType().equals("NUMBER")) parser_type = simpLParser.NUMBER;
+		else if(val.getType().equals("BOOLEAN")) parser_type = simpLParser.BOOLEAN;
 		else parser_type = simpLParser.TEXT;
 		incStackSize(2);
 		if (memory.get(identifier) == null)
@@ -302,24 +303,72 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 		// Boolean operators
 		else if(ctx.NOT() != null)
 		{
-			return null;
+			System.out.println(loperand);
+			return new TerminalNodeImpl(new CommonToken(simpLParser.BOOLEAN, loperand.toString()));
 		}
 		else if(ctx.AND() != null)
 		{
-			return null;
+			System.out.println(loperand + "---" + roperand);
+			// add check that both are boolean?
+			if(loperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+			}
+			else CodeEmitter.LoadConstant((Boolean) loperand.getValue());
+			if(roperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+			}
+			else CodeEmitter.LoadConstant((Boolean)loperand.getValue());
+			text.add(CodeEmitter.BooleanOperation("and"));
+			return new TerminalNodeImpl(new CommonToken(simpLParser.BOOLEAN, "AND"));
 		}
 		else if(ctx.OR() != null)
 		{
-			return null;
+			System.out.println(loperand + "---" + roperand);
+			// add check that both are boolean?
+			if(loperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+			}
+			else CodeEmitter.LoadConstant((Boolean) loperand.getValue());
+			if(roperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+			}
+			else CodeEmitter.LoadConstant((Boolean)loperand.getValue());
+			text.add(CodeEmitter.BooleanOperation("or"));
+			return new TerminalNodeImpl(new CommonToken(simpLParser.BOOLEAN, "OR"));
 		}
 		else if(ctx.LT() != null)
 		{
-			return null;
+			if(loperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			if(roperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.BooleanOperation("lt"));
+			return new TerminalNodeImpl(new CommonToken(simpLParser.BOOLEAN, "LT"));
 		}
 		else if(ctx.GT() != null)
 		{
-			return null;
-
+			if(loperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			if(roperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.BooleanOperation("gt"));
+			return new TerminalNodeImpl(new CommonToken(simpLParser.BOOLEAN, "LT"));
 		}
 		else if(ctx.GTE() != null)
 		{
