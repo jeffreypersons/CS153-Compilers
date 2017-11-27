@@ -39,4 +39,9 @@ public class Bool implements Value<Boolean>
 	{
 		return this.value;
 	}
+
+	public void toggleValue()
+	{
+		value = !value;
+	}
 }
