@@ -204,7 +204,6 @@ public class cVisitor extends simpLBaseVisitor<TerminalNode>
 		for(simpLParser.ExprContext exp : expressions)
 		{
 			evaluate_type = visit(exp).getSymbol().getText();
-			System.out.println(evaluate_type);
 			if_memory.put(label, countLines());
 			cond_label = CodeEmitter.GetCondLabel(cond_label_count);
 			text.add(CodeEmitter.IfOperation(evaluate_type, cond_label));
