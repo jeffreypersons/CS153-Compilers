@@ -1,7 +1,29 @@
 # SimpL Programming Language Overview
 
-## Syntax Description
-- Coming Soon
+## Setup
+
+##### Troubleshooting
+- Ensure your working from the HW06 directory (this will change in future versions)
+- Ensure shell script permissions are set, use `chmod +x ./<file_name>.sh` before
+  running for the first time
+- Ensure newlines and utf-8 are set for the scripts, use `sed -i 's/\r$//' ./<file>`
+  on any shell scripts that are failing due to newlines issues such as $'\r', etc
+
+##### Building SimpL
+
+    ./build.sh
+
+##### Running SimpL
+
+    ./simpl.sh <source_file>
+
+##### For example
+
+    ./build-all.sh
+    ./simpl.sh tests/basic_compile.txt
+
+
+## Syntax
 
 ### Operators
 ```

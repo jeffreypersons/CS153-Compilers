@@ -6,7 +6,7 @@ public class SimpLMain
         if (args.length == 0)
         {
             System.out.println("Invalid number of arguments");
-            System.out.println("Usage: java SimpLMain test.txt");
+            System.out.println("Usage: java SimpLMain <filename>");
             System.exit(1);
         }
         String fileName = args[0];
