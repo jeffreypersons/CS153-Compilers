@@ -16,17 +16,31 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	private static int stack_size = 0;
 	private static int necessary_stack_size = 0;
 	private static int locals = 1;
-	private static List<String> text;
+	private static ArrayList<String> text;
+	private static int label_count = 0;
+	private static int cond_label_count = 0;
 	private java.util.Map<String, Value> memory = new java.util.HashMap<String, Value>();
+	private java.util.Map<String, Integer> if_memory = new java.util.HashMap<String, Integer>();
+	public void IncLabelCount()
+	{
+		label_count++;
+	}
 
-	public List<String> getText()
+	public void IncCondLabelCount()
+	{
+		cond_label_count++;
+	}
+
+	public ArrayList<String> getText()
 	{
 		return text;
 	}
+
 	public int getStackSize()
 	{
 		return this.necessary_stack_size;
 	}
+
 	public java.util.Map<String, Value> getMemory()
 	{
 		return this.memory;
@@ -37,23 +51,28 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		stack_size++;
 		if(stack_size > necessary_stack_size) necessary_stack_size = stack_size;
 	}
+
 	private void IncLocals()
 	{
 		locals++;
 	}
+
 	private void DecLocals()
 	{
 		locals--;
 	}
+
 	private void decStackSize()
 	{
-		if(stack_size > 0) stack_size--; 
+		if(stack_size > 0) stack_size--;
 	}
+
 	private void incStackSize(long a)
 	{
 		stack_size += a;
 		if(stack_size > necessary_stack_size) necessary_stack_size = stack_size;
 	}
+
 	private void decStackSize(long a)
 	{
 		if(a >= stack_size) stack_size = 0;
@@ -74,7 +93,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		int stack_size_line = 0;
 		stack_size_line = text.size();
 		text.add(CodeEmitter.SetStack(stack_size) + CodeEmitter.SetLocals(locals));
-		TerminalNode a = super.visitChildren(ctx); 
+		TerminalNode a = super.visitChildren(ctx);
 		text.set(stack_size_line, CodeEmitter.SetStack((stack_size + locals) * 2) + CodeEmitter.SetLocals(locals)); // since everything is stored as float, multiply by 2 I think
 		return a;
 	}
@@ -85,7 +104,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public TerminalNode visitStmt(SimpLParser.StmtContext ctx)
-	{ 
+	{
 		return super.visitChildren(ctx);
 	}
 	/**
@@ -123,7 +142,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public TerminalNode visitAssignment(SimpLParser.AssignmentContext ctx)
-	{ 
+	{
 		// check if it exists in the memory map
 		// TODO: check validity based on variable cast using .getCast() method
 		String identifier = ctx.NAME().getSymbol().getText();
@@ -158,7 +177,45 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	 */
 	@Override public TerminalNode visitIf_stmt(SimpLParser.If_stmtContext ctx)
 	{
-		return super.visitChildren(ctx);
+		List<SimpLParser.ExprContext> expressions = ctx.expr();
+		int block_count = 0;
+		String label = CodeEmitter.GetLabel(label_count);
+		text.add(label);
+		IncLabelCount();
+		String evaluate_type, cond_label = null;
+		ArrayList<Integer> last_label_skip = new ArrayList<Integer>();
+		for(SimpLParser.ExprContext exp : expressions)
+		{
+			evaluate_type = visit(exp).getSymbol().getText();
+			System.out.println(evaluate_type);
+			if_memory.put(label, countLines());
+			cond_label = CodeEmitter.GetCondLabel(cond_label_count);
+			text.add(CodeEmitter.IfOperation(evaluate_type, cond_label));
+			visit(ctx.block(block_count));
+			last_label_skip.add(text.size());
+
+			text.add(CodeEmitter.GetGoTo("temp"));
+			text.add(cond_label);
+			IncCondLabelCount();
+			block_count++;
+		}
+
+		// else block
+		if(block_count < ctx.block().size())
+		{
+			visit(ctx.block(block_count));
+			cond_label = CodeEmitter.GetCondLabel(cond_label_count);
+			text.add(cond_label);
+			IncCondLabelCount();
+		}
+		for(int a : last_label_skip)
+		{
+			text.set(a, CodeEmitter.GetGoTo(cond_label));
+		}
+
+		//System.out.print("resulting node: " + a);
+		// if then body. if condition is not met, the label sends it outside if statement, otherwise continue normally
+		return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true"));
 	}
 	/**
 	 * {@inheritDoc}
@@ -173,7 +230,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public TerminalNode visitBlock(SimpLParser.BlockContext ctx) { return super.visitChildren(ctx); }
+	@Override public TerminalNode visitBlock(SimpLParser.BlockContext ctx)
+	{
+		// don't execute expr yet. this would be the return statement
+		List<SimpLParser.StmtContext> stmts = ctx.stmt();
+		for(SimpLParser.StmtContext stmt : stmts) visit(stmt);
+		return new TerminalNodeImpl(new CommonToken(SimpLParser.LITERAL, "block"));
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -187,7 +250,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		TerminalNodeImpl a = null;
 		if(ctx.NAME() != null)
 		{
-			Value val = memory.get(ctx.NAME().getSymbol().getText().toString());
+			Value val = memory.get(ctx.NAME().getSymbol().getText().toString()); // if undeclared throw error
+			if(val == null) return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true"));
 			double result;
 			if(val.getType().equals("IDENTIFIER"))
 			{
@@ -232,16 +296,30 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		}
 		else if(ctx.LPAREN() != null)
 		{
-			return ctx.LPAREN();
+			if(ctx.RPAREN() == null) System.out.println("no matching paren");
+			TerminalNodeImpl result = new TerminalNodeImpl(visit(ctx.expr(0)).getSymbol());
+			return result;
 		}
-		else if(ctx.RPAREN() != null)
+		/*else if(ctx.RPAREN() != null)
 		{
 			return ctx.RPAREN();
-		}
+		}*/
 		Value loperand, roperand;
 		incStackSize(2);
+		// try for single operator such as not
+		if(ctx.NOT() != null)
+		{
+			loperand = getOperandValue(visit(ctx.expr(0)).getSymbol());
+			if(loperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((Boolean) loperand.getValue()));
+			text.add(CodeEmitter.BooleanOperation("NOT"));
+			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "NOT"));
+		}
 		try
-		{	
+		{
 			loperand = getOperandValue(visit(ctx.expr(0)).getSymbol());
 			roperand = getOperandValue(visit(ctx.expr(1)).getSymbol());
 		}catch (Exception e)
@@ -301,11 +379,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			a = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
 		// Boolean operators
-		else if(ctx.NOT() != null)
-		{
-			System.out.println(loperand);
-			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, loperand.toString()));
-		}
 		else if(ctx.AND() != null)
 		{
 			System.out.println(loperand + "---" + roperand);
@@ -368,27 +441,67 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			}
 			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
 			text.add(CodeEmitter.BooleanOperation("gt"));
-			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "LT"));
+			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "GT"));
 		}
 		else if(ctx.GTE() != null)
 		{
-			return null;
-
+			if(loperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			if(roperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.BooleanOperation("gte"));
+			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "GTE"));
 		}
 		else if(ctx.LTE() != null)
 		{
-			return null;
-
+			if(loperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			if(roperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.BooleanOperation("lte"));
+			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "LTE"));
 		}
 		else if(ctx.EQ() != null)
 		{
-			return null;
-	
+			if(loperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			if(roperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.BooleanOperation("eq"));
+			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "EQ"));
 		}
 		else if(ctx.NEQ() != null)
 		{
-			return null;
-
+			if(loperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			if(roperand.getType().equals("IDENTIFIER"))
+			{
+				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+			}
+			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.BooleanOperation("neq"));
+			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "NEQ"));
 		}
 		return a;
 	}
@@ -419,16 +532,39 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public TerminalNode visitFunc_call(SimpLParser.Func_callContext ctx)
-	{ 
+	{
 		TerminalNode a = null;
 		String name = ctx.NAME().toString();
 		Value val = null;
 		Variable var = null;
 		if(name.equals("println"))
 		{
-			// print ln - evaluate all expressions in function currently only evalutes the first one
-			// for testing
-
+			List<SimpLParser.ExprContext> expressions = ctx.expr();
+			for(SimpLParser.ExprContext exp : expressions)
+			{
+				a = visit(exp);
+				val = ValueBuilder.getValue(a.getSymbol(), memory);
+				if(a.getSymbol().getType() == SimpLParser.NUMBER)
+				{
+					text.add(CodeEmitter.Println("NUMBER"));
+				}
+				else if(a.getSymbol().getType() == SimpLParser.NAME)
+				{
+					var = (Variable) val;
+					val = var.getValue();
+					text.add(CodeEmitter.PutVarStack(var));
+					text.add(CodeEmitter.Println(val.getType()));
+				}
+				else if(a.getSymbol().getType() == SimpLParser.BOOLEAN)
+				{
+					text.add(CodeEmitter.Println("BOOLEAN"));
+				}
+				else
+				{
+					CodeEmitter.LoadConstant(val.getValue().toString());
+					text.add(CodeEmitter.Println("TEXT"));
+				}
+			}
 		}
 		else if(name.equals("print"))
 		{
@@ -463,6 +599,20 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		{
 
 		}
-		return a; 
+		return a;
+	}
+
+	private int countLines()
+	{
+		int num_lines = 0;
+		for(String str : text)
+		{
+			for(int x = 0; x < str.length(); x++)
+			{
+				if(str.charAt(x) == '\n' || str.charAt(x) == '\r') num_lines++;
+			}
+		}
+		num_lines += text.size();
+		return num_lines;
 	}
 }

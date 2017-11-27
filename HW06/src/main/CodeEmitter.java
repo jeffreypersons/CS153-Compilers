@@ -1,5 +1,9 @@
 package main;
 
+import main.Value;
+import main.Variable;
+
+
 public class CodeEmitter
 {
 	private static final String SET_NAME = ".class public ";
@@ -45,7 +49,7 @@ public class CodeEmitter
 	{
 		StringBuilder construct = new StringBuilder("");
 		construct.append("invokestatic " + CodeEmitter.program_name + "/sub(FF)F\n");
-		return construct.toString();	
+		return construct.toString();
 	}
 
 
@@ -53,14 +57,14 @@ public class CodeEmitter
 	{
 		StringBuilder construct = new StringBuilder("");
 		construct.append("invokestatic " + CodeEmitter.program_name + "/mul(FF)F\n");
-		return construct.toString();	
+		return construct.toString();
 	}
 
 	public static String Div()
 	{
 		StringBuilder construct = new StringBuilder("");
 		construct.append("invokestatic " + CodeEmitter.program_name + "/div(FF)F\n");
-		return construct.toString();	
+		return construct.toString();
 	}
 
 	public static String Printi(String in)
@@ -71,8 +75,8 @@ public class CodeEmitter
 
 	public static String Read(String type)
 	{
-    	StringBuilder construct = new StringBuilder("getstatic java/lang/System/in Ljava/io/InputStream;\n");
-    	return construct.append("invokevirtual java/io/InputStream/read()").append(type).append("\n").toString();
+		StringBuilder construct = new StringBuilder("getstatic java/lang/System/in Ljava/io/InputStream;\n");
+		return construct.append("invokevirtual java/io/InputStream/read()").append(type).append("\n").toString();
 	}
 
 	public static String EndMethod()
@@ -82,7 +86,6 @@ public class CodeEmitter
 
 	private static void shortCutInstruction(String instruction)
 	{
-		return;
 	}
 
 	/**
@@ -98,42 +101,42 @@ public class CodeEmitter
 		{
 			// create multiply code
 			construct.append(START_FUNCTION + "mul(FF)F\n");
-    		construct.append(SetStack(2));
-    		construct.append(SetLocals(2));
-    		construct.append("fload_0\n");
-    		construct.append("fload_1\n");
-    		construct.append("fmul\n");
-    		construct.append("freturn\n");
+			construct.append(SetStack(2));
+			construct.append(SetLocals(2));
+			construct.append("fload_0\n");
+			construct.append("fload_1\n");
+			construct.append("fmul\n");
+			construct.append("freturn\n");
 			construct.append(END_FUNCTION);
 
 			// create add code
 			construct.append(START_FUNCTION + "add(FF)F\n");
-    		construct.append(SetStack(2));
-    		construct.append(SetLocals(2));
-    		construct.append("fload_0\n");
-    		construct.append("fload_1\n");
-    		construct.append("fadd\n");
-    		construct.append("freturn\n");
+			construct.append(SetStack(2));
+			construct.append(SetLocals(2));
+			construct.append("fload_0\n");
+			construct.append("fload_1\n");
+			construct.append("fadd\n");
+			construct.append("freturn\n");
 			construct.append(END_FUNCTION);
 
 			// create div code
 			construct.append(START_FUNCTION + "div(FF)F\n");
-    		construct.append(SetStack(2));
-    		construct.append(SetLocals(2));
-    		construct.append("fload_0\n");
-    		construct.append("fload_1\n");
-    		construct.append("fdiv\n");
-    		construct.append("freturn\n");
+			construct.append(SetStack(2));
+			construct.append(SetLocals(2));
+			construct.append("fload_0\n");
+			construct.append("fload_1\n");
+			construct.append("fdiv\n");
+			construct.append("freturn\n");
 			construct.append(END_FUNCTION);
 
 			// create sub code
 			construct.append(START_FUNCTION + "sub(FF)F\n");
-    		construct.append(SetStack(2));
-    		construct.append(SetLocals(2));
-    		construct.append("fload_0\n");
-    		construct.append("fload_1\n");
-    		construct.append("fsub\n");
-    		construct.append("freturn\n");
+			construct.append(SetStack(2));
+			construct.append(SetLocals(2));
+			construct.append("fload_0\n");
+			construct.append("fload_1\n");
+			construct.append("fsub\n");
+			construct.append("freturn\n");
 			construct.append(END_FUNCTION);
 		}
 		return construct.toString();
@@ -161,14 +164,14 @@ public class CodeEmitter
 	 */
 	public static String AssignVariable(Variable var)
 	{
-		if(var.getSlot() < 0) ;  //throw error here. Undeclared variable
+		if(var.getSlot() < 0) ;//throw error here. Undeclared variable
 		Value val = var.getValue();
 		String store_type = "";
 		if(val.getType().equals("NUMBER")) store_type = "fstore ";
 		else if(val.getType().equals("BOOLEAN")) store_type = "istore ";
 		else store_type = "astore ";
 		return store_type + var.getSlot();
-	}	
+	}
 
 	/**
 	 * Put a constant string onto the stack
@@ -186,7 +189,7 @@ public class CodeEmitter
 		{
 			return "ldc " + 1;
 		}
-		else return "ldc " + 0;
+		else return "ldc " + -1;
 	}
 
 	/**
@@ -204,6 +207,31 @@ public class CodeEmitter
 	 * @param  type String description that matches possible types. e.g. NUMBER or TEXT
 	 * @return      Return the appropriate println command in jasmin assembly code
 	 */
+	public static String Println(String type)
+	{
+		StringBuilder construct = new StringBuilder("getstatic java/lang/System/out Ljava/io/PrintStream;\ndup\n");
+		construct.append("ldc \" \"\ninvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+		if(type.equals("TEXT"))
+		{
+			//construct.append();
+			construct.append("swap\n");
+			construct.append("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n");
+		}
+		else if(type.equals("NUMBER"))
+		{
+			//construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
+			construct.append("swap\n");
+			construct.append("invokevirtual java/io/PrintStream/print(F)V\n");
+		}
+		else if(type.equals("BOOLEAN"))
+		{
+			//construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
+			construct.append("swap\n");
+			construct.append("invokevirtual java/io/PrintStream/print(I)V\n");
+		}
+		return construct.toString();
+	}
+
 	public static String Print(String type)
 	{
 		StringBuilder construct = new StringBuilder("");
@@ -211,24 +239,24 @@ public class CodeEmitter
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+			construct.append("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n");
 		}
 		else if(type.equals("NUMBER"))
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/println(F)V\n");
+			construct.append("invokevirtual java/io/PrintStream/print(F)V\n");
 		}
 		else if(type.equals("BOOLEAN"))
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/println(I)V\n");
+			construct.append("invokevirtual java/io/PrintStream/print(I)V\n");
 		}
 		return construct.toString();
 	}
 
-	// if number used fstore else use astore assuming address to string. Can change type to 
+	// if number used fstore else use astore assuming address to string. Can change type to
 	// array in the future
 	public static String PutVarStack(Variable a)
 	{
@@ -245,10 +273,42 @@ public class CodeEmitter
 	{
 		if(type.toUpperCase().equals("OR")) return "ior";
 		else if(type.toUpperCase().equals("AND")) return "iand";
-		else if(type.toUpperCase().equals("LT")) return "swap\nfcmpg"; // if equal change to negative 1
-		else if(type.toUpperCase().equals("GT")) return "fcmpg"; // if equal change to negative 1
+		else if(type.toUpperCase().equals("LT")) return "swap\nfcmpg\niconst_1\nisub"; // if equal change to negative 1
+		else if(type.toUpperCase().equals("GT")) return "swap\nfcmpg\niconst_1\niadd"; // if equal change to negative 1
 		else if(type.toUpperCase().equals("LTE")) return "swap\nfcmpg"; // change to 1 if equal
 		else if(type.toUpperCase().equals("GTE")) return "fcmpg"; // change to 1 if equal
+		else if(type.toUpperCase().equals("EQ")) return "fcmpg";
+		else if(type.toUpperCase().equals("NEQ")) return "fcmpg";
+		else if(type.toUpperCase().equals("NOT")) return "ineg";
 		else return "";
+	}
+
+	public static String IfOperation(String type, String label)
+	{
+		String compare_type = "";
+		if(type.toUpperCase().equals("GT")) compare_type = "ifgt";
+		else if(type.toUpperCase().equals("LT")) compare_type = "iflt";
+		else if(type.toUpperCase().equals("GTE")) compare_type = "ifgt";
+		else if(type.toUpperCase().equals("LTE")) compare_type = "iflt";
+		else if(type.toUpperCase().equals("EQ")) compare_type = "ifne";
+		else if(type.toUpperCase().equals("NEQ")) compare_type = "ifeq";
+		else if(type.toUpperCase().equals("NOT")) compare_type = "iconst_1\nisub\niflt";
+		else compare_type = "iflt";
+		return compare_type + " " + label.replaceAll(":", "");
+	}
+
+	public static String GetLabel(int num)
+	{
+		return "LABEL_" + num + ":";
+	}
+
+	public static String GetCondLabel(int num)
+	{
+		return "COND_" + num + ":";
+	}
+
+	public static String GetGoTo(String label)
+	{
+		return "goto " + label.replaceAll(":", "");
 	}
 }
