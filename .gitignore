@@ -28,6 +28,7 @@ target/
 classes/
 
 # compiled object files
+*.j
 *.o
 *.lo
 *.slo
