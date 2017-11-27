@@ -8,7 +8,7 @@ Notes:
   instead. This greatly promotes separation of concerns, and simplifies the lexer grammar.
 - ANTLR unfortunately lacks support for negated tokens (eg, we have to do ~('\'') instead of ~QUOTE)
  */
-grammar SimpL;
+grammar simpL;
 
 program : stmt*;
 stmt
