@@ -2,7 +2,7 @@ package main;
 
 import org.antlr.v4.runtime.Token;
 
-import gen.simpLParser;
+import gen.SimpLParser;
 
 
 /**
@@ -18,16 +18,16 @@ public class ValueBuilder
 	 */
 	public static Value getValue(Token token, java.util.Map<String, Value> map)
 	{
-		if(token.getType() == simpLParser.NAME)
+		if(token.getType() == SimpLParser.NAME)
 		{
 			// add check for cast to determine
 			return map.get(token.getText());
 		}
-		if(token.getType() == simpLParser.NUMBER)
+		if(token.getType() == SimpLParser.NUMBER)
 		{
 			return new Number(Double.parseDouble(token.getText()));
 		}
-		else if(token.getType() == simpLParser.LITERAL)
+		else if(token.getType() == SimpLParser.LITERAL)
 		{
 			// add checks for all possible literals
 			Value val;
@@ -45,11 +45,11 @@ public class ValueBuilder
 			}
 			return val;
 		}
-		else if(token.getType() == simpLParser.BOOLEAN)
+		else if(token.getType() == SimpLParser.BOOLEAN)
 		{
 			return new Bool(token.getText());
 		}
-		else if(token.getType() == simpLParser.TEXT)
+		else if(token.getType() == SimpLParser.TEXT)
 		{
 			return new Text(token.getText());
 		}
@@ -60,7 +60,7 @@ public class ValueBuilder
 		}
 	}
 
-	// add values for primities
+	// add values for primitives
 	public static Value getValue(double in)
 	{
 		return new Number(in);

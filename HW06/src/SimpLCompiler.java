@@ -6,45 +6,46 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import gen.simpLBaseListener;
-import gen.simpLLexer;
-import gen.simpLParser;
+import gen.SimpLBaseListener;
+import gen.SimpLLexer;
+import gen.SimpLParser;
 import main.CodeEmitter;
-import main.cVisitor;
+import main.CVisitor;
 import utils.FileUtils;
+
 
 class SourceFileNotFoundException extends RuntimeException {}
 
 /**
  * Client class for wrapping all the compiler components (lexer/parser/parseTree/symTabs/etc).
  */
-public class simpLCompiler
+public class SimpLCompiler
 {
     // todo: changes can be made here in future, since backend won't need to change every time...
     // but the lexer/parser wilL!
-    private final simpLLexer lexer;
-    private final simpLParser parser;
+    private final SimpLLexer lexer;
+    private final SimpLParser parser;
     private final ParseTree parseTree;
-    private final cVisitor visitor;
+    private final CVisitor visitor;
     private final String sourceFileName;
     private final List<String> program = new ArrayList<>();
 
-    public simpLCompiler(String sourceFileName)
+    public SimpLCompiler(String sourceFileName)
     {
         try
         {
-            lexer = new simpLLexer(CharStreams.fromFileName(sourceFileName));
+            lexer = new SimpLLexer(CharStreams.fromFileName(sourceFileName));
         }
         catch (IOException e)
         {
             throw new SourceFileNotFoundException();
         }
         this.sourceFileName = sourceFileName;
-        parser = new simpLParser(new CommonTokenStream(lexer));
-        parser.addParseListener(new simpLBaseListener());
+        parser = new SimpLParser(new CommonTokenStream(lexer));
+        parser.addParseListener(new SimpLBaseListener());
 
         parseTree = parser.program();
-        visitor = new cVisitor();
+        visitor = new CVisitor();
     }
 
     /**
