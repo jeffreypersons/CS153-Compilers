@@ -161,7 +161,6 @@ public class CodeEmitter
 		if(var.getSlot() < 0) ;//throw error here. Undeclared variable
 		Value val = var.getValue();
 		String store_type = "";
-		System.out.println(val.getValue());
 		if(val.getType().equals("NUMBER")) store_type = "fstore ";
 		else if(val.getType().equals("BOOLEAN")) store_type = "istore ";
 		else store_type = "astore ";
@@ -237,5 +236,16 @@ public class CodeEmitter
 		else if(val.getType().equals("BOOLEAN")) load_type = "iload ";
 		else load_type = "aload ";
 		return load_type + a.getSlot();
+	}
+
+	public static String BooleanOperation(String type)
+	{
+		if(type.toUpperCase().equals("OR")) return "ior";
+		else if(type.toUpperCase().equals("AND")) return "iand";
+		else if(type.toUpperCase().equals("LT")) return "swap\nfcmpg"; // if equal change to negative 1
+		else if(type.toUpperCase().equals("GT")) return "fcmpg"; // if equal change to negative 1
+		else if(type.toUpperCase().equals("LTE")) return "swap\nfcmpg"; // change to 1 if equal
+		else if(type.toUpperCase().equals("GTE")) return "fcmpg"; // change to 1 if equal
+		else return "";
 	}
 }
