@@ -183,7 +183,7 @@ public class CodeEmitter
 		{
 			return "ldc " + 1;
 		}
-		else return "ldc " + 0;
+		else return "ldc " + -1;
 	}
 
 	/**
@@ -201,6 +201,31 @@ public class CodeEmitter
 	 * @param  type String description that matches possible types. e.g. NUMBER or TEXT
 	 * @return      Return the appropriate println command in jasmin assembly code
 	 */
+	public static String Println(String type)
+	{
+		StringBuilder construct = new StringBuilder("getstatic java/lang/System/out Ljava/io/PrintStream;\ndup\n");
+		construct.append("ldc \" \"\ninvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+		if(type.equals("TEXT"))
+		{
+			//construct.append();
+			construct.append("swap\n");
+			construct.append("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n");
+		}
+		else if(type.equals("NUMBER"))
+		{
+			//construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
+			construct.append("swap\n");
+			construct.append("invokevirtual java/io/PrintStream/print(F)V\n");
+		}
+		else if(type.equals("BOOLEAN"))
+		{
+			//construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
+			construct.append("swap\n");
+			construct.append("invokevirtual java/io/PrintStream/print(I)V\n");
+		}
+		return construct.toString();
+	}
+
 	public static String Print(String type)
 	{
 		StringBuilder construct = new StringBuilder("");
@@ -208,19 +233,19 @@ public class CodeEmitter
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+			construct.append("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n");
 		}
 		else if(type.equals("NUMBER"))
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/println(F)V\n");
+			construct.append("invokevirtual java/io/PrintStream/print(F)V\n");
 		}
 		else if(type.equals("BOOLEAN"))
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/println(I)V\n");
+			construct.append("invokevirtual java/io/PrintStream/print(I)V\n");
 		}
 		return construct.toString();
 	}
@@ -242,10 +267,42 @@ public class CodeEmitter
 	{
 		if(type.toUpperCase().equals("OR")) return "ior";
 		else if(type.toUpperCase().equals("AND")) return "iand";
-		else if(type.toUpperCase().equals("LT")) return "swap\nfcmpg"; // if equal change to negative 1
-		else if(type.toUpperCase().equals("GT")) return "fcmpg"; // if equal change to negative 1
+		else if(type.toUpperCase().equals("LT")) return "swap\nfcmpg\niconst_1\nisub"; // if equal change to negative 1
+		else if(type.toUpperCase().equals("GT")) return "swap\nfcmpg\niconst_1\niadd"; // if equal change to negative 1
 		else if(type.toUpperCase().equals("LTE")) return "swap\nfcmpg"; // change to 1 if equal
 		else if(type.toUpperCase().equals("GTE")) return "fcmpg"; // change to 1 if equal
+		else if(type.toUpperCase().equals("EQ")) return "fcmpg"; 
+		else if(type.toUpperCase().equals("NEQ")) return "fcmpg";
+		else if(type.toUpperCase().equals("NOT")) return "ineg";
 		else return "";
+	}
+
+	public static String IfOperation(String type, String label)
+	{
+		String compare_type = "";
+		if(type.toUpperCase().equals("GT")) compare_type = "ifgt";
+		else if(type.toUpperCase().equals("LT")) compare_type = "iflt";
+		else if(type.toUpperCase().equals("GTE")) compare_type = "ifgt";
+		else if(type.toUpperCase().equals("LTE")) compare_type = "iflt";
+		else if(type.toUpperCase().equals("EQ")) compare_type = "ifne";
+		else if(type.toUpperCase().equals("NEQ")) compare_type = "ifeq";
+		else if(type.toUpperCase().equals("NOT")) compare_type = "iconst_1\nisub\niflt";
+		else compare_type = "iflt";
+		return compare_type + " " + label.replaceAll(":", "");
+	}
+
+	public static String GetLabel(int num)
+	{
+		return "LABEL_" + num + ":";
+	}
+
+	public static String GetCondLabel(int num)
+	{
+		return "COND_" + num + ":";
+	}
+
+	public static String GetGoTo(String label)
+	{
+		return "goto " + label.replaceAll(":", "");
 	}
 }
