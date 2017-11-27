@@ -26,7 +26,7 @@ export CLASSPATH="./lib/jasmin-2.4-complete.jar:./lib/antlr-4.7-complete.jar:./s
 
 # generate Java code according to the SimpL grammar file
 # output is written to src/gen, consisting of code for tokens/parsers/listeners/visitors
-java -jar lib/antlr-4.7-complete.jar src/SimpL.g4 -long-messages -listener -visitor -encoding utf-8 -o src/gen -package gen
+java -jar lib/antlr-4.7-complete.jar -o src/gen -package gen src/SimpL.g4 -long-messages -listener -visitor -encoding utf-8
 
 # delete any existing class files and compile source
 find ./src -name '*.class' -type f -delete

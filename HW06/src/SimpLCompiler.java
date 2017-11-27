@@ -56,8 +56,8 @@ public class SimpLCompiler
         // todo: require an extension like .sla or something, instead of the basename manipulation
         String assemblyFileName = FileUtils.getBaseName(sourceFileName) + ".j";
 
-        visitor.visit(parseTree);
         FileUtils.writeText(assemblyFileName, CodeEmitter.Program(sourceFileName));
+        visitor.visit(parseTree);
         FileUtils.writeLines(assemblyFileName, visitor.getText());
         FileUtils.writeText(assemblyFileName, "\nreturn\n" + CodeEmitter.EndMethod());
     }
