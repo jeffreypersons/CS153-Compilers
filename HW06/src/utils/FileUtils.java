@@ -16,13 +16,14 @@ import java.util.stream.Stream;
 /** Utility functions for file input/output. */
 public class FileUtils
 {
-    // todo: add ability to append lines to file
     public static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
+
     /** Return absolute path of given file (wraps Paths's toAbsolutePath()). */
     public static String getAbsolutePath(String filePath)
     {
         return Paths.get(filePath).toAbsolutePath().toString();
     }
+
     /**
      * Return basename of given path, without extension or leading dot.
      * For example:
@@ -40,40 +41,37 @@ public class FileUtils
         int end = dotIndex == -1? rawName.length() : dotIndex + 1;
         return rawName.substring(start, end);
     }
+
     /** Return name of directory without extension, "" if not . */
-    public static String getDirectoryName(String filePath)
+    public static String getParentDirectoryName(String filePath)
     {
         return Paths.get(filePath).getParent().toAbsolutePath().toString();
     }
+
     /** Return true if path exists as file, false otherwise. */
     public static boolean isFile(String filePath)
     {
-        return (new File(filePath)).isFile();
+        return new File(filePath).isFile();
     }
+
     /** Return true if path exists as directory, false otherwise. */
-    public static boolean isDirectory(String filePath)
+    public static boolean isDirectory(String path)
     {
-        return (new File(filePath)).isDirectory();
+        return new File(path).isDirectory();
     }
-    /** Return empty string if no extension, null if not a file, else extension without dot of given file. */
+
+    /**
+     * Return last extension of given filePath, empty string if not a file
+     *  empty string if no extension, null if not a file, else extension without dot of given file.
+     */
     public static String getExtension(String filePath)
     {
         File file = new File(filePath);
         String fileName = file.getName();
-        int dotLocation = fileName.lastIndexOf('.');
-        if (file.isFile())
-            return (dotLocation == -1)? "" : fileName.substring(dotLocation + 1);
-        return null;
+        int dotIndex = fileName.lastIndexOf('.');
+        return file.isFile()? fileName.substring(dotIndex + 1) : "";
     }
-    /** Returns true if path has single matching extension. */
-    public static boolean hasExtension(String filePath, String extension)
-    {
-        // todo: change to ensureIsTextFile(), and throw exception if not instead of bool return
-        File file = new File(filePath);
-        String fileName = file.getName();
-        int dotLocation = fileName.lastIndexOf('.');
-        return file.isFile() && dotLocation >= 1 && fileName.substring(dotLocation + 1).equals(extension);
-    }
+
     /** Overwrites contents (newlines are recognized) of given text file, creating if not present. */
     public static void writeText(String filePath, String text)
     {
@@ -86,10 +84,11 @@ public class FileUtils
             e.printStackTrace();
         }
     }
+
     /** Writes given lines of text to file. */
     public static void writeLines(String filePath, List<String> lines)
     {
-        try (BufferedWriter writer = java.nio.file.Files.newBufferedWriter(Paths.get(filePath), DEFAULT_ENCODING))
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath), DEFAULT_ENCODING))
         {
             for (String line : lines)
             {
@@ -107,7 +106,7 @@ public class FileUtils
     {
         // try with resources, pipe each line of file through a stream and into an arraylist
         List<String> linesInFile = new ArrayList<>();
-        try (Stream<String> stream = java.nio.file.Files.lines(Paths.get(filePath), DEFAULT_ENCODING))
+        try (Stream<String> stream = Files.lines(Paths.get(filePath), DEFAULT_ENCODING))
         {
             linesInFile = stream
                 .filter(line -> !line.trim().equals(""))
