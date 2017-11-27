@@ -1,12 +1,13 @@
 package main;
 
-/** Used for varaibles. Returns the value stored in the map */
+/** Used for variables. Used to fetch the values stored in the map. */
 public class Variable implements Value<Value>
 {
 	final String cast;
 	String identifier;
 	Value a;
 	int slot_number;
+
 	public Variable(String identifier, Value value, String cast)
 	{
 		this.cast = cast;

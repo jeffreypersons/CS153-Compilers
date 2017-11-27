@@ -82,6 +82,7 @@ public class CodeEmitter
 
 	private static void shortCutInstruction(String instruction)
 	{
+		return;
 	}
 
 	/**
@@ -140,9 +141,9 @@ public class CodeEmitter
 
 	/**
 	 * Declares a variable using a slot number
-	 * @param  value [variable that will be assigned]
-	 * @param  num   [slot number]
-	 * @return       [assembly code for that slot]
+	 * @param  var [variable that will be assigned]
+	 * @param  num [slot number]
+	 * @return     [assembly code for that slot]
 	 */
 	public static String DeclareVariable(Variable var, int num)
 	{
@@ -155,12 +156,12 @@ public class CodeEmitter
 
 	/**
 	 * Creates assembly code for assigning either a string or a number to a variable
-	 * @param  value [variable that will be assigned new value]
-	 * @return       [assembly that will cause new value put into that slot or variable]
+	 * @param  var [variable that will be assigned new value]
+	 * @return     [assembly that will cause new value put into that slot or variable]
 	 */
 	public static String AssignVariable(Variable var)
 	{
-		if(var.getSlot() < 0) ;//throw error here. Undeclared variable
+		if(var.getSlot() < 0) ;  //throw error here. Undeclared variable
 		Value val = var.getValue();
 		String store_type = "";
 		if(val.getType().equals("NUMBER")) store_type = "fstore ";

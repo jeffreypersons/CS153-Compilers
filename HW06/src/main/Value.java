@@ -7,6 +7,7 @@ public interface Value<T>
 	 * @return value extracted
 	 */
 	public T getValue();
+
 	/**
 	 * Used to set a value into an object
 	 * @param i new value for object

@@ -1,3 +1,5 @@
+package main;
+
 public class Bool implements Value<Boolean>
 {
 	Boolean value;
