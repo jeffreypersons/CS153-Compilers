@@ -10,9 +10,8 @@
 #     .java file)
 # ==============================================================================
 
-# validate parameters
-if [[ `basename "$PWD"` != HW06 ]]; then
-  echo "  `basename "$0"` must be executed from working directory HW06"
+if [[ `basename "$PWD"` != scripts ]]; then
+  echo "  `basename "$0"` must be executed from working directory 'scripts'"
   exit 1
 fi
 if [ $# -ne 0 ]; then
