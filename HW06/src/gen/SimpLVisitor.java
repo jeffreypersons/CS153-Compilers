@@ -1,4 +1,4 @@
-// Generated from ./src/SimpL.g4 by ANTLR 4.7
+// Generated from src/SimpL.g4 by ANTLR 4.7
 package gen;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
