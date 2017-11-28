@@ -17,22 +17,15 @@ if [[ `basename "$PWD"` != HW06 ]]; then
 fi
 if [ $# -ne 0 ]; then
   echo "  **Improper number of arguments**"
-  echo "  Usage: ./build-all.sh"
+  echo "  Usage: . ./build-all.sh"
   exit 1
 fi
-cwd=`realpath "$PWD"`;lib="$0/lib"
-export CLASSPATH=".:$cwd/:$cwd/src/:$cwd/main/:$cwd/gen/:$lib/antlr-4.7-complete.jar:$lib/jasmin-2.4-complete.jar"
+export CLASSPATH=".:src/:src/main/:src/gen/:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
 
 # generate antlr sources
-java -jar ${cwd}/lib/antlr-4.7-complete.jar \
-      ${cwd}/src/SimpL.g4 \
-     -long-messages     \
-     -encoding utf-8    \
-     -listener -visitor \
-     -package gen       \
-     -o ${cwd}/src/gen \
+. ./antlr-gen.sh
 
 # compile everything in src dir
-find  ${cwd}/src -name '*.class' -type f -delete
-javac ${cwd}/src/*.java
-javac ${cwd}/SimpLMain.java
+find  src -name '*.class' -type f -delete
+javac src/*.java
+javac SimpLMain.java
