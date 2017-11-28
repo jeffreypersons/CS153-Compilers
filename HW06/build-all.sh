@@ -10,8 +10,9 @@
 #     .java file)
 # ==============================================================================
 
-if [[ `basename "$PWD"` != scripts ]]; then
-  echo "  `basename "$0"` must be executed from working directory 'scripts'"
+# validate parameters and configure vars
+if [[ `basename "$PWD"` != HW06 ]]; then
+  echo "  `basename "$0"` must be executed from working directory 'HW06'"
   exit 1
 fi
 if [ $# -ne 0 ]; then
@@ -19,11 +20,19 @@ if [ $# -ne 0 ]; then
   echo "  Usage: ./build-all.sh"
   exit 1
 fi
+cwd=`realpath "$PWD"`;lib="$0/lib"
+export CLASSPATH=".:$cwd/:$cwd/src/:$cwd/main/:$cwd/gen/:$lib/antlr-4.7-complete.jar:$lib/jasmin-2.4-complete.jar"
 
-# elevate helper script permissions
-chmod +x ./scripts/gen-antlr.sh
-chmod +x ./scripts/build-src.sh
+# generate antlr sources
+java -jar ${cwd}/lib/antlr-4.7-complete.jar \
+      ${cwd}/src/SimpL.g4 \
+     -long-messages     \
+     -encoding utf-8    \
+     -listener -visitor \
+     -package gen       \
+     -o ${cwd}/src/gen \
 
-# generate antlr sources, and them compile everything in src dir
-. ./scripts/gen-antlr.sh
-. ./scripts/build-src.sh
+# compile everything in src dir
+find  ${cwd}/src -name '*.class' -type f -delete
+javac ${cwd}/src/*.java
+javac ${cwd}/SimpLMain.java
