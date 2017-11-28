@@ -7,7 +7,7 @@ if [[ `basename "$PWD"` != scripts ]]; then
 fi
 if [ $# -ne 1 ]; then
   echo "  **Improper number of arguments**"
-  echo "  Usage: ./run-main.sh <source_file_name>"
+  echo "  Usage: . ./run-main.sh <source_file_name>"
   exit 1
 fi
 source_file_name=$1

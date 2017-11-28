@@ -32,7 +32,6 @@ jasmin_file=${filename}".j"
 class_file=${filename}".class"
 
 # produce class file (.sl -> .j -> .class) then run it using java
-./scripts/run-main.sh ${simpl_file}
-./scripts/run-jasmin.sh ${jasmin_file}
+. ./scripts/run-main.sh ${simpl_file}
+. ./scripts/run-jasmin.sh ${jasmin_file}
 java ${class_file}
-./simpl.sh tests/basic_compile.txt

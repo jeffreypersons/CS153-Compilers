@@ -25,5 +25,5 @@ chmod +x ./scripts/gen-antlr.sh
 chmod +x ./scripts/build-src.sh
 
 # generate antlr sources, and them compile everything in src dir
-./scripts/gen-antlr.sh
-./scripts/build-src.sh
+. ./scripts/gen-antlr.sh
+. ./scripts/build-src.sh

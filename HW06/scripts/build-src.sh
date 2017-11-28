@@ -7,7 +7,7 @@ if [[ `basename "$PWD"` != scripts ]]; then
 fi
 if [ $# -ne 0 ]; then
   echo "  **Improper number of arguments**"
-  echo "  Usage: ./build-src.sh"
+  echo "  Usage: . ./build-src.sh"
   exit 1
 fi
 export CLASSPATH="../src/:../src/main:../src/gen/:$CLASSPATH"
