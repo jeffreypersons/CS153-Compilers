@@ -10,7 +10,7 @@ if [ $# -ne 0 ]; then
   echo "  Usage: ./build-src.sh"
   exit 1
 fi
-export CLASSPATH="/src/:../src/main:../src/gen/:$CLASSPATH"
-find ./src -name '*.class' -type f -delete
-javac ./src/main/*.java
-javac ./src/SimpLMain.java
+export CLASSPATH="../src/:../src/main:../src/gen/:$CLASSPATH"
+find ../src -name '*.class' -type f -delete
+javac ../src/main/*.java
+javac ../src/SimpLMain.java
