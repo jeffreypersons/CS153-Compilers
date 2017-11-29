@@ -1,13 +1,3 @@
-/*
-Notes:
-- All curly braces must be on their own line, and all statements must terminate with a newline
-- Earlier the definition, greater the precedence
-- Identifier is defined to avoid name clashes with other keywords
-- It's important to distinguish between the lexer and parser stage. That means things like
-  valid types is NOT to be distinguished here, but rather determined in the parsing stage,
-  instead. This greatly promotes separation of concerns, and simplifies the lexer grammar.
-- ANTLR unfortunately lacks support for negated tokens (eg, we have to do ~('\'') instead of ~QUOTE)
- */
 grammar SimpL;
 
 program : stmt*;
@@ -104,6 +94,7 @@ NAME          : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
 WHITESPACE    : (LINE_COMMENT | [ \t]+) -> skip;
 LINE_COMMENT  : ('#' .*? NEWLINE) -> skip;
 BLOCK_COMMENT : ('##' .*? '##')   -> skip;
+
 // fragments (helper definitions)
 fragment QUOTE     : '\'';
 fragment DIGIT     : '0'..'9';
