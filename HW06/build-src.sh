@@ -21,8 +21,13 @@ if [ $# -ne 0 ]; then
 fi
 export CLASSPATH=".:src:src/gen:src/utils:src/main:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
 
+# emulate realpath since it doesn't exist on windows
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+cwd=`realpath`
+
 # generate antlr sources using absolute paths to avoid tool conflicts
-cwd=`realpath "$PWD"`
 java -jar ${cwd}/lib/antlr-4.7-complete.jar \
       ${cwd}/src/SimpL.g4 \
      -long-messages       \
