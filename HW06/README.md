@@ -1,6 +1,8 @@
 # SimpL Programming Language Overview
 
 ## Setup
+- To ensure it builds and runs on your machine, try: `./build.sh` followed by
+  `./simpl.sh tests/basic_compile1.txt`
 
 ##### Troubleshooting
 - Ensure your working from the HW06 directory (this will change in future versions)
@@ -8,6 +10,7 @@
   running for the first time
 - Ensure newlines and utf-8 are set for the scripts, use `sed -i 's/\r$//' ./<file>`
   on any shell scripts that are failing due to newlines issues such as $'\r', etc
+- A helpful command for cleaning up class files, use `find <dir_name> -name '*.class' -type f -delete`
 
 ##### Building SimpL
 

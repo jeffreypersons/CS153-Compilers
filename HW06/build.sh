@@ -21,7 +21,7 @@ if [ $# -ne 0 ]; then
 fi
 export CLASSPATH=".:src:src/gen:src/utils:src/main:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
 
-# emulate realpath since it doesn't exist on windows
+# emulate realpath since it doesn't exist on mac
 realpath() {
     [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
 }
@@ -36,10 +36,7 @@ java -jar ${cwd}/lib/antlr-4.7-complete.jar \
      -package gen         \
      -o ${cwd}/src/gen    \
 
-# compile everything in src dir
-find src -name '*.class' -type f -delete
-javac -cp ${CLASSPATH}     \
-          src/gen/*.java   \
-          src/utils/*.java \
-          src/main/*.java  \
-          src/*.java       \
+# generate class files in out dir
+rm -rf out; mkdir out
+find -name '*.java' > out/sources.txt
+javac -cp ${CLASSPATH} -d out @out/sources.txt
