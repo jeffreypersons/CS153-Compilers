@@ -2,7 +2,9 @@
 
 ## Setup
 - To ensure it builds and runs on your machine, try: `./build.sh` followed by
-  `./simpl.sh tests/basic_compile1.txt`
+  `./simpl.sh tests/basic_compile1.simpl`. This should create an out dir with all the
+  generated class files from HW06 src, and then generate basic_compile1.j and
+  basic_compile1.class in a __simplcache folder
 
 ##### Troubleshooting
 - Ensure your working from the HW06 directory (this will change in future versions)
