@@ -20,7 +20,7 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 filename=$(basename "$1" | cut -d. -f1)
-export CLASSPATH=".:out:out/main:out/gen:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
+export CLASSPATH="out:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
 
 # produce class file (.sl -> .j -> .class) then run it using java
 java -cp ${CLASSPATH} SimpLMain ${filename}

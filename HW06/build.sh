@@ -19,7 +19,6 @@ if [ $# -ne 0 ]; then
   echo "  Usage: . ./build-src.sh"
   exit 1
 fi
-export CLASSPATH=".:src:src/gen:src/utils:src/main:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
 
 # emulate realpath since it doesn't exist on mac
 realpath() {
@@ -39,4 +38,4 @@ java -jar ${cwd}/lib/antlr-4.7-complete.jar \
 # generate class files in out dir
 rm -rf out; mkdir out
 find -name '*.java' > out/sources.txt
-javac -cp ${CLASSPATH} -d out @out/sources.txt
+javac -cp "lib/antlr-4.7-complete.jar" -d out @out/sources.txt
