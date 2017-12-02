@@ -12,12 +12,12 @@
 # emulate realpath (not on all os) and then validate input
 realpath() { [[ $1 = /* ]] && echo $1 || echo "$(pwd)/${1#./}" | sed 's/\/*$//g'; }
 if [[ $(pwd) != *HW06 ]]; then
-    echo "  simpl.sh must be executed from HW06 as the working directory"
+    echo "simpl.sh must be executed from HW06 as the working directory"
     exit 1
 fi
 if [ $# -ne 0 ]; then
-    echo "  **Invalid number of arguments**"
-    echo "  Usage: ./build.sh"
+    echo "Invalid number of arguments"
+    echo "Usage: ./build.sh"
     exit 1
 fi
 cwd=$(realpath)
