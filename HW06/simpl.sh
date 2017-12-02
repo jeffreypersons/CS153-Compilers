@@ -27,26 +27,26 @@ if [[ ${filetype} != simpl ]]; then
     exit 1
 fi
 
-# ------ generate jasmin file from simpl file
+# ------ produce jasmin file from simpl file
 java -ea -cp "out:lib/antlr-4.7-complete.jar" SimpLMain "$filename.simpl"
 if [ $? == 0 ]; then
-    echo "Successfully generated object file: $filename.j"
+    echo "  Successfully produced object file '$filename.j'"
 else
-    echo "Failed to successfully generate object file: $filename.j"; exit $?
+    echo "  Failure to produce object file '$filename.j' due to the above errors"; exit $?
 fi
 
-# ------ generate class file from jasmin file
+# ------ produce class file from jasmin file
 java -jar lib/jasmin-2.4-complete.jar "$filename.j"
 if [ $? == 0 ]; then
-    echo "Successfully generated class file: $filename.class"
+    echo "  Successfully produced class file '$filename.class'"
 else
-    echo "Failed to successfully generate class file: $filename.class"; exit $?
+    echo "  Failure to produce class file '$filename.class' due to the above errors"; exit $?
 fi
 
 # ------ run class file
 java "$filename.class"
 if [ $? == 0 ]; then
-    echo "Successfully ran class file for: $filename.simpl"
+    echo "  Successfully ran class file '$filename.class'"
 else
-    echo "Failed to successfully run class file for: $filename.simpl"; exit $?
+    echo "  Failure to run class file '$filename.class' due to the above errors"; exit $?
 fi
