@@ -2,9 +2,27 @@
 
 ## Setup
 - To ensure it builds and runs on your machine, try: `./build.sh` followed by
-  `./simpl.sh tests/basic_compile1.simpl`. This should create an out dir with all the
-  generated class files from HW06 src, and then generate basic_compile1.j and
-  basic_compile1.class in a __simplcache folder
+  `./simpl.sh tests/basic_compile1.simpl`. This should create an out dir with all
+  the generated class files from HW06 src, and then generate basic_compile1.j and
+  basic_compile1.class
+
+#### Building SimpL
+
+    ./build.sh
+
+#### Building SimpL
+
+    ./test.sh
+
+#### Running SimpL
+
+    ./simpl.sh <source_file>
+
+#### For example
+
+    ./build.sh
+    ./simpl.sh tests/basic_compile.simpl
+    ./test.sh
 
 #### Troubleshooting
 - Ensure your working from the HW06 directory (this will change in future versions)
@@ -13,20 +31,6 @@
 - Ensure newlines and utf-8 are set for the scripts, use `sed -i 's/\r$//' ./<file>`
   on any shell scripts that are failing due to newlines issues such as $'\r', etc
 - A helpful command for cleaning up class files, use `find <dir_name> -name '*.class' -type f -delete`
-
-#### Building SimpL
-
-    ./build.sh
-
-#### Running SimpL
-
-    ./simpl.sh <source_file>
-
-#### For example
-
-    ./build-all.sh
-    ./simpl.sh tests/basic_compile.txt
-
 
 
 ## Syntax

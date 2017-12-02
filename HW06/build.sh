@@ -9,22 +9,17 @@
 # (2) compiles all of the source directory (generates .class files adjacent to
 #     .java file)
 # ==============================================================================
-# validate parameters and configure vars (todo: add option to gen/not gen srcs)
-if [[ `basename "$PWD"` != HW06 ]]; then
-  echo "  `basename "$0"` must be executed from working directory 'HW06'"
-  exit 1
+# emulate realpath (not on all os) and then validate input
+realpath() { [[ $1 = /* ]] && echo $1 || echo "$(pwd)/${1#./}" | sed 's/\/*$//g'; }
+if [[ $(pwd) != *HW06 ]]; then
+    echo "  simpl.sh must be executed from HW06 as the working directory"
+    exit 1
 fi
 if [ $# -ne 0 ]; then
-  echo "  **Improper number of arguments**"
-  echo "  Usage: . ./build-src.sh"
-  exit 1
+    echo "  **Invalid number of arguments**"
+    echo "  Usage: ./build.sh"
+    exit 1
 fi
-
-# emulate realpath since it doesn't exist on mac
-realpath() {
-    # infer the actual path and remove trailing slash
-    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}" | sed 's/\/*$//g'
-}
 cwd=$(realpath)
 
 # generate antlr sources using absolute paths to avoid tool conflicts
@@ -38,7 +33,7 @@ java -jar ${cwd}/lib/antlr-4.7-complete.jar \
      -o ${cwd}/src/gen    \
 
 # generate class files in out dir
-echo "Compiling all Java in ./src sources to ./out"
+echo "Compiling all Java files in ./src sources into ./out"
 rm -rf out; mkdir out
 find -name '*.java' > out/sources.txt
 javac -cp "lib/antlr-4.7-complete.jar" -d out @out/sources.txt
