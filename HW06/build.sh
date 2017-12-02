@@ -22,11 +22,13 @@ fi
 
 # emulate realpath since it doesn't exist on mac
 realpath() {
-    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+    # infer the actual path and remove trailing slash
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}" | sed 's/\/*$//g'
 }
-cwd=`realpath`
+cwd=$(realpath)
 
 # generate antlr sources using absolute paths to avoid tool conflicts
+echo "Generating antlr4 source files into ./src/gen"
 java -jar ${cwd}/lib/antlr-4.7-complete.jar \
       ${cwd}/src/SimpL.g4 \
      -long-messages       \
@@ -36,6 +38,7 @@ java -jar ${cwd}/lib/antlr-4.7-complete.jar \
      -o ${cwd}/src/gen    \
 
 # generate class files in out dir
+echo "Compiling all Java in ./src sources to ./out"
 rm -rf out; mkdir out
 find -name '*.java' > out/sources.txt
 javac -cp "lib/antlr-4.7-complete.jar" -d out @out/sources.txt
