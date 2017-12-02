@@ -8,3 +8,10 @@
 # ==============================================================================
 
 # todo: add functionality (look into antlr test rig tool as well...)
+printf '\n------------ Running tests/basic_compile1.simpl ------------\n'
+./simpl.sh tests/basic_compile1.simpl
+
+printf "\n------------ Running tests/basic_compile2.simpl ------------\n"
+./simpl.sh tests/basic_compile2.simpl
+
+printf '\n'
