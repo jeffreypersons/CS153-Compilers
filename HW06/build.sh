@@ -29,7 +29,7 @@ fi
 if [ $# -ne 0 ]; then
     echo "**Error processing input for build.sh**"
     echo "  Invalid number of arguments"
-    echo "  Use as ./build.sh"
+    echo "  Run as $ ./build.sh"
     exit 1
 fi
 

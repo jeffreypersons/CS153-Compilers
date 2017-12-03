@@ -13,6 +13,7 @@ import main.CodeEmitter;
 import main.CVisitor;
 import utils.FileUtils;
 
+// todo: reconsider what is source file dependent in SimpL compiler (instance) vs what is independent (static)
 
 class SourceFileNotFoundException extends RuntimeException {}
 
@@ -21,26 +22,28 @@ class SourceFileNotFoundException extends RuntimeException {}
  */
 public class SimpLCompiler
 {
-    // todo: changes can be made here in future, since backend won't need to change every time...
-    // but the lexer/parser wilL!
     private final SimpLLexer lexer;
     private final SimpLParser parser;
     private final ParseTree parseTree;
     private final CVisitor visitor;
-    private final String sourceFileName;
+    private final String simplFilepath;
+    private final String jasminFilepath;
     private final List<String> program = new ArrayList<>();
 
-    public SimpLCompiler(String sourceFileName)
+    public SimpLCompiler(String simplFilepath, String jasminFilepath)
     {
         try
         {
-            lexer = new SimpLLexer(CharStreams.fromFileName(sourceFileName));
+            lexer = new SimpLLexer(CharStreams.fromFileName(simplFilepath));
         }
         catch (IOException e)
         {
             throw new SourceFileNotFoundException();
         }
-        this.sourceFileName = sourceFileName;
+        this.simplFilepath = simplFilepath;
+        this.jasminFilepath = jasminFilepath;
+        System.out.println(this.simplFilepath);
+        System.out.println(this.jasminFilepath);
         parser = new SimpLParser(new CommonTokenStream(lexer));
         parser.addParseListener(new SimpLBaseListener());
 
@@ -53,12 +56,9 @@ public class SimpLCompiler
      */
     public void generateObjectCode()
     {
-        // todo: require an extension like .sla or something, instead of the basename manipulation
-        String assemblyFileName = FileUtils.getBaseName(sourceFileName) + ".j";
-
-        FileUtils.writeText(assemblyFileName, CodeEmitter.Program(sourceFileName));
+        FileUtils.writeText(jasminFilepath, CodeEmitter.Program(simplFilepath));
         visitor.visit(parseTree);
-        FileUtils.writeLines(assemblyFileName, visitor.getText());
-        FileUtils.writeText(assemblyFileName, "\nreturn\n" + CodeEmitter.EndMethod());
+        FileUtils.writeLines(jasminFilepath, visitor.getText());
+        FileUtils.writeText(jasminFilepath, "\nreturn\n" + CodeEmitter.EndMethod());
     }
 }

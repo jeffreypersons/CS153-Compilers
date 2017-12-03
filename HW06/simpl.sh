@@ -29,7 +29,7 @@ fi
 if [ $# -ne 1 ]; then
     echo "**Error processing input for simpl.sh**"
     echo "  Invalid number of arguments"
-    echo "  Use as ./simpl.sh <source_filepath>.simpl"
+    echo "  Run as $ ./simpl.sh <source_filepath>.simpl"
     exit 1
 fi
 if [[ $(get_extension ${rawpath}) != .simpl ]]; then
@@ -47,7 +47,8 @@ jasmin_filepath=./simplbin/${name}.j
 class_filepath=./simplbin/${name}.class
 
 # ------ produce jasmin file from simpl file
-java -ea -cp "out:lib/antlr-4.7-complete.jar" SimpLMain ${source_filepath}
+java -cp "out:lib/antlr-4.7-complete.jar" SimpLMain ${source_filepath} ${jasmin_filepath}
+
 if [ $? == 0 ]; then
     echo "Successfully produced file $jasmin_filepath"
 else
@@ -56,7 +57,7 @@ else
 fi
 
 # ------ produce class file from jasmin file
-java -ea -jar lib/jasmin-2.4-complete.jar ${jasmin_filepath}
+java -jar lib/jasmin-2.4-complete.jar ${jasmin_filepath}
 if [ $? == 0 ]; then
     echo "Successfully produced file $class_filepath"
 else
@@ -65,7 +66,7 @@ else
 fi
 
 # ------ run class file
-java -ea ${class_filepath}
+java ${class_filepath}
 if [ $? == 0 ]; then
     echo "Successfully ran file $class_filepath"
 else
