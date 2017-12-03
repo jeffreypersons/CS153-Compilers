@@ -1,26 +1,37 @@
 #!/usr/bin/env bash
 # ========================= Generate and Build SimpL Sources ===================
 # Build SimpL from sources
-# Example usage: ./build-src.sh
+# Example usage: ./build.sh
+#
+# Requirements:
+# (1) HW06 is currently the only supported working directory
+# (2) No arguments are supported at this time
 #
 # This script does the following steps:
-# (1) generates Java source code for listener, visitor, parser, and tokens
+# (1) Generates Java source code for listener, visitor, parser, and tokens
 #     using antlr4
-# (2) compiles all of the source directory (generates .class files adjacent to
+# (2) Compiles all of the source directory (generates .class files adjacent to
 #     .java file)
 # ==============================================================================
+
+# todo: split script into separate gen and build scripts (eg gen.sh and build.sh)
+
 # emulate realpath (not on all os) and then validate input
 realpath() { [[ $1 = /* ]] && echo $1 || echo "$(pwd)/${1#./}" | sed 's/\/*$//g'; }
-if [[ $(pwd) != *HW06 ]]; then
-    echo "simpl.sh must be executed from HW06 as the working directory"
+cwd=$(realpath)
+
+# ensure working dir is HW06 and no arguments are given
+if [[ $(basename $(pwd)) != HW06 ]]; then
+    echo "**Error processing input for build.sh**"
+    echo "  build.sh can only be run with HW06 as the working directory"
     exit 1
 fi
 if [ $# -ne 0 ]; then
-    echo "Invalid number of arguments"
-    echo "Usage: ./build.sh"
+    echo "**Error processing input for build.sh**"
+    echo "  Invalid number of arguments"
+    echo "  Use as ./build.sh"
     exit 1
 fi
-cwd=$(realpath)
 
 # generate antlr sources using absolute paths to avoid tool conflicts
 echo "Generating antlr4 source files into ./src/gen"
