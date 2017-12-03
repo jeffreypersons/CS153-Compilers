@@ -1,4 +1,7 @@
 # ========================== language specific ===========================
+# simpl
+simplbin/
+
 # pascal
 *.lpi
 *.lps

@@ -7,7 +7,6 @@
 # (1) HW06 is currently the only supported working directory
 # (2) Currently only a single file can be compiled/run at a time
 # (3) File must end with single .simpl extension
-# (4) No relative path dot prefixes are currently supported (except for ./)
 #
 # This script does the following steps:
 # (1) Produce jasmin file from simpl file
@@ -17,12 +16,11 @@
 
 # todo: split script into separate compile run scripts (eg simplc.sh and simpl.sh)
 
-# get raw path, path without extensions or leading ./, all file extensions
-rawpath=${1}
-basepath=${rawpath#./}; basepath=${basepath%%.*}
-filetype="."$(echo ${rawpath} | cut -d '.' -f2-)
+get_extension() { echo "."$(echo $(basename $1) | cut -d '.' -f2-); }
 
 # ensure working dir is HW06, and given argument is an existing simpl filepath
+rawpath=${1}
+name=$(basename ${rawpath} .simpl)
 if [[ $(basename $(pwd)) != HW06 ]]; then
     echo "**Error processing input file for simpl.sh**"
     echo "  Script can only be run with HW06 as the working directory"
@@ -34,43 +32,43 @@ if [ $# -ne 1 ]; then
     echo "  Use as ./simpl.sh <source_filepath>.simpl"
     exit 1
 fi
-if [[ $1 == ..*/ ]]; then
-    echo "**Error processing input for simpl.sh**"
-    echo "  Invalid prefix for filepath $rawpath"
-    echo "  Only ./ is the only currently supported relative dot prefix"
-    exit 1
-fi
-if [[ ${filetype} != .simpl ]]; then
+if [[ $(get_extension ${rawpath}) != .simpl ]]; then
     echo "**Error processing input for simpl.sh**"
     echo "  Invalid file extension for file $rawpath"
     echo "  Only .simpl files are supported"
     exit 1
 fi
 
-basefile=$(basename ${basepath})
+# ------ setup cache folder for simpl/jasmin/class files
+rm -rf simplbin; mkdir simplbin
+cp ${rawpath} simplbin
+source_filepath=./simplbin/${name}.simpl
+jasmin_filepath=./simplbin/${name}.j
+class_filepath=./simplbin/${name}.class
+
 # ------ produce jasmin file from simpl file
-java -ea -cp "out:lib/antlr-4.7-complete.jar" SimpLMain "$basepath.simpl"
+java -ea -cp "out:lib/antlr-4.7-complete.jar" SimpLMain ${source_filepath}
 if [ $? == 0 ]; then
-    echo "Successfully produced file $basefile.j"
+    echo "Successfully produced file $jasmin_filepath"
 else
-    echo "**Error generating file $basefile.j**"
+    echo "**Error generating file $jasmin_filepath**"
     exit $?
 fi
 
 # ------ produce class file from jasmin file
-java -jar lib/jasmin-2.4-complete.jar "$basefile.j"
+java -ea -jar lib/jasmin-2.4-complete.jar ${jasmin_filepath}
 if [ $? == 0 ]; then
-    echo "Successfully produced file $basefile.class"
+    echo "Successfully produced file $class_filepath"
 else
-    echo "**Error generating file $basefile.class**"
+    echo "**Error generating file $class_filepath**"
     exit $?
 fi
 
 # ------ run class file
-java "$basepath.class"
+java -ea ${class_filepath}
 if [ $? == 0 ]; then
-    echo "Successfully ran file $basefile.class"
+    echo "Successfully ran file $class_filepath"
 else
-    echo "**Error running file $basefile.class**"
+    echo "**Error running file $class_filepath**"
     exit $?
 fi
