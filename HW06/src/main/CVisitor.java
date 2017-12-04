@@ -2,7 +2,6 @@ package main;
 
 import gen.SimpLBaseVisitor;
 import gen.SimpLParser;
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.antlr.v4.runtime.CommonToken;
@@ -25,15 +24,15 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	public CVisitor()
 	{
 		super();
-		CodeEmitter.Initialize();
+		CodeEmitter.initialize();
 	}
 
-	public void IncLabelCount()
+	public void incLabelCount()
 	{
 		label_count++;
 	}
 
-	public void IncCondLabelCount()
+	public void incCondLabelCount()
 	{
 		cond_label_count++;
 	}
@@ -59,12 +58,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		if(stack_size > necessary_stack_size) necessary_stack_size = stack_size;
 	}
 
-	private void IncLocals()
+	private void incLocals()
 	{
 		locals++;
 	}
 
-	private void DecLocals()
+	private void decLocals()
 	{
 		locals--;
 	}
@@ -95,13 +94,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	@Override public TerminalNode visitProgram(SimpLParser.ProgramContext ctx)
 	{
 		text = new ArrayList<String>();
-		text.add(CodeEmitter.GetLibraryCode("math"));
-		text.add(CodeEmitter.Main());
+		text.add(CodeEmitter.getLibraryCode("math"));
+		text.add(CodeEmitter.main());
 		int stack_size_line = 0;
 		stack_size_line = text.size();
-		text.add(CodeEmitter.SetStack(stack_size) + CodeEmitter.SetLocals(locals));
+		text.add(CodeEmitter.setStack(stack_size) + CodeEmitter.setlocals(locals));
 		TerminalNode a = super.visitChildren(ctx);
-		text.set(stack_size_line, CodeEmitter.SetStack((stack_size + locals) * 2) + CodeEmitter.SetLocals(locals)); // since everything is stored as float, multiply by 2 I think
+		text.set(stack_size_line, CodeEmitter.setStack((stack_size + locals) * 2) + CodeEmitter.setlocals(locals)); // since everything is stored as float, multiply by 2 I think
 		return a;
 	}
 	/**
@@ -131,12 +130,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		{
 			val = getOperandValue(token);
 			var = new Variable(name, val, val.getType());
-			text.add(CodeEmitter.DeclareVariable(var, locals));
+			text.add(CodeEmitter.declareVariable(var, locals));
 			memory.put(name, var);
 			//System.out.println("creating " + name + " and setting to " + val.getValue());
 		}
 		else memory.put(name, null); // add typing regardless of assignment or not
-		IncLocals();
+		incLocals();
 		if(val != null) return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, "0"));
 		//else if(parser_type == SimpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(parser_type, Double.toString((double)val.getValue())));
 		//else return new TerminalNodeImpl(new CommonToken(parser_type, val.getValue().toString()));
@@ -169,7 +168,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		else System.out.println("Improper cast!"); // throw error here - different type
 		//var.setValue(val);
 		memory.put(identifier, var);
-		text.add(CodeEmitter.AssignVariable(var));
+		text.add(CodeEmitter.assignVariable(var));
 		decStackSize(2);
 		if(parser_type == SimpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString((double)val.getValue())));
 		else return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, val.getValue().toString()));
@@ -177,16 +176,16 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
 	@Override public TerminalNode visitWhile_loop(SimpLParser.While_loopContext ctx)
 	{
-		String label = CodeEmitter.GetLabel(label_count);
-		IncLabelCount();
-		String exit_label = CodeEmitter.GetLabel(label_count);
-		IncLabelCount();
+		String label = CodeEmitter.getLabel(label_count);
+		incLabelCount();
+		String exit_label = CodeEmitter.getLabel(label_count);
+		incLabelCount();
 
 		text.add(label);
 		String expr_type = visit(ctx.expr()).getSymbol().getText().toString();
-		text.add(CodeEmitter.IfOperation(expr_type, exit_label));
+		text.add(CodeEmitter.ifOperation(expr_type, exit_label));
 		visit(ctx.block());
-		text.add(CodeEmitter.GetGoTo(label));
+		text.add(CodeEmitter.getGoTo(label));
 		text.add(exit_label);
 		return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "loop"));
 	}
@@ -201,23 +200,23 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	{
 		List<SimpLParser.ExprContext> expressions = ctx.expr();
 		int block_count = 0;
-		String label = CodeEmitter.GetLabel(label_count);
+		String label = CodeEmitter.getLabel(label_count);
 		text.add(label);
-		IncLabelCount();
+		incLabelCount();
 		String evaluate_type, cond_label = null;
 		ArrayList<Integer> last_label_skip = new ArrayList<Integer>();
 		for(SimpLParser.ExprContext exp : expressions)
 		{
 			evaluate_type = visit(exp).getSymbol().getText();
 			if_memory.put(label, countLines());
-			cond_label = CodeEmitter.GetCondLabel(cond_label_count);
-			text.add(CodeEmitter.IfOperation(evaluate_type, cond_label));
+			cond_label = CodeEmitter.getCondLabel(cond_label_count);
+			text.add(CodeEmitter.ifOperation(evaluate_type, cond_label));
 			visit(ctx.block(block_count));
 			last_label_skip.add(text.size());
 
-			text.add(CodeEmitter.GetGoTo("temp"));
+			text.add(CodeEmitter.getGoTo("temp"));
 			text.add(cond_label);
-			IncCondLabelCount();
+			incCondLabelCount();
 			block_count++;
 		}
 
@@ -225,13 +224,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		if(block_count < ctx.block().size())
 		{
 			visit(ctx.block(block_count));
-			cond_label = CodeEmitter.GetCondLabel(cond_label_count);
+			cond_label = CodeEmitter.getCondLabel(cond_label_count);
 			text.add(cond_label);
-			IncCondLabelCount();
+			incCondLabelCount();
 		}
 		for(int a : last_label_skip)
 		{
-			text.set(a, CodeEmitter.GetGoTo(cond_label));
+			text.set(a, CodeEmitter.getGoTo(cond_label));
 		}
 
 		//System.out.print("resulting node: " + a);
@@ -278,7 +277,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			{
 				Variable var = (Variable) val;
 				Value operand = var.getValue();
-				text.add(CodeEmitter.PutVarStack(var));
+				text.add(CodeEmitter.putVarStack(var));
 				if(operand.getType().equals("BOOLEAN"))
 				{
 					return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, operand.getValue().toString()));
@@ -300,18 +299,18 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			if(operand.getType().equals("NUMBER"))
 			{
 				double result = (double)operand.getValue();
-				text.add(CodeEmitter.LoadConstant(result));
+				text.add(CodeEmitter.loadConstant(result));
 				return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 			}
 			else if(operand.getType().equals("BOOLEAN"))
 			{
 				Boolean result = (Boolean) operand.getValue();
-				text.add(CodeEmitter.LoadConstant(result));
+				text.add(CodeEmitter.loadConstant(result));
 				return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, Boolean.toString(result)));
 			}
 			else
 			{
-				text.add(CodeEmitter.LoadConstant(operand.getValue().toString()));
+				text.add(CodeEmitter.loadConstant(operand.getValue().toString()));
 				return new TerminalNodeImpl(new CommonToken(SimpLParser.TEXT, (String)operand.getValue()));
 			}
 		}
@@ -333,10 +332,10 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			loperand = getOperandValue(visit(ctx.expr(0)).getSymbol());
 			if(loperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+				text.add(CodeEmitter.putVarStack((Variable)loperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((Boolean) loperand.getValue()));
-			text.add(CodeEmitter.BooleanOperation("NOT"));
+			//else text.add(CodeEmitter.loadConstant((Boolean) loperand.getValue()));
+			text.add(CodeEmitter.booleanOperation("NOT"));
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "NOT"));
 		}
 		try
@@ -364,7 +363,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			lvalue = (double)loperand.getValue();
 			rvalue = (double)roperand.getValue();
 			double result = lvalue * rvalue;
-			text.add(CodeEmitter.Mul());
+			text.add(CodeEmitter.mul());
 			decStackSize();
 			a = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
@@ -374,7 +373,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			lvalue = (double)loperand.getValue();
 			rvalue = (double)roperand.getValue();
 			double result = lvalue / rvalue;
-			text.add(CodeEmitter.Div());
+			text.add(CodeEmitter.div());
 			decStackSize();
 			a = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
@@ -385,7 +384,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			lvalue = (double)loperand.getValue();
 			rvalue = (double)roperand.getValue();
 			double result = lvalue + rvalue;
-			text.add(CodeEmitter.Add());
+			text.add(CodeEmitter.add());
 			decStackSize();
 			a =  new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
@@ -395,7 +394,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			lvalue = (double)loperand.getValue();
 			rvalue = (double)roperand.getValue();
 			double result = lvalue - rvalue;
-			text.add(CodeEmitter.Sub());
+			text.add(CodeEmitter.sub());
 			decStackSize();
 			a = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
@@ -406,15 +405,15 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			// add check that both are boolean?
 			if(loperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+				text.add(CodeEmitter.putVarStack((Variable)loperand));
 			}
-			else CodeEmitter.LoadConstant((Boolean) loperand.getValue());
+			else CodeEmitter.loadConstant((Boolean) loperand.getValue());
 			if(roperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+				text.add(CodeEmitter.putVarStack((Variable)roperand));
 			}
-			else CodeEmitter.LoadConstant((Boolean)loperand.getValue());
-			text.add(CodeEmitter.BooleanOperation("and"));
+			else CodeEmitter.loadConstant((Boolean)loperand.getValue());
+			text.add(CodeEmitter.booleanOperation("and"));
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "AND"));
 		}
 		else if(ctx.OR() != null)
@@ -423,105 +422,105 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			// add check that both are boolean?
 			if(loperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+				text.add(CodeEmitter.putVarStack((Variable)loperand));
 			}
-			else CodeEmitter.LoadConstant((Boolean) loperand.getValue());
+			else CodeEmitter.loadConstant((Boolean) loperand.getValue());
 			if(roperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+				text.add(CodeEmitter.putVarStack((Variable)roperand));
 			}
-			else CodeEmitter.LoadConstant((Boolean)loperand.getValue());
-			text.add(CodeEmitter.BooleanOperation("or"));
+			else CodeEmitter.loadConstant((Boolean)loperand.getValue());
+			text.add(CodeEmitter.booleanOperation("or"));
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "OR"));
 		}
 		else if(ctx.LT() != null)
 		{
 			if(loperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+				text.add(CodeEmitter.putVarStack((Variable)loperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			//else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
 			if(roperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+				text.add(CodeEmitter.putVarStack((Variable)roperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
-			text.add(CodeEmitter.BooleanOperation("lt"));
+			//else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.booleanOperation("lt"));
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "LT"));
 		}
 		else if(ctx.GT() != null)
 		{
 			if(loperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+				text.add(CodeEmitter.putVarStack((Variable)loperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			//else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
 			if(roperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+				text.add(CodeEmitter.putVarStack((Variable)roperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
-			text.add(CodeEmitter.BooleanOperation("gt"));
+			//else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.booleanOperation("gt"));
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "GT"));
 		}
 		else if(ctx.GTE() != null)
 		{
 			if(loperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+				text.add(CodeEmitter.putVarStack((Variable)loperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			//else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
 			if(roperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+				text.add(CodeEmitter.putVarStack((Variable)roperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
-			text.add(CodeEmitter.BooleanOperation("gte"));
+			//else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.booleanOperation("gte"));
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "GTE"));
 		}
 		else if(ctx.LTE() != null)
 		{
 			if(loperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+				text.add(CodeEmitter.putVarStack((Variable)loperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			//else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
 			if(roperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+				text.add(CodeEmitter.putVarStack((Variable)roperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
-			text.add(CodeEmitter.BooleanOperation("lte"));
+			//else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.booleanOperation("lte"));
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "LTE"));
 		}
 		else if(ctx.EQ() != null)
 		{
 			if(loperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+				text.add(CodeEmitter.putVarStack((Variable)loperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			//else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
 			if(roperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+				text.add(CodeEmitter.putVarStack((Variable)roperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
-			text.add(CodeEmitter.BooleanOperation("eq"));
+			//else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.booleanOperation("eq"));
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "EQ"));
 		}
 		else if(ctx.NEQ() != null)
 		{
 			if(loperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)loperand));
+				text.add(CodeEmitter.putVarStack((Variable)loperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double)loperand.getValue()));
+			//else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
 			if(roperand.getType().equals("IDENTIFIER"))
 			{
-				text.add(CodeEmitter.PutVarStack((Variable)roperand));
+				text.add(CodeEmitter.putVarStack((Variable)roperand));
 			}
-			//else text.add(CodeEmitter.LoadConstant((double) roperand.getValue()));
-			text.add(CodeEmitter.BooleanOperation("neq"));
+			//else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
+			text.add(CodeEmitter.booleanOperation("neq"));
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "NEQ"));
 		}
 		return a;
@@ -567,23 +566,23 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 				val = ValueBuilder.getValue(a.getSymbol(), memory);
 				if(a.getSymbol().getType() == SimpLParser.NUMBER)
 				{
-					text.add(CodeEmitter.Println("NUMBER"));
+					text.add(CodeEmitter.println("NUMBER"));
 				}
 				else if(a.getSymbol().getType() == SimpLParser.NAME)
 				{
 					var = (Variable) val;
 					val = var.getValue();
-					text.add(CodeEmitter.PutVarStack(var));
-					text.add(CodeEmitter.Println(val.getType()));
+					text.add(CodeEmitter.putVarStack(var));
+					text.add(CodeEmitter.println(val.getType()));
 				}
 				else if(a.getSymbol().getType() == SimpLParser.BOOLEAN)
 				{
-					text.add(CodeEmitter.Println("BOOLEAN"));
+					text.add(CodeEmitter.println("BOOLEAN"));
 				}
 				else
 				{
-					CodeEmitter.LoadConstant(val.getValue().toString());
-					text.add(CodeEmitter.Println("TEXT"));
+					CodeEmitter.loadConstant(val.getValue().toString());
+					text.add(CodeEmitter.println("TEXT"));
 				}
 			}
 		}
@@ -596,23 +595,23 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 				val = ValueBuilder.getValue(a.getSymbol(), memory);
 				if(a.getSymbol().getType() == SimpLParser.NUMBER)
 				{
-					text.add(CodeEmitter.Print("NUMBER"));
+					text.add(CodeEmitter.print("NUMBER"));
 				}
 				else if(a.getSymbol().getType() == SimpLParser.NAME)
 				{
 					var = (Variable) val;
 					val = var.getValue();
-					text.add(CodeEmitter.PutVarStack(var));
-					text.add(CodeEmitter.Print(val.getType()));
+					text.add(CodeEmitter.putVarStack(var));
+					text.add(CodeEmitter.print(val.getType()));
 				}
 				else if(a.getSymbol().getType() == SimpLParser.BOOLEAN)
 				{
-					text.add(CodeEmitter.Print("BOOLEAN"));
+					text.add(CodeEmitter.print("BOOLEAN"));
 				}
 				else
 				{
-					CodeEmitter.LoadConstant(val.getValue().toString());
-					text.add(CodeEmitter.Print("TEXT"));
+					CodeEmitter.loadConstant(val.getValue().toString());
+					text.add(CodeEmitter.print("TEXT"));
 				}
 			}
 		}

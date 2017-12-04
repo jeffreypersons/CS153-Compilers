@@ -16,31 +16,31 @@ public class CodeEmitter
 	private static Map<String, HashMap<String,String>> type_ops;
 	private static Boolean isInitialized = false;
 
-	public static String Program(String name)
+	public static String program(String name)
 	{
 		CodeEmitter.program_name = name;
 		StringBuilder construct = new StringBuilder(SET_NAME);
 		return construct.append(name).append("\n").append(INIT).toString();
 	}
 
-	public static String Main()
+	public static String main()
 	{
 		return MAIN;
 	}
 
-	public static String SetStack(int limit)
+	public static String setStack(int limit)
 	{
 		StringBuilder construct = new StringBuilder(STACK_SIZE);
 		return construct.append(limit + "\n").toString();
 	}
 
-	public static String SetLocals(int locals)
+	public static String setlocals(int locals)
 	{
 		StringBuilder construct = new StringBuilder(".limit locals " + locals + "\n");
 		return construct.toString();
 	}
 
-	public static String Add()
+	public static String add()
 	{
 		//StringBuilder construct = new StringBuilder("ldc " + a).append("\nldc " + b);
 		StringBuilder construct = new StringBuilder("");
@@ -48,7 +48,7 @@ public class CodeEmitter
 		return construct.toString();
 	}
 
-	public static String Sub()
+	public static String sub()
 	{
 		StringBuilder construct = new StringBuilder("");
 		construct.append("invokestatic " + CodeEmitter.program_name + "/sub(FF)F\n");
@@ -56,33 +56,33 @@ public class CodeEmitter
 	}
 
 
-	public static String Mul()
+	public static String mul()
 	{
 		StringBuilder construct = new StringBuilder("");
 		construct.append("invokestatic " + CodeEmitter.program_name + "/mul(FF)F\n");
 		return construct.toString();
 	}
 
-	public static String Div()
+	public static String div()
 	{
 		StringBuilder construct = new StringBuilder("");
 		construct.append("invokestatic " + CodeEmitter.program_name + "/div(FF)F\n");
 		return construct.toString();
 	}
 
-	public static String Printi(String in)
+	public static String printi(String in)
 	{
 		StringBuilder construct = new StringBuilder("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 		return construct.append("ldc " + "\"" + in + "\"\n").append("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\nreturn\n").toString();
 	}
 
-	public static String Read(String type)
+	public static String read(String type)
 	{
 		StringBuilder construct = new StringBuilder("getstatic java/lang/System/in Ljava/io/InputStream;\n");
 		return construct.append("invokevirtual java/io/InputStream/read()").append(type).append("\n").toString();
 	}
 
-	public static String EndMethod()
+	public static String endMethod()
 	{
 		return END_FUNCTION;
 	}
@@ -97,15 +97,15 @@ public class CodeEmitter
 	 * @param  lib_name [which library to print the assembly code]
 	 * @return          [the library as text in assembly]
 	 */
-	public static String GetLibraryCode(String lib_name)
+	public static String getLibraryCode(String lib_name)
 	{
 		StringBuilder construct = new StringBuilder("");
-		if(lib_name.equals("math"))
+		if (lib_name.equals("math"))
 		{
 			// create multiply code
 			construct.append(START_FUNCTION + "mul(FF)F\n");
-			construct.append(SetStack(2));
-			construct.append(SetLocals(2));
+			construct.append(setStack(2));
+			construct.append(setlocals(2));
 			construct.append("fload_0\n");
 			construct.append("fload_1\n");
 			construct.append("fmul\n");
@@ -114,8 +114,8 @@ public class CodeEmitter
 
 			// create add code
 			construct.append(START_FUNCTION + "add(FF)F\n");
-			construct.append(SetStack(2));
-			construct.append(SetLocals(2));
+			construct.append(setStack(2));
+			construct.append(setlocals(2));
 			construct.append("fload_0\n");
 			construct.append("fload_1\n");
 			construct.append("fadd\n");
@@ -124,8 +124,8 @@ public class CodeEmitter
 
 			// create div code
 			construct.append(START_FUNCTION + "div(FF)F\n");
-			construct.append(SetStack(2));
-			construct.append(SetLocals(2));
+			construct.append(setStack(2));
+			construct.append(setlocals(2));
 			construct.append("fload_0\n");
 			construct.append("fload_1\n");
 			construct.append("fdiv\n");
@@ -134,8 +134,8 @@ public class CodeEmitter
 
 			// create sub code
 			construct.append(START_FUNCTION + "sub(FF)F\n");
-			construct.append(SetStack(2));
-			construct.append(SetLocals(2));
+			construct.append(setStack(2));
+			construct.append(setlocals(2));
 			construct.append("fload_0\n");
 			construct.append("fload_1\n");
 			construct.append("fsub\n");
@@ -151,12 +151,12 @@ public class CodeEmitter
 	 * @param  num [slot number]
 	 * @return     [assembly code for that slot]
 	 */
-	public static String DeclareVariable(Variable var, int num)
+	public static String declareVariable(Variable var, int num)
 	{
 		//StringBuilder construct = new StringBuilder("ldc " + value.getValue().getValue() + "\n");
 		StringBuilder construct = new StringBuilder("");
 		var.setSlot(num);
-		construct.append(AssignVariable(var) + "\n");
+		construct.append(assignVariable(var) + "\n");
 		return construct.toString();
 	}
 
@@ -165,7 +165,7 @@ public class CodeEmitter
 	 * @param  var [variable that will be assigned new value]
 	 * @return     [assembly that will cause new value put into that slot or variable]
 	 */
-	public static String AssignVariable(Variable var)
+	public static String assignVariable(Variable var)
 	{
 		if(var.getSlot() < 0) ;//throw error here. Undeclared variable
 		Value val = var.getValue();
@@ -179,12 +179,12 @@ public class CodeEmitter
 	 * @param  in [string to put onto stack]
 	 * @return    [assembly code to put string on stack]
 	 */
-	public static String LoadConstant(String in)
+	public static String loadConstant(String in)
 	{
 		return "ldc " + "\"" + in + "\"";
 	}
 
-	public static String LoadConstant(Boolean a)
+	public static String loadConstant(Boolean a)
 	{
 		if(a)
 		{
@@ -198,7 +198,7 @@ public class CodeEmitter
 	 * @param  in number to put onto stack
 	 * @return    assembly code to push requested number onto stack
 	 */
-	public static String LoadConstant(double in)
+	public static String loadConstant(double in)
 	{
 		return "ldc " + in;
 	}
@@ -208,7 +208,7 @@ public class CodeEmitter
 	 * @param  type String description that matches possible types. e.g. NUMBER or TEXT
 	 * @return      Return the appropriate println command in jasmin assembly code
 	 */
-	public static String Println(String type)
+	public static String println(String type)
 	{
 		StringBuilder construct = new StringBuilder("getstatic java/lang/System/out Ljava/io/PrintStream;\ndup\n");
 		construct.append("ldc \" \"\ninvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
@@ -233,7 +233,7 @@ public class CodeEmitter
 		return construct.toString();
 	}
 
-	public static String Print(String type)
+	public static String print(String type)
 	{
 		StringBuilder construct = new StringBuilder("");
 		if(type.equals("TEXT"))
@@ -259,7 +259,7 @@ public class CodeEmitter
 
 	// if number used fstore else use astore assuming address to string. Can change type to 
 	// array in the future
-	public static String PutVarStack(Variable a)
+	public static String putVarStack(Variable a)
 	{
 		// no checking
 		Value val = a.getValue();
@@ -268,14 +268,14 @@ public class CodeEmitter
 		return load_type + a.getSlot();
 	}
 
-	public static String BooleanOperation(String type)
+	public static String booleanOperation(String type)
 	{
 		String result = boolean_operations.get(type.toUpperCase());
 		if(result == null) result = "";
 		return result;
 	}
 
-	public static String IfOperation(String type, String label)
+	public static String ifOperation(String type, String label)
 	{
 		String compare_type = "";
 		type = type.toUpperCase();
@@ -284,7 +284,7 @@ public class CodeEmitter
 		return compare_type + " " + label.replaceAll(":", "");
 	}
 
-	public static void Initialize()
+	public static void initialize()
 	{
 
 		// construct hashmaps for all boolean and if operations
@@ -317,17 +317,17 @@ public class CodeEmitter
 		isInitialized = true;
 	}
 
-	public static String GetLabel(int num)
+	public static String getLabel(int num)
 	{
 		return "LABEL_" + num + ":";
 	}
 
-	public static String GetCondLabel(int num)
+	public static String getCondLabel(int num)
 	{
 		return "COND_" + num + ":";
 	}
 
-	public static String GetGoTo(String label)
+	public static String getGoTo(String label)
 	{
 		return "goto " + label.replaceAll(":", "");
 	}

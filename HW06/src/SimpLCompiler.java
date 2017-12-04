@@ -56,11 +56,11 @@ public class SimpLCompiler
      */
     public void generateObjectCode()
     {
-        FileUtils.appendText(jasminFilepath, CodeEmitter.Program(jasminFilepath));
+        FileUtils.appendText(jasminFilepath, CodeEmitter.program(jasminFilepath));
         visitor.visit(parseTree);
         FileUtils.appendLines(jasminFilepath, visitor.getText());
         FileUtils.appendText(
-            jasminFilepath, System.lineSeparator() + "return" + System.lineSeparator() + CodeEmitter.EndMethod()
+            jasminFilepath, System.lineSeparator() + "return" + System.lineSeparator() + CodeEmitter.endMethod()
         );
     }
 }
