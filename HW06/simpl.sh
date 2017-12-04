@@ -20,6 +20,7 @@ get_extension() { echo "."$(echo $(basename $1) | cut -d '.' -f2-); }
 
 # ensure working dir is HW06, and given argument is an existing simpl filepath
 rawpath=${1}
+inputdir="$(dirname "${rawpath}")"
 name=$(basename ${rawpath} .simpl)
 if [[ $(basename $(pwd)) != HW06 ]]; then
     echo "**Error processing input file for simpl.sh**"
@@ -32,6 +33,12 @@ if [ $# -ne 1 ]; then
     echo "  Run as $ ./simpl.sh <source_filepath>.simpl"
     exit 1
 fi
+if [ ! -f ${rawpath} ]; then
+    echo "**Error processing input for simpl.sh**"
+    echo "  Invalid file path $rawpath"
+    echo "  File does not exist"
+    exit 1
+fi
 if [[ $(get_extension ${rawpath}) != .simpl ]]; then
     echo "**Error processing input for simpl.sh**"
     echo "  Invalid file extension for file $rawpath"
@@ -40,15 +47,12 @@ if [[ $(get_extension ${rawpath}) != .simpl ]]; then
 fi
 
 # ------ setup cache folder for simpl/jasmin/class files
-rm -rf simplbin; mkdir simplbin
-cp ${rawpath} simplbin
-source_filepath=./simplbin/${name}.simpl
-jasmin_filepath=./simplbin/${name}.j
-class_filepath=./simplbin/${name}.class
+source_filepath=${inputdir}/${name}.simpl
+jasmin_filepath=${inputdir}/${name}.j
+class_filepath=${inputdir}/${name}.class
 
 # ------ produce jasmin file from simpl file
-java -cp "out:lib/antlr-4.7-complete.jar" SimpLMain ${source_filepath} ${jasmin_filepath}
-
+java -cp "out:lib/antlr-4.7-complete.jar" SimpLMain ${inputdir}/${name}.simpl
 if [ $? == 0 ]; then
     echo "Successfully produced file $jasmin_filepath"
 else
@@ -57,7 +61,7 @@ else
 fi
 
 # ------ produce class file from jasmin file
-java -jar lib/jasmin-2.4-complete.jar ${jasmin_filepath}
+java -jar lib/jasmin-2.4-complete.jar -g ${inputdir}/${name}.j
 if [ $? == 0 ]; then
     echo "Successfully produced file $class_filepath"
 else
@@ -66,7 +70,7 @@ else
 fi
 
 # ------ run class file
-java ${class_filepath}
+java -cp "${inputdir}" ${inputdir} ${name}
 if [ $? == 0 ]; then
     echo "Successfully ran file $class_filepath"
 else
