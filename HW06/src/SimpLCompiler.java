@@ -30,7 +30,7 @@ public class SimpLCompiler
     private final String jasminFilepath;
     private final List<String> program = new ArrayList<>();
 
-    public SimpLCompiler(String simplFilepath, String jasminFilepath)
+    public SimpLCompiler(String simplFilepath)
     {
         try
         {
@@ -41,9 +41,9 @@ public class SimpLCompiler
             throw new SourceFileNotFoundException();
         }
         this.simplFilepath = simplFilepath;
-        this.jasminFilepath = jasminFilepath;
-        System.out.println(this.simplFilepath);
-        System.out.println(this.jasminFilepath);
+        this.jasminFilepath = FileUtils.joinPaths(
+            FileUtils.getParentDir(simplFilepath), FileUtils.getBaseName(simplFilepath) + ".j"
+        );
         parser = new SimpLParser(new CommonTokenStream(lexer));
         parser.addParseListener(new SimpLBaseListener());
 
@@ -56,9 +56,11 @@ public class SimpLCompiler
      */
     public void generateObjectCode()
     {
-        FileUtils.writeText(jasminFilepath, CodeEmitter.Program(simplFilepath));
+        FileUtils.appendText(jasminFilepath, CodeEmitter.Program(jasminFilepath));
         visitor.visit(parseTree);
-        FileUtils.writeLines(jasminFilepath, visitor.getText());
-        FileUtils.writeText(jasminFilepath, "\nreturn\n" + CodeEmitter.EndMethod());
+        FileUtils.appendLines(jasminFilepath, visitor.getText());
+        FileUtils.appendText(
+            jasminFilepath, System.lineSeparator() + "return" + System.lineSeparator() + CodeEmitter.EndMethod()
+        );
     }
 }
