@@ -50,12 +50,12 @@ public class SimpLCompiler
         parseTree = parser.program();
         visitor = new CVisitor();
     }
-
     /**
      * Generate jasmine code for given SimpL code file.
      */
     public void generateObjectCode()
     {
+
         FileUtils.appendText(jasminFilepath, CodeEmitter.program(jasminFilepath));
         visitor.visit(parseTree);
         FileUtils.appendLines(jasminFilepath, visitor.getText());

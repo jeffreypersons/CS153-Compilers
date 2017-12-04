@@ -214,7 +214,6 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 		}
 		return val;
 	}
-
 	/**
 	 * {@inheritDoc}
 	 *

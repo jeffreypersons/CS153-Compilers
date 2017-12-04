@@ -15,7 +15,8 @@ public class Bool implements Value<Boolean>
 		{
 			this.value = true;
 		}
-		else this.value = false;
+		else
+			this.value = false;
 	}
 
 	public String getType()

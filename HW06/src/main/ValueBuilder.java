@@ -12,7 +12,7 @@ public class ValueBuilder
 {
 	/**
 	 * Takes in a token and a map and constructs the appropriate wrapper for it
-	 * @param  token Tokent o be converted into value
+	 * @param  token Token to be converted into value
 	 * @param  map   map used to store identifiers
 	 * @return       a Value created from the token and map
 	 */
@@ -59,7 +59,6 @@ public class ValueBuilder
 			return new Number(0);
 		}
 	}
-
 	// add values for primitives
 	public static Value getValue(double in)
 	{

@@ -15,37 +15,30 @@ public class Variable implements Value<Value>
 		this.identifier = identifier;
 		this.slot_number = -1;
 	}
-
 	public void setValue(Value value)
 	{
 		this.a.setValue(value.getValue());
 	}
-
 	public Value getValue()
 	{
 		return a;
 	}
-
 	public String getID()
 	{
 		return this.identifier;
 	}
-
 	public String getType()
 	{
 		return "IDENTIFIER";
 	}
-
 	public String getCast()
 	{
 		return this.cast;
 	}
-
 	public void setSlot(int slot)
 	{
 		this.slot_number = slot;
 	}
-
 	public int getSlot()
 	{
 		return this.slot_number;

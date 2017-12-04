@@ -34,39 +34,35 @@ public class FileUtils
         int end = dotIndex == -1? rawName.length() : dotIndex + 1;
         return rawName.substring(start, end);
     }
-
-    public static String joinPaths(String basepath, String... paths)
-    {
-        return Paths.get(basepath, paths).toAbsolutePath()
-            .normalize().toString();
-    }
-
-    /** Return absolute path of given file (wraps Paths's toAbsolutePath()). */
-    public static String getAbsolutePath(String filePath)
-    {
-        return Paths.get(filePath).toAbsolutePath()
-            .normalize().toString();
-    }
-
-    /** Return full path of given path's parent directory. */
-    public static String getParentDir(String path)
-    {
-        return Paths.get(path).getParent().toAbsolutePath()
-            .normalize().toString();
-    }
-
     /** Return true if path exists as file, false otherwise. */
     public static boolean isFile(String filePath)
     {
         return new File(filePath).isFile();
     }
-
     /** Return true if path exists as directory, false otherwise. */
     public static boolean isDir(String path)
     {
         return new File(path).isDirectory();
     }
 
+    /** Return given paths joined to base. */
+    public static String joinPaths(String basepath, String... paths)
+    {
+        return Paths.get(basepath, paths).toAbsolutePath()
+            .normalize().toString();
+    }
+    /** Return absolute path of given file (wraps Paths's toAbsolutePath()). */
+    public static String getAbsolutePath(String filePath)
+    {
+        return Paths.get(filePath).toAbsolutePath()
+            .normalize().toString();
+    }
+    /** Return full path of given path's parent directory. */
+    public static String getParentDir(String path)
+    {
+        return Paths.get(path).getParent().toAbsolutePath()
+            .normalize().toString();
+    }
     /**
      * Return last extension of given filePath, empty string if not a file
      *  empty string if no extension, null if not a file, else extension without dot of given file.
@@ -93,7 +89,6 @@ public class FileUtils
             e.printStackTrace();
         }
     }
-
     /** Append given lines of text to file. */
     public static void appendLines(String filePath, List<String> lines)
     {
@@ -110,7 +105,6 @@ public class FileUtils
             e.printStackTrace();
         }
     }
-
     /** Return list of strings representing each non-blank line in the file. */
     public static List<String> readLines(String filePath)
     {

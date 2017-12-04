@@ -11,17 +11,14 @@ public class Number implements Value<Double>
 	{
 		this.value = in;
 	}
-
 	public void setValue(Double in)
 	{
 		this.value = in;
 	}
-
 	public Double getValue()
 	{
 		return this.value;
 	}
-
 	public String getType()
 	{
 		return "NUMBER";

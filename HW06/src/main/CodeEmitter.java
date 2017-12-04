@@ -11,7 +11,7 @@ public class CodeEmitter
 	private static final String START_FUNCTION = "\n.method public static ";
 	private static final String END_FUNCTION = ".end method\n";
 	private static final String STACK_SIZE = ".limit stack ";
-	public static String program_name = "a";
+	public  static String program_name = "a";
 	private static Map<String, String> boolean_operations, if_operations;
 	private static Map<String, HashMap<String,String>> type_ops;
 	private static Boolean isInitialized = false;
@@ -22,7 +22,6 @@ public class CodeEmitter
 		StringBuilder construct = new StringBuilder(SET_NAME);
 		return construct.append(name).append("\n").append(INIT).toString();
 	}
-
 	public static String main()
 	{
 		return MAIN;
@@ -33,7 +32,6 @@ public class CodeEmitter
 		StringBuilder construct = new StringBuilder(STACK_SIZE);
 		return construct.append(limit + "\n").toString();
 	}
-
 	public static String setlocals(int locals)
 	{
 		StringBuilder construct = new StringBuilder(".limit locals " + locals + "\n");
@@ -47,22 +45,18 @@ public class CodeEmitter
 		construct.append("invokestatic " + CodeEmitter.program_name + "/add(FF)F\n");
 		return construct.toString();
 	}
-
 	public static String sub()
 	{
 		StringBuilder construct = new StringBuilder("");
 		construct.append("invokestatic " + CodeEmitter.program_name + "/sub(FF)F\n");
 		return construct.toString();
 	}
-
-
 	public static String mul()
 	{
 		StringBuilder construct = new StringBuilder("");
 		construct.append("invokestatic " + CodeEmitter.program_name + "/mul(FF)F\n");
 		return construct.toString();
 	}
-
 	public static String div()
 	{
 		StringBuilder construct = new StringBuilder("");
@@ -75,18 +69,15 @@ public class CodeEmitter
 		StringBuilder construct = new StringBuilder("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 		return construct.append("ldc " + "\"" + in + "\"\n").append("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\nreturn\n").toString();
 	}
-
 	public static String read(String type)
 	{
 		StringBuilder construct = new StringBuilder("getstatic java/lang/System/in Ljava/io/InputStream;\n");
 		return construct.append("invokevirtual java/io/InputStream/read()").append(type).append("\n").toString();
 	}
-
 	public static String endMethod()
 	{
 		return END_FUNCTION;
 	}
-
 	private static void shortCutInstruction(String instruction)
 	{
 	}
@@ -159,7 +150,6 @@ public class CodeEmitter
 		construct.append(assignVariable(var) + "\n");
 		return construct.toString();
 	}
-
 	/**
 	 * Creates assembly code for assigning either a string or a number to a variable
 	 * @param  var [variable that will be assigned new value]
@@ -173,7 +163,6 @@ public class CodeEmitter
 		store_type = type_ops.get(val.getType()).get("store");
 		return store_type + var.getSlot();
 	}
-
 	/**
 	 * Put a constant string onto the stack
 	 * @param  in [string to put onto stack]
@@ -183,7 +172,6 @@ public class CodeEmitter
 	{
 		return "ldc " + "\"" + in + "\"";
 	}
-
 	public static String loadConstant(Boolean a)
 	{
 		if(a)
@@ -192,7 +180,6 @@ public class CodeEmitter
 		}
 		else return "ldc " + -1;
 	}
-
 	/**
 	 * Load constant onto stack
 	 * @param  in number to put onto stack
@@ -202,6 +189,16 @@ public class CodeEmitter
 	{
 		return "ldc " + in;
 	}
+    // if number used fstore else use astore assuming address to string. Can change type to
+    // array in the future
+    public static String putVarStack(Variable a)
+    {
+        // no checking
+        Value val = a.getValue();
+        String load_type = "";
+        load_type = type_ops.get(val.getType()).get("load");
+        return load_type + a.getSlot();
+    }
 
 	/**
 	 * Create print command based on the type that is being passed into the function
@@ -232,7 +229,6 @@ public class CodeEmitter
 		}
 		return construct.toString();
 	}
-
 	public static String print(String type)
 	{
 		StringBuilder construct = new StringBuilder("");
@@ -256,25 +252,12 @@ public class CodeEmitter
 		}
 		return construct.toString();
 	}
-
-	// if number used fstore else use astore assuming address to string. Can change type to 
-	// array in the future
-	public static String putVarStack(Variable a)
-	{
-		// no checking
-		Value val = a.getValue();
-		String load_type = "";
-		load_type = type_ops.get(val.getType()).get("load");
-		return load_type + a.getSlot();
-	}
-
 	public static String booleanOperation(String type)
 	{
 		String result = boolean_operations.get(type.toUpperCase());
 		if(result == null) result = "";
 		return result;
 	}
-
 	public static String ifOperation(String type, String label)
 	{
 		String compare_type = "";
@@ -286,7 +269,6 @@ public class CodeEmitter
 
 	public static void initialize()
 	{
-
 		// construct hashmaps for all boolean and if operations
 		if(isInitialized) return;
 
@@ -294,19 +276,19 @@ public class CodeEmitter
 		boolean_operations = new HashMap<String, String>();
 		type_ops = new HashMap<String, HashMap<String,String>>();
 
-		String[] ops = {"GT", "LT", "GTE", "LTE", "EQ", "NEQ", "NOT", "OR", "AND"};
-		String[] if_ops = {"ifgt", "iflt", "ifgt", "iflt", "ifne", "ifeq", "iconst_1\nisub\niflt"};
-		String[] bool_ops = {"swap\nfcmpg\niconst_1\niadd", "swap\nfcmpg\niconst_1\nisub", "fcmpg", "swap\nfcmpg", "fcmpg", "fcmpg", "ineg", "ior", "iand"};
-		String[] types = {"NUMBER", "TEXT", "BOOLEAN"};
-		String[] load_commands = {"fload ", "aload ", "iload "};
-		String[] store_commands = {"fstore ", "astore ", "istore "};
-		String[] command_types = {"store", "load"};
+        String[] types          = {"NUMBER", "TEXT", "BOOLEAN"};
+        String[] load_commands  = {"fload ", "aload ", "iload "};
+        String[] store_commands = {"fstore ", "astore ", "istore "};
+        String[] command_types  = {"store", "load"};
+		String[] ops            = {"GT", "LT", "GTE", "LTE", "EQ", "NEQ", "NOT", "OR", "AND"};
+		String[] if_ops         = {"ifgt", "iflt", "ifgt", "iflt", "ifne", "ifeq", "iconst_1\nisub\niflt"};
+		String[] bool_ops       = {"swap\nfcmpg\niconst_1\niadd", "swap\nfcmpg\niconst_1\nisub", "fcmpg",
+                                   "swap\nfcmpg", "fcmpg", "fcmpg", "ineg", "ior", "iand"};
 
 		HashMap<String, String> loads;
-
-		for(int x = 0; x < if_ops.length; x++) if_operations.put(ops[x], if_ops[x]);
-		for(int x = 0; x < bool_ops.length; x++) boolean_operations.put(ops[x], bool_ops[x]);
-		for(int x = 0; x < types.length; x++)
+		for (int x = 0; x < if_ops.length; x++)   if_operations.put(ops[x], if_ops[x]);
+		for (int x = 0; x < bool_ops.length; x++) boolean_operations.put(ops[x], bool_ops[x]);
+		for (int x = 0; x < types.length; x++)
 		{
 			loads = new HashMap<String, String>();
 			loads.put(command_types[0], store_commands[x]);
@@ -321,12 +303,10 @@ public class CodeEmitter
 	{
 		return "LABEL_" + num + ":";
 	}
-
 	public static String getCondLabel(int num)
 	{
 		return "COND_" + num + ":";
 	}
-
 	public static String getGoTo(String label)
 	{
 		return "goto " + label.replaceAll(":", "");

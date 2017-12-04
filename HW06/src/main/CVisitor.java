@@ -31,7 +31,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	{
 		label_count++;
 	}
-
 	public void incCondLabelCount()
 	{
 		cond_label_count++;
@@ -41,12 +40,10 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	{
 		return text;
 	}
-
 	public int getStackSize()
 	{
 		return this.necessary_stack_size;
 	}
-
 	public java.util.Map<String, Value> getMemory()
 	{
 		return this.memory;
@@ -57,28 +54,23 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		stack_size++;
 		if(stack_size > necessary_stack_size) necessary_stack_size = stack_size;
 	}
-
 	private void incLocals()
 	{
 		locals++;
 	}
-
 	private void decLocals()
 	{
 		locals--;
 	}
-
 	private void decStackSize()
 	{
 		if(stack_size > 0) stack_size--;
 	}
-
 	private void incStackSize(long a)
 	{
 		stack_size += a;
 		if(stack_size > necessary_stack_size) necessary_stack_size = stack_size;
 	}
-
 	private void decStackSize(long a)
 	{
 		if(a >= stack_size) stack_size = 0;
@@ -189,7 +181,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		text.add(exit_label);
 		return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "loop"));
 	}
-
 	/**
 	 * {@inheritDoc}
 	 *
@@ -535,7 +526,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		}
 		return val;
 	}
-
 	private Value getOperandValue(Value val)
 	{
 		if(val.getType().compareTo("IDENTIFIER") == 0)
@@ -621,7 +611,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		}
 		return a;
 	}
-
 	private int countLines()
 	{
 		int num_lines = 0;
