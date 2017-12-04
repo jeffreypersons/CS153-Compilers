@@ -55,7 +55,7 @@ public class SimpLCompiler
      */
     public void generateObjectCode()
     {
-
+        FileUtils.delete(jasminFilepath);
         FileUtils.appendText(jasminFilepath, CodeEmitter.program(jasminFilepath));
         visitor.visit(parseTree);
         FileUtils.appendLines(jasminFilepath, visitor.getText());
