@@ -1,5 +1,6 @@
 package main;
 
+
 /** Used for variables. Used to fetch the values stored in the map. */
 public class Variable implements Value<Value>
 {
