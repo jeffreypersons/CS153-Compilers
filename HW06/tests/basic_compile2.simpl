@@ -1,26 +1,55 @@
-Number a = 2
-Number b = 25
-Number expectedval = 1
-Text string = 'Value of a should be '
-if b > a * 100
-{
-    a = 5
-    return 1
-}
-else
-{
-    a = 1
-    return 1
-}
-print(string, expectedval, ' it should be: ', a)
+print('creating first variable and assigning 1')
+Number a = 1
+println('creating first variable and assigning Number is')
+Text placeholder = 'Number is: '
+Text placeholder2 = ''
+Number result = 0
 
-if(expectedval == a)
+if a > 0
 {
-    println('program is working correctly')
-    return 1
+	result = a
+	return 1
+}
+elif a < 0
+{
+	result = 2
+	return 1
 }
 else
 {
-    println('program is not functioning properly')
-    return 1
+	placeholder2 = 'executed else statement result: '
+	result = 3
+	return 1
+}
+
+while a < 10
+{
+	println('executing while. incrementing a to 10. a: ', a)
+	a = a + 1
+	return 1
+}
+
+println('adding a and result. Checking following expression not( a + result > 10): ')
+
+if not(a + result > 10)
+{
+	print('true')
+	return 1
+}
+else
+{
+	println('false')
+	return 1
+}
+
+println('that means that a + result > 10 is: ')
+if a + result > 10
+{
+	print('true')
+	return 1
+}
+else
+{
+	print('false')
+	return 1
 }
