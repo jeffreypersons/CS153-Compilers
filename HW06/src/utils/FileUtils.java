@@ -35,14 +35,19 @@ public class FileUtils
         return rawName.substring(start, end);
     }
     /** Return true if path exists as file, false otherwise. */
-    public static boolean isFile(String filePath)
+    public static boolean isFile(String path)
     {
-        return new File(filePath).isFile();
+        return new File(path).isFile();
     }
     /** Return true if path exists as directory, false otherwise. */
     public static boolean isDir(String path)
     {
         return new File(path).isDirectory();
+    }
+    /** Return true if path exists and dir/file successfully deleted, false otherwise. */
+    public static boolean delete(String path)
+    {
+        return new File(path).delete();
     }
 
     /** Return given paths joined to base. */
@@ -63,11 +68,13 @@ public class FileUtils
         return Paths.get(path).getParent().toAbsolutePath()
             .normalize().toString();
     }
+
+    // todo: change to return entire extension (eg foo.x.y.z => x.y.z)
     /**
      * Return last extension of given filePath, empty string if not a file
      *  empty string if no extension, null if not a file, else extension without dot of given file.
      */
-    public static String getExtension(String filePath)
+    public static String getLastExtension(String filePath)
     {
         File file = new File(filePath);
         String fileName = file.getName();
