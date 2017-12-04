@@ -1,15 +1,15 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import gen.SimpLBaseVisitor;
+import gen.SimpLParser;
+import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 
-import gen.SimpLBaseVisitor;
-import gen.SimpLParser;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 {
@@ -21,6 +21,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	private static int cond_label_count = 0;
 	private java.util.Map<String, Value> memory = new java.util.HashMap<String, Value>();
 	private java.util.Map<String, Integer> if_memory = new java.util.HashMap<String, Integer>();
+
+	public CVisitor()
+	{
+		super();
+		CodeEmitter.Initialize();
+	}
+
 	public void IncLabelCount()
 	{
 		label_count++;
@@ -131,7 +138,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		else memory.put(name, null); // add typing regardless of assignment or not
 		IncLocals();
 		if(val != null) return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, "0"));
-		//else if(parser_type == simpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(parser_type, Double.toString((double)val.getValue())));
+		//else if(parser_type == SimpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(parser_type, Double.toString((double)val.getValue())));
 		//else return new TerminalNodeImpl(new CommonToken(parser_type, val.getValue().toString()));
 		return new TerminalNodeImpl(token);
 	}
@@ -164,11 +171,26 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		memory.put(identifier, var);
 		text.add(CodeEmitter.AssignVariable(var));
 		decStackSize(2);
-		if(parser_type == SimpLParser.NUMBER)
-			return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString((double)val.getValue())));
-		else
-			return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, val.getValue().toString()));
+		if(parser_type == SimpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString((double)val.getValue())));
+		else return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, val.getValue().toString()));
 	}
+
+	@Override public TerminalNode visitWhile_loop(SimpLParser.While_loopContext ctx)
+	{
+		String label = CodeEmitter.GetLabel(label_count);
+		IncLabelCount();
+		String exit_label = CodeEmitter.GetLabel(label_count);
+		IncLabelCount();
+
+		text.add(label);
+		String expr_type = visit(ctx.expr()).getSymbol().getText().toString();
+		text.add(CodeEmitter.IfOperation(expr_type, exit_label));
+		visit(ctx.block());
+		text.add(CodeEmitter.GetGoTo(label));
+		text.add(exit_label);
+		return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "loop"));
+	}
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -187,7 +209,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		for(SimpLParser.ExprContext exp : expressions)
 		{
 			evaluate_type = visit(exp).getSymbol().getText();
-			System.out.println(evaluate_type);
 			if_memory.put(label, countLines());
 			cond_label = CodeEmitter.GetCondLabel(cond_label_count);
 			text.add(CodeEmitter.IfOperation(evaluate_type, cond_label));
