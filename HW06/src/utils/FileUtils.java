@@ -1,9 +1,6 @@
 package utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -13,16 +10,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/** Utility functions for file input/output. */
+import static java.nio.file.StandardOpenOption.APPEND;
+
+/** Utility functions for file input/output: does normalization and returns full paths as much as possible. */
 public class FileUtils
 {
     public static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
-
-    /** Return absolute path of given file (wraps Paths's toAbsolutePath()). */
-    public static String getAbsolutePath(String filePath)
-    {
-        return Paths.get(filePath).toAbsolutePath().toString();
-    }
 
     /**
      * Return basename of given path, without extension or leading dot.
@@ -42,10 +35,24 @@ public class FileUtils
         return rawName.substring(start, end);
     }
 
-    /** Return name of directory without extension, "" if not . */
-    public static String getParentDirectoryName(String filePath)
+    public static String joinPaths(String basepath, String... paths)
     {
-        return Paths.get(filePath).getParent().toAbsolutePath().toString();
+        return Paths.get(basepath, paths).toAbsolutePath()
+            .normalize().toString();
+    }
+
+    /** Return absolute path of given file (wraps Paths's toAbsolutePath()). */
+    public static String getAbsolutePath(String filePath)
+    {
+        return Paths.get(filePath).toAbsolutePath()
+            .normalize().toString();
+    }
+
+    /** Return full path of given path's parent directory. */
+    public static String getParentDir(String path)
+    {
+        return Paths.get(path).getParent().toAbsolutePath()
+            .normalize().toString();
     }
 
     /** Return true if path exists as file, false otherwise. */
@@ -55,7 +62,7 @@ public class FileUtils
     }
 
     /** Return true if path exists as directory, false otherwise. */
-    public static boolean isDirectory(String path)
+    public static boolean isDir(String path)
     {
         return new File(path).isDirectory();
     }
@@ -73,11 +80,13 @@ public class FileUtils
     }
 
     /** Overwrites contents (newlines are recognized) of given text file, creating if not present. */
-    public static void writeText(String filePath, String text)
+    public static void appendText(String filePath, String text)
     {
-        try (PrintStream out = new PrintStream(filePath, DEFAULT_ENCODING.name()))
+        try (PrintStream out = new PrintStream(new FileOutputStream(filePath, true)))
         {
-            out.print(text + "\n");
+            out.write(
+                (text + System.lineSeparator()).getBytes(DEFAULT_ENCODING)
+            );
         }
         catch (IOException e)
         {
@@ -85,10 +94,10 @@ public class FileUtils
         }
     }
 
-    /** Writes given lines of text to file. */
-    public static void writeLines(String filePath, List<String> lines)
+    /** Append given lines of text to file. */
+    public static void appendLines(String filePath, List<String> lines)
     {
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath), DEFAULT_ENCODING))
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath), DEFAULT_ENCODING, APPEND))
         {
             for (String line : lines)
             {
@@ -101,6 +110,7 @@ public class FileUtils
             e.printStackTrace();
         }
     }
+
     /** Return list of strings representing each non-blank line in the file. */
     public static List<String> readLines(String filePath)
     {
