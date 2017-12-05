@@ -238,7 +238,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		}
 
 		// else block
-		if(block_count < ctx.block().size())
+		if (block_count < ctx.block().size())
 		{
 			visit(ctx.block(block_count));
 			cond_label = CodeEmitter.getCondLabel(cond_label_count);
@@ -302,13 +302,15 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 				{
 					return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, operand.getValue().toString()));
 				}
-				else if(!operand.getType().equals("NUMBER"))
+				else if (!operand.getType().equals("NUMBER"))
 				{
 					return new TerminalNodeImpl(new CommonToken(SimpLParser.TEXT, (String)operand.getValue()));
 				}
-				else result = (double)operand.getValue();
+				else
+				    result = (double)operand.getValue();
 			}
-			else result = (double) val.getValue();
+			else
+			    result = (double) val.getValue();
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
 		else if (ctx.LITERAL() != null)
@@ -538,12 +540,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		}
 		else if (ctx.NEQ() != null)
 		{
-			if(loperand.getType().equals("IDENTIFIER"))
+			if (loperand.getType().equals("IDENTIFIER"))
 			{
 				text.add(CodeEmitter.putVarStack((Variable)loperand));
 			}
 			//else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
-			if(roperand.getType().equals("IDENTIFIER"))
+			if (roperand.getType().equals("IDENTIFIER"))
 			{
 				text.add(CodeEmitter.putVarStack((Variable)roperand));
 			}
@@ -584,25 +586,25 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		String name = ctx.NAME().toString();
 		Value val = null;
 		Variable var = null;
-		if(name.equals("println"))
+		if (name.equals("println"))
 		{
 			List<SimpLParser.ExprContext> expressions = ctx.expr();
 			for(SimpLParser.ExprContext exp : expressions)
 			{
 				a = visit(exp);
 				val = ValueBuilder.getValue(a.getSymbol(), memory);
-				if(a.getSymbol().getType() == SimpLParser.NUMBER)
+				if (a.getSymbol().getType() == SimpLParser.NUMBER)
 				{
 					text.add(CodeEmitter.println("NUMBER"));
 				}
-				else if(a.getSymbol().getType() == SimpLParser.NAME)
+				else if (a.getSymbol().getType() == SimpLParser.NAME)
 				{
 					var = (Variable) val;
 					val = var.getValue();
 					text.add(CodeEmitter.putVarStack(var));
 					text.add(CodeEmitter.println(val.getType()));
 				}
-				else if(a.getSymbol().getType() == SimpLParser.BOOLEAN)
+				else if (a.getSymbol().getType() == SimpLParser.BOOLEAN)
 				{
 					text.add(CodeEmitter.println("BOOLEAN"));
 				}
@@ -642,7 +644,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 				}
 			}
 		}
-		else if(name.equals("read"))
+		else if (name.equals("read"))
 		{
 
 		}
@@ -651,11 +653,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	private int countLines()
 	{
 		int num_lines = 0;
-		for(String str : text)
+		for (String str : text)
 		{
-			for(int x = 0; x < str.length(); x++)
+			for (int x = 0; x < str.length(); x++)
 			{
-				if(str.charAt(x) == '\n' || str.charAt(x) == '\r') num_lines++;
+				if (str.charAt(x) == '\n' || str.charAt(x) == '\r')
+				    num_lines++;
 			}
 		}
 		num_lines += text.size();
