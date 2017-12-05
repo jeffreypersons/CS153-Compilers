@@ -436,7 +436,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		else if (ctx.AND() != null)
 		{
 			System.out.println(loperand + "---" + roperand);
-			// add check that both are boolean?
+			// todo: add check that both are boolean?
 			if (loperand.getType().equals("IDENTIFIER"))
 			{
 				text.add(CodeEmitter.putVarStack((Variable)loperand));
@@ -582,6 +582,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		return val;
 	}
 
+	// todo: address the return values of the CodeEmitter function calls
 	/**
 	 * {@inheritDoc}
 	 *

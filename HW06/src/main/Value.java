@@ -10,9 +10,9 @@ public interface Value<T>
 	public T getValue();
 	/**
 	 * Used to set a value into an object
-	 * @param i new value for object
+	 * @param value new value for object
 	 */
-	public void setValue(T i);
+	public void setValue(T value);
 	/**
 	 * Type of object as a string
 	 * @return label of the object possible labels are currently

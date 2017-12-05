@@ -20,7 +20,7 @@ public class ValueBuilder
 	{
 		if (token.getType() == SimpLParser.NAME)
 		{
-			// add check for cast to determine
+			// todo: add check for cast to determine
 			return map.get(token.getText());
 		}
 		if (token.getType() == SimpLParser.NUMBER)
@@ -29,7 +29,7 @@ public class ValueBuilder
 		}
 		else if (token.getType() == SimpLParser.LITERAL)
 		{
-			// add checks for all possible literals
+			// todo: add checks for all possible literals
 			Value val;
 			try
 			{
@@ -60,7 +60,7 @@ public class ValueBuilder
 			return new Number(0);  // todo - do we really want this on error?...
 		}
 	}
-	// add values for primitives
+	// todo: add values for primitives
 	public static Value getValue(double value)
 	{
 		return new Number(value);
