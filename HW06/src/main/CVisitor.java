@@ -105,11 +105,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
 		int stack_size_line = 0;
 		stack_size_line = text.size();
-		text.add(CodeEmitter.setStack(stackSize) + CodeEmitter.setlocals(locals));
+		text.add(CodeEmitter.setStack(stackSize) + CodeEmitter.setLocals(locals));
 		TerminalNode a = super.visitChildren(ctx);
 		text.set(
             // since everything is stored as float, multiply by 2 I think
-            stack_size_line, CodeEmitter.setStack((stackSize + locals) * 2) + CodeEmitter.setlocals(locals)
+            stack_size_line, CodeEmitter.setStack((stackSize + locals) * 2) + CodeEmitter.setLocals(locals)
         );
 		return a;
 	}

@@ -33,7 +33,7 @@ public class CodeEmitter
 		StringBuilder construct = new StringBuilder(STACK_SIZE);
 		return construct.append(limit + "\n").toString();
 	}
-	public static String setlocals(int locals)
+	public static String setLocals(int locals)
 	{
 		StringBuilder construct = new StringBuilder(".limit locals " + locals + "\n");
 		return construct.toString();
@@ -97,7 +97,7 @@ public class CodeEmitter
 			// create multiply code
 			construct.append(START_FUNCTION + "mul(FF)F\n");
 			construct.append(setStack(2));
-			construct.append(setlocals(2));
+			construct.append(setLocals(2));
 			construct.append("fload_0\n");
 			construct.append("fload_1\n");
 			construct.append("fmul\n");
@@ -107,7 +107,7 @@ public class CodeEmitter
 			// create add code
 			construct.append(START_FUNCTION + "add(FF)F\n");
 			construct.append(setStack(2));
-			construct.append(setlocals(2));
+			construct.append(setLocals(2));
 			construct.append("fload_0\n");
 			construct.append("fload_1\n");
 			construct.append("fadd\n");
@@ -117,7 +117,7 @@ public class CodeEmitter
 			// create div code
 			construct.append(START_FUNCTION + "div(FF)F\n");
 			construct.append(setStack(2));
-			construct.append(setlocals(2));
+			construct.append(setLocals(2));
 			construct.append("fload_0\n");
 			construct.append("fload_1\n");
 			construct.append("fdiv\n");
@@ -127,7 +127,7 @@ public class CodeEmitter
 			// create sub code
 			construct.append(START_FUNCTION + "sub(FF)F\n");
 			construct.append(setStack(2));
-			construct.append(setlocals(2));
+			construct.append(setLocals(2));
 			construct.append("fload_0\n");
 			construct.append("fload_1\n");
 			construct.append("fsub\n");
