@@ -89,11 +89,15 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		text = new ArrayList<String>();
 		text.add(CodeEmitter.getLibraryCode("math"));
 		text.add(CodeEmitter.main());
+
 		int stack_size_line = 0;
 		stack_size_line = text.size();
 		text.add(CodeEmitter.setStack(stack_size) + CodeEmitter.setlocals(locals));
 		TerminalNode a = super.visitChildren(ctx);
-		text.set(stack_size_line, CodeEmitter.setStack((stack_size + locals) * 2) + CodeEmitter.setlocals(locals)); // since everything is stored as float, multiply by 2 I think
+		text.set(
+            // since everything is stored as float, multiply by 2 I think
+            stack_size_line, CodeEmitter.setStack((stack_size + locals) * 2) + CodeEmitter.setlocals(locals)
+        );
 		return a;
 	}
 	/**
@@ -119,7 +123,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		CommonToken token = new CommonToken(visit(ctx.expr()).getSymbol());
 		Value val = null;
 		Variable var = null;
-		if(ctx.ASSIGN() != null)
+		if (ctx.ASSIGN() != null)
 		{
 			val = getOperandValue(token);
 			var = new Variable(name, val, val.getType());
@@ -129,9 +133,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		}
 		else memory.put(name, null); // add typing regardless of assignment or not
 		incLocals();
-		if(val != null) return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, "0"));
-		//else if(parser_type == SimpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(parser_type, Double.toString((double)val.getValue())));
-		//else return new TerminalNodeImpl(new CommonToken(parser_type, val.getValue().toString()));
+		if (val != null)
+		    return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, "0"));
+		/*
+		else if (parser_type == SimpLParser.NUMBER)
+		    return new TerminalNodeImpl(new CommonToken(parser_type, Double.toString((double)val.getValue())));
+		else
+		    return new TerminalNodeImpl(new CommonToken(parser_type, val.getValue().toString()));
+		*/
 		return new TerminalNodeImpl(token);
 	}
 	/**
@@ -146,10 +155,15 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		// TODO: check validity based on variable cast using .getCast() method
 		String identifier = ctx.NAME().getSymbol().getText();
 		Value val = getOperandValue(visit(ctx.expr()).getSymbol());
+
 		int parser_type = 0;
-		if(val.getType().equals("NUMBER")) parser_type = SimpLParser.NUMBER;
-		else if(val.getType().equals("BOOLEAN")) parser_type = SimpLParser.BOOLEAN;
-		else parser_type = SimpLParser.TEXT;
+		if (val.getType().equals("NUMBER"))
+		    parser_type = SimpLParser.NUMBER;
+		else if (val.getType().equals("BOOLEAN"))
+		    parser_type = SimpLParser.BOOLEAN;
+		else
+		    parser_type = SimpLParser.TEXT;
+
 		incStackSize(2);
 		if (memory.get(identifier) == null)
 		{
@@ -157,14 +171,19 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 			//throw new Exception("UNDELCARED IDENTIFIER");
 		}
 		Variable var = (Variable) memory.get(identifier);
-		if(var.getCast().equals(val.getType())) var.setValue(val);
-		else System.out.println("Improper cast!"); // throw error here - different type
+		if (var.getCast().equals(val.getType()))
+			var.setValue(val);
+		else
+		    System.out.println("Improper cast!"); // todo: throw error here since different type
 		//var.setValue(val);
+
 		memory.put(identifier, var);
 		text.add(CodeEmitter.assignVariable(var));
 		decStackSize(2);
-		if(parser_type == SimpLParser.NUMBER) return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString((double)val.getValue())));
-		else return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, val.getValue().toString()));
+		if (parser_type == SimpLParser.NUMBER)
+		    return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString((double)val.getValue())));
+		else
+		    return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, val.getValue().toString()));
 	}
 
 	@Override public TerminalNode visitWhile_loop(SimpLParser.While_loopContext ctx)
@@ -175,7 +194,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		incLabelCount();
 
 		text.add(label);
-		String expr_type = visit(ctx.expr()).getSymbol().getText().toString();
+		String expr_type = visit(ctx.expr()).getSymbol().getText();
 		text.add(CodeEmitter.ifOperation(expr_type, exit_label));
 		visit(ctx.block());
 		text.add(CodeEmitter.getGoTo(label));
