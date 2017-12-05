@@ -53,13 +53,6 @@ public class CodeEmitter
         return "invokestatic " + CodeEmitter.program_name + "/div(FF)F\n";
 	}
 
-	public static String printi(String in)
-	{
-        return "getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
-                "ldc \"" + in + "\"\n" +
-                "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
-                "return\n";
-	}
 	public static String read(String type)
 	{
         return "getstatic java/lang/System/in Ljava/io/InputStream;\n" +
@@ -71,60 +64,6 @@ public class CodeEmitter
 	}
 	private static void shortCutInstruction(String instruction)
 	{
-	}
-
-	/**
-	 * Prints basic operations in assembly code. In the future create class and invoke virtual from inside assembly.
-	 * Only temporary
-	 * @param  lib_name [which library to print the assembly code]
-	 * @return          [the library as text in assembly]
-	 */
-	public static String getLibraryCode(String lib_name)
-	{
-		StringBuilder construct = new StringBuilder("");
-		if (lib_name.equals("math"))
-		{
-			// create multiply code
-			construct.append(START_FUNCTION + "mul(FF)F\n");
-			construct.append(setStack(2));
-			construct.append(setLocals(2));
-			construct.append("fload_0\n");
-			construct.append("fload_1\n");
-			construct.append("fmul\n");
-			construct.append("freturn\n");
-			construct.append(END_FUNCTION);
-
-			// create add code
-			construct.append(START_FUNCTION + "add(FF)F\n");
-			construct.append(setStack(2));
-			construct.append(setLocals(2));
-			construct.append("fload_0\n");
-			construct.append("fload_1\n");
-			construct.append("fadd\n");
-			construct.append("freturn\n");
-			construct.append(END_FUNCTION);
-
-			// create div code
-			construct.append(START_FUNCTION + "div(FF)F\n");
-			construct.append(setStack(2));
-			construct.append(setLocals(2));
-			construct.append("fload_0\n");
-			construct.append("fload_1\n");
-			construct.append("fdiv\n");
-			construct.append("freturn\n");
-			construct.append(END_FUNCTION);
-
-			// create sub code
-			construct.append(START_FUNCTION + "sub(FF)F\n");
-			construct.append(setStack(2));
-			construct.append(setLocals(2));
-			construct.append("fload_0\n");
-			construct.append("fload_1\n");
-			construct.append("fsub\n");
-			construct.append("freturn\n");
-			construct.append(END_FUNCTION);
-		}
-		return construct.toString();
 	}
 	/**
 	 * Declares a variable using a slot number
@@ -194,59 +133,6 @@ public class CodeEmitter
         load_type = type_ops.get(val.getType()).get("load");
         return load_type + a.getSlot();
     }
-
-	/**
-	 * Create print command based on the type that is being passed into the function
-	 * @param  type String description that matches possible types. e.g. NUMBER or TEXT
-	 * @return      Return the appropriate println command in jasmin assembly code
-	 */
-	public static String println(String type)
-	{
-		StringBuilder construct = new StringBuilder("getstatic java/lang/System/out Ljava/io/PrintStream;\ndup\n");
-		construct.append("ldc \" \"\ninvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
-		if (type.equals("TEXT"))
-		{
-			//construct.append();
-			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n");
-		}
-		else if (type.equals("NUMBER"))
-		{
-			//construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
-			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/print(F)V\n");
-		}
-		else if (type.equals("BOOLEAN"))
-		{
-			//construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
-			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/print(I)V\n");
-		}
-		return construct.toString();
-	}
-	public static String print(String type)
-	{
-		StringBuilder construct = new StringBuilder("");
-		if (type.equals("TEXT"))
-		{
-			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
-			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n");
-		}
-		else if (type.equals("NUMBER"))
-		{
-			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
-			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/print(F)V\n");
-		}
-		else if (type.equals("BOOLEAN"))
-		{
-			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
-			construct.append("swap\n");
-			construct.append("invokevirtual java/io/PrintStream/print(I)V\n");
-		}
-		return construct.toString();
-	}
 	public static String booleanOperation(String type)
 	{
 		String result = boolean_operations.get(type.toUpperCase());
@@ -311,4 +197,118 @@ public class CodeEmitter
 	{
 		return "goto " + label.replaceAll(":", "");
 	}
+
+    public static String print(String type)
+    {
+        StringBuilder construct = new StringBuilder("");
+        if (type.equals("TEXT"))
+        {
+            construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
+            construct.append("swap\n");
+            construct.append("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n");
+        }
+        else if (type.equals("NUMBER"))
+        {
+            construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
+            construct.append("swap\n");
+            construct.append("invokevirtual java/io/PrintStream/print(F)V\n");
+        }
+        else if (type.equals("BOOLEAN"))
+        {
+            construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
+            construct.append("swap\n");
+            construct.append("invokevirtual java/io/PrintStream/print(I)V\n");
+        }
+        return construct.toString();
+    }
+    public static String printi(String in)
+    {
+        return "getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
+                "ldc \"" + in + "\"\n" +
+                "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
+                "return\n";
+    }
+    /**
+     * Create print command based on the type that is being passed into the function
+     * @param  type String description that matches possible types. e.g. NUMBER or TEXT
+     * @return      Return the appropriate println command in jasmin assembly code
+     */
+    public static String println(String type)
+    {
+        StringBuilder construct = new StringBuilder("getstatic java/lang/System/out Ljava/io/PrintStream;\ndup\n");
+        construct.append("ldc \" \"\ninvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+        if (type.equals("TEXT"))
+        {
+            //construct.append();
+            construct.append("swap\n");
+            construct.append("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n");
+        }
+        else if (type.equals("NUMBER"))
+        {
+            //construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
+            construct.append("swap\n");
+            construct.append("invokevirtual java/io/PrintStream/print(F)V\n");
+        }
+        else if (type.equals("BOOLEAN"))
+        {
+            //construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
+            construct.append("swap\n");
+            construct.append("invokevirtual java/io/PrintStream/print(I)V\n");
+        }
+        return construct.toString();
+    }
+
+    /**
+     * Prints basic operations in assembly code. In the future create class and invoke virtual from inside assembly.
+     * Only temporary
+     * @param  lib_name [which library to print the assembly code]
+     * @return          [the library as text in assembly]
+     */
+    public static String getLibraryCode(String lib_name)
+    {
+        StringBuilder construct = new StringBuilder("");
+        if (lib_name.equals("math"))
+        {
+            // create multiply code
+            construct.append(START_FUNCTION + "mul(FF)F\n");
+            construct.append(setStack(2));
+            construct.append(setLocals(2));
+            construct.append("fload_0\n");
+            construct.append("fload_1\n");
+            construct.append("fmul\n");
+            construct.append("freturn\n");
+            construct.append(END_FUNCTION);
+
+            // create add code
+            construct.append(START_FUNCTION + "add(FF)F\n");
+            construct.append(setStack(2));
+            construct.append(setLocals(2));
+            construct.append("fload_0\n");
+            construct.append("fload_1\n");
+            construct.append("fadd\n");
+            construct.append("freturn\n");
+            construct.append(END_FUNCTION);
+
+            // create div code
+            construct.append(START_FUNCTION + "div(FF)F\n");
+            construct.append(setStack(2));
+            construct.append(setLocals(2));
+            construct.append("fload_0\n");
+            construct.append("fload_1\n");
+            construct.append("fdiv\n");
+            construct.append("freturn\n");
+            construct.append(END_FUNCTION);
+
+            // create sub code
+            construct.append(START_FUNCTION + "sub(FF)F\n");
+            construct.append(setStack(2));
+            construct.append(setLocals(2));
+            construct.append("fload_0\n");
+            construct.append("fload_1\n");
+            construct.append("fsub\n");
+            construct.append("freturn\n");
+            construct.append(END_FUNCTION);
+        }
+        return construct.toString();
+    }
 }
