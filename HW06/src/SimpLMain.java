@@ -14,7 +14,6 @@ public class SimpLMain
             System.out.println("  Run as $ java SimpLMain <simpl_filepath>");
             System.exit(1);
         }
-
         String simpFilepath = args[0];
         if (!FileUtils.isFile(simpFilepath))
         {
