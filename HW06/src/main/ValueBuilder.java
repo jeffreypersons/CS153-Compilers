@@ -18,23 +18,24 @@ public class ValueBuilder
 	 */
 	public static Value getValue(Token token, java.util.Map<String, Value> map)
 	{
-		if(token.getType() == SimpLParser.NAME)
+		if (token.getType() == SimpLParser.NAME)
 		{
 			// add check for cast to determine
 			return map.get(token.getText());
 		}
-		if(token.getType() == SimpLParser.NUMBER)
+		if (token.getType() == SimpLParser.NUMBER)
 		{
 			return new Number(Double.parseDouble(token.getText()));
 		}
-		else if(token.getType() == SimpLParser.LITERAL)
+		else if (token.getType() == SimpLParser.LITERAL)
 		{
 			// add checks for all possible literals
 			Value val;
 			try
 			{
 				val = new Number(Double.parseDouble(token.getText()));
-			}catch (Exception e)
+			}
+			catch (Exception e)
 			{
 				String text = token.getText();
 				if(text.equals("true") || text.equals("false"))
@@ -45,23 +46,23 @@ public class ValueBuilder
 			}
 			return val;
 		}
-		else if(token.getType() == SimpLParser.BOOLEAN)
+		else if (token.getType() == SimpLParser.BOOLEAN)
 		{
 			return new Bool(token.getText());
 		}
-		else if(token.getType() == SimpLParser.TEXT)
+		else if (token.getType() == SimpLParser.TEXT)
 		{
 			return new Text(token.getText());
 		}
 		else
 		{
 			System.out.println("NO VALID CAST " + token.getType());
-			return new Number(0);
+			return new Number(0);  // todo - do we really want this on error?...
 		}
 	}
 	// add values for primitives
-	public static Value getValue(double in)
+	public static Value getValue(double value)
 	{
-		return new Number(in);
+		return new Number(value);
 	}
 }
