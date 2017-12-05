@@ -8,34 +8,42 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 {
-	private static int stack_size = 0;
-	private static int necessary_stack_size = 0;
-	private static int locals = 1;
-	private static int label_count = 0;
-	private static int cond_label_count = 0;
-    private static List<String> text;
-    private Map<String, Value> memory = new java.util.HashMap<String, Value>();
-	private Map<String, Integer> if_memory = new java.util.HashMap<String, Integer>();
+	private int stackSize;
+	private int necessaryStackSize;
+	private int locals;
+	private int labelCount;
+	private int condLabelCount;
+    private List<String> text;
+    private Map<String, Value> memory;
+	private Map<String, Integer> ifMemory;
 
 	public CVisitor()
 	{
 		super();
+        memory = new HashMap<>();
+        ifMemory = new HashMap<>();
+		stackSize = 0;
+		necessaryStackSize = 0;
+		locals = 1;
+		labelCount = 0;
+		condLabelCount = 0;
 		CodeEmitter.initialize();
 	}
 
 	public void incLabelCount()
 	{
-		label_count++;
+		labelCount++;
 	}
 	public void incCondLabelCount()
 	{
-		cond_label_count++;
+		condLabelCount++;
 	}
 
 	public List<String> getText()
@@ -44,7 +52,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	}
 	public int getStackSize()
 	{
-		return necessary_stack_size;
+		return necessaryStackSize;
 	}
 	public java.util.Map<String, Value> getMemory()
 	{
@@ -53,9 +61,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
 	private void incStackSize()
 	{
-		stack_size++;
-		if (stack_size > necessary_stack_size)
-		    necessary_stack_size = stack_size;
+		stackSize++;
+		if (stackSize > necessaryStackSize)
+		    necessaryStackSize = stackSize;
 	}
 	private void incLocals()
 	{
@@ -67,20 +75,20 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	}
 	private void decStackSize()
 	{
-		if (stack_size > 0)
-		    stack_size--;
+		if (stackSize > 0)
+		    stackSize--;
 	}
 	private void incStackSize(long a)
 	{
-		stack_size += a;
-		if (stack_size > necessary_stack_size)
-		    necessary_stack_size = stack_size;
+		stackSize += a;
+		if (stackSize > necessaryStackSize)
+		    necessaryStackSize = stackSize;
 	}
 	private void decStackSize(long a)
 	{
-		if (a >= stack_size)
-		    stack_size = 0;
-		else stack_size -= a;
+		if (a >= stackSize)
+		    stackSize = 0;
+		else stackSize -= a;
 	}
 
 	/**
@@ -97,11 +105,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
 		int stack_size_line = 0;
 		stack_size_line = text.size();
-		text.add(CodeEmitter.setStack(stack_size) + CodeEmitter.setlocals(locals));
+		text.add(CodeEmitter.setStack(stackSize) + CodeEmitter.setlocals(locals));
 		TerminalNode a = super.visitChildren(ctx);
 		text.set(
             // since everything is stored as float, multiply by 2 I think
-            stack_size_line, CodeEmitter.setStack((stack_size + locals) * 2) + CodeEmitter.setlocals(locals)
+            stack_size_line, CodeEmitter.setStack((stackSize + locals) * 2) + CodeEmitter.setlocals(locals)
         );
 		return a;
 	}
@@ -193,9 +201,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
 	@Override public TerminalNode visitWhile_loop(SimpLParser.While_loopContext ctx)
 	{
-		String label = CodeEmitter.getLabel(label_count);
+		String label = CodeEmitter.getLabel(labelCount);
 		incLabelCount();
-		String exit_label = CodeEmitter.getLabel(label_count);
+		String exit_label = CodeEmitter.getLabel(labelCount);
 		incLabelCount();
 
 		text.add(label);
@@ -216,7 +224,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	{
 		List<SimpLParser.ExprContext> expressions = ctx.expr();
 		int block_count = 0;
-		String label = CodeEmitter.getLabel(label_count);
+		String label = CodeEmitter.getLabel(labelCount);
 		text.add(label);
 		incLabelCount();
 
@@ -225,8 +233,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		for (SimpLParser.ExprContext exp : expressions)
 		{
 			evaluate_type = visit(exp).getSymbol().getText();
-			if_memory.put(label, countLines());
-			cond_label = CodeEmitter.getCondLabel(cond_label_count);
+			ifMemory.put(label, countLines());
+			cond_label = CodeEmitter.getCondLabel(condLabelCount);
 			text.add(CodeEmitter.ifOperation(evaluate_type, cond_label));
 			visit(ctx.block(block_count));
 			last_label_skip.add(text.size());
@@ -241,7 +249,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		if (block_count < ctx.block().size())
 		{
 			visit(ctx.block(block_count));
-			cond_label = CodeEmitter.getCondLabel(cond_label_count);
+			cond_label = CodeEmitter.getCondLabel(condLabelCount);
 			text.add(cond_label);
 			incCondLabelCount();
 		}

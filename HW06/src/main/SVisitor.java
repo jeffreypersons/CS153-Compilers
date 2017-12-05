@@ -8,10 +8,13 @@ import org.antlr.v4.runtime.Token;
 import gen.SimpLBaseVisitor;
 import gen.SimpLParser;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 {
-	public java.util.Map<String, Value> memory = new java.util.HashMap<String, Value>();
+	private Map<String, Value> memory = new HashMap<String, Value>();
 	/**
 	 * {@inheritDoc}
 	 *
@@ -101,7 +104,7 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 	@Override public TerminalNode visitExpr(SimpLParser.ExprContext ctx)
 	{
 		// Terribly written, we should come back and review this. Just trying to get some working code in
-		// would be easy to change grammar to encompass symbosl by category. e.g. POW, NUL, DIV .. belong to arithemtic_operators
+		// would be easy to change grammar to encompass symbosl by category. e.g. POW, NUL, DIV .. belong to arithmetic_operators
 		if (ctx.LITERAL() != null)
 		{
 			return ctx.LITERAL(); 
