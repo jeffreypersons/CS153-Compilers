@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
@@ -16,11 +17,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	private static int stack_size = 0;
 	private static int necessary_stack_size = 0;
 	private static int locals = 1;
-	private static ArrayList<String> text;
 	private static int label_count = 0;
 	private static int cond_label_count = 0;
-	private java.util.Map<String, Value> memory = new java.util.HashMap<String, Value>();
-	private java.util.Map<String, Integer> if_memory = new java.util.HashMap<String, Integer>();
+    private static List<String> text;
+    private Map<String, Value> memory = new java.util.HashMap<String, Value>();
+	private Map<String, Integer> if_memory = new java.util.HashMap<String, Integer>();
 
 	public CVisitor()
 	{
@@ -37,7 +38,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 		cond_label_count++;
 	}
 
-	public ArrayList<String> getText()
+	public List<String> getText()
 	{
 		return text;
 	}
