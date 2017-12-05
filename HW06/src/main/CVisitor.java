@@ -56,7 +56,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	}
 	public java.util.Map<String, Value> getMemory()
 	{
-		return this.memory;
+		return memory;
 	}
 
 	private void incStackSize()
@@ -292,7 +292,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	@Override public TerminalNode visitExpr(SimpLParser.ExprContext ctx)
 	{
 		// Terribly written, we should come back and review this. Just trying to get some working code in
-		// would be easy to change grammar to encompass symbosl by category. e.g. POW, NUL, DIV .. belong to arithemtic_operators
+		// would be easy to change grammar to encompass symbols by category. e.g. POW, NUL, DIV .. belong to arithmetic_operators
 		TerminalNodeImpl a = null;
 		if (ctx.NAME() != null)
 		{
@@ -660,16 +660,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 	}
 	private int countLines()
 	{
-		int num_lines = 0;
+		int numLines = 0;
 		for (String str : text)
-		{
 			for (int x = 0; x < str.length(); x++)
-			{
 				if (str.charAt(x) == '\n' || str.charAt(x) == '\r')
-				    num_lines++;
-			}
-		}
-		num_lines += text.size();
-		return num_lines;
+					numLines++;
+		return numLines + text.size();
 	}
 }
