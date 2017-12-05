@@ -36,7 +36,7 @@ public class ValueBuilder
 				val = new Number(Double.parseDouble(token.getText()));
 			}catch (Exception e)
 			{
-				String text = token.getText().toString();
+				String text = token.getText();
 				if(text.equals("true") || text.equals("false"))
 				{
 					val = new Bool(text);
