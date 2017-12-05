@@ -14,7 +14,7 @@ public class CodeEmitter
 	private static final String STACK_SIZE = ".limit stack ";
 	public  static String program_name = "a";
 	private static Map<String, String> boolean_operations, if_operations;
-	private static Map<String, HashMap<String,String>> type_ops;
+	private static Map<String, Map<String,String>> type_ops;
 	private static Boolean isInitialized = false;
 
 	public static String program(String name)
@@ -136,7 +136,6 @@ public class CodeEmitter
 		}
 		return construct.toString();
 	}
-
 	/**
 	 * Declares a variable using a slot number
 	 * @param  var [variable that will be assigned]
@@ -158,7 +157,8 @@ public class CodeEmitter
 	 */
 	public static String assignVariable(Variable var)
 	{
-		if(var.getSlot() < 0) ;//throw error here. Undeclared variable
+		if (var.getSlot() < 0)
+		    ;  //throw error here. Undeclared variable
 		Value val = var.getValue();
 		String store_type = "";
 		store_type = type_ops.get(val.getType()).get("store");
@@ -175,11 +175,12 @@ public class CodeEmitter
 	}
 	public static String loadConstant(Boolean a)
 	{
-		if(a)
+		if (a)
 		{
 			return "ldc " + 1;
 		}
-		else return "ldc " + -1;
+		else
+		    return "ldc " + -1;
 	}
 	/**
 	 * Load constant onto stack
@@ -190,8 +191,11 @@ public class CodeEmitter
 	{
 		return "ldc " + in;
 	}
-    // if number used fstore else use astore assuming address to string. Can change type to
-    // array in the future
+
+    /**
+     * If number used fstore else use astore assuming address to string.
+     * Can change type to array in the future
+     */
     public static String putVarStack(Variable a)
     {
         // no checking
@@ -210,19 +214,19 @@ public class CodeEmitter
 	{
 		StringBuilder construct = new StringBuilder("getstatic java/lang/System/out Ljava/io/PrintStream;\ndup\n");
 		construct.append("ldc \" \"\ninvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
-		if(type.equals("TEXT"))
+		if (type.equals("TEXT"))
 		{
 			//construct.append();
 			construct.append("swap\n");
 			construct.append("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n");
 		}
-		else if(type.equals("NUMBER"))
+		else if (type.equals("NUMBER"))
 		{
 			//construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
 			construct.append("invokevirtual java/io/PrintStream/print(F)V\n");
 		}
-		else if(type.equals("BOOLEAN"))
+		else if (type.equals("BOOLEAN"))
 		{
 			//construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
@@ -233,19 +237,19 @@ public class CodeEmitter
 	public static String print(String type)
 	{
 		StringBuilder construct = new StringBuilder("");
-		if(type.equals("TEXT"))
+		if (type.equals("TEXT"))
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
 			construct.append("invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n");
 		}
-		else if(type.equals("NUMBER"))
+		else if (type.equals("NUMBER"))
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
 			construct.append("invokevirtual java/io/PrintStream/print(F)V\n");
 		}
-		else if(type.equals("BOOLEAN"))
+		else if (type.equals("BOOLEAN"))
 		{
 			construct.append("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
 			construct.append("swap\n");
@@ -256,7 +260,8 @@ public class CodeEmitter
 	public static String booleanOperation(String type)
 	{
 		String result = boolean_operations.get(type.toUpperCase());
-		if(result == null) result = "";
+		if (result == null)
+		    result = "";
 		return result;
 	}
 	public static String ifOperation(String type, String label)
@@ -264,18 +269,20 @@ public class CodeEmitter
 		String compare_type = "";
 		type = type.toUpperCase();
 		compare_type = if_operations.get(type);
-		if(compare_type == null) compare_type = "iflt";
+		if (compare_type == null)
+		    compare_type = "iflt";
 		return compare_type + " " + label.replaceAll(":", "");
 	}
 
 	public static void initialize()
 	{
 		// construct hashmaps for all boolean and if operations
-		if(isInitialized) return;
+		if (isInitialized)
+		    return;
 
 		if_operations = new HashMap<String, String>();
 		boolean_operations = new HashMap<String, String>();
-		type_ops = new HashMap<String, HashMap<String,String>>();
+		type_ops = new HashMap<String, Map<String,String>>();
 
         String[] types          = {"NUMBER", "TEXT", "BOOLEAN"};
         String[] load_commands  = {"fload ", "aload ", "iload "};
@@ -286,9 +293,11 @@ public class CodeEmitter
 		String[] bool_ops       = {"swap\nfcmpg\niconst_1\niadd", "swap\nfcmpg\niconst_1\nisub", "fcmpg",
                                    "swap\nfcmpg", "fcmpg", "fcmpg", "ineg", "ior", "iand"};
 
-		HashMap<String, String> loads;
-		for (int x = 0; x < if_ops.length; x++)   if_operations.put(ops[x], if_ops[x]);
-		for (int x = 0; x < bool_ops.length; x++) boolean_operations.put(ops[x], bool_ops[x]);
+		Map<String, String> loads;
+		for (int x = 0; x < if_ops.length; x++)
+			if_operations.put(ops[x], if_ops[x]);
+		for (int x = 0; x < bool_ops.length; x++)
+			boolean_operations.put(ops[x], bool_ops[x]);
 		for (int x = 0; x < types.length; x++)
 		{
 			loads = new HashMap<String, String>();

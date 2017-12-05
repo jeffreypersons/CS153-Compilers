@@ -39,11 +39,11 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 	{
 		// No check typing - need to add
 		String name = ctx.NAME().toString();
-		if(!ctx.TYPE().getSymbol().getText().equals("Number"))
+		if (!ctx.TYPE().getSymbol().getText().equals("Number"))
 		{
 			System.out.println("INVALID DECLARATION - ONLY SUPPORT OF NUMBER IMPLEMENTED");
 		}
-		if(ctx.ASSIGN() != null)
+		if (ctx.ASSIGN() != null)
 		{
 			Value val = getOperandValue(visit(ctx.expr()).getSymbol());
 			memory.put(name, val);
@@ -102,11 +102,11 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 	{
 		// Terribly written, we should come back and review this. Just trying to get some working code in
 		// would be easy to change grammar to encompass symbosl by category. e.g. POW, NUL, DIV .. belong to arithemtic_operators
-		if(ctx.LITERAL() != null)
+		if (ctx.LITERAL() != null)
 		{
 			return ctx.LITERAL(); 
 		}
-		else if(ctx.NAME() != null)
+		else if (ctx.NAME() != null)
 		{
 			return ctx.NAME();
 		}
@@ -115,7 +115,7 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 		loperand = getOperandValue(visit(ctx.expr(0)).getSymbol());
 		roperand = getOperandValue(visit(ctx.expr(1)).getSymbol());
 
-		if(ctx.POW() != null)
+		if (ctx.POW() != null)
 		{
 			double lvalue, rvalue = 0;
 			lvalue = (double)loperand.getValue();
@@ -124,7 +124,7 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 			System.out.println(lvalue + " ^ " + rvalue + " = " + result);
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
-		else if(ctx.MUL() != null)
+		else if (ctx.MUL() != null)
 		{
 			double lvalue, rvalue = 0;
 			lvalue = (double)loperand.getValue();
@@ -133,7 +133,7 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 			System.out.println(lvalue + " * " + rvalue + " = " + result);
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
-		else if(ctx.DIV() != null)
+		else if (ctx.DIV() != null)
 		{
 			double lvalue, rvalue = 0;
 			lvalue = (double)loperand.getValue();
@@ -142,7 +142,7 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 			System.out.println(lvalue + " / " + rvalue + " = " + result);
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
-		else if(ctx.ADD() != null)
+		else if (ctx.ADD() != null)
 		{
 			double lvalue, rvalue = 0;
 			lvalue = (double)loperand.getValue();
@@ -151,7 +151,7 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 			System.out.println(lvalue + " + " + rvalue + " = " + result);
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
-		else if(ctx.SUB() != null)
+		else if (ctx.SUB() != null)
 		{
 			double lvalue, rvalue = 0;
 			lvalue = (double)loperand.getValue();
@@ -161,43 +161,43 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 			return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
 		}
 		// Boolean operators
-		else if(ctx.NOT() != null)
+		else if (ctx.NOT() != null)
 		{
 			return null;
 		}
-		else if(ctx.AND() != null)
+		else if (ctx.AND() != null)
 		{
 			return null;
 		}
-		else if(ctx.OR() != null)
+		else if (ctx.OR() != null)
 		{
 			return null;
 		}
-		else if(ctx.LT() != null)
+		else if (ctx.LT() != null)
 		{
 			return null;
 		}
-		else if(ctx.GT() != null)
-		{
-			return null;
-
-		}
-		else if(ctx.GTE() != null)
+		else if (ctx.GT() != null)
 		{
 			return null;
 
 		}
-		else if(ctx.LTE() != null)
+		else if (ctx.GTE() != null)
 		{
 			return null;
 
 		}
-		else if(ctx.EQ() != null)
+		else if (ctx.LTE() != null)
+		{
+			return null;
+
+		}
+		else if (ctx.EQ() != null)
 		{
 			return null;
 	
 		}
-		else if(ctx.NEQ() != null)
+		else if (ctx.NEQ() != null)
 		{
 			return null;
 
@@ -208,7 +208,7 @@ public class SVisitor extends SimpLBaseVisitor<TerminalNode>
 	private Value getOperandValue(Token a)
 	{
 		Value val = ValueBuilder.getValue(a, memory);
-		if(val.getType().compareTo("IDENTIFIER") == 0)
+		if (val.getType().compareTo("IDENTIFIER") == 0)
 		{
 			val = (Value) val.getValue();
 		}
