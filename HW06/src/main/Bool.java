@@ -2,47 +2,32 @@ package main;
 
 public class Bool implements Value<Boolean>
 {
-	Boolean value;
+	private Boolean value;
 
-	public Bool(Boolean in)
+	public Bool(Boolean value)
 	{
 		this.value = value;
 	}
-
-	public Bool(String in)
+	public Bool(String value)
 	{
-		if(in.equals("true"))
-		{
-			this.value = true;
-		}
-		else
-			this.value = false;
+        this.value = value.equals("true");
 	}
-
 	public String getType()
 	{
 		return "BOOLEAN";
 	}
-
-	public void setValue(Boolean in)
+	public void setValue(Boolean value)
 	{
-		this.value = in;
+		this.value = value;
 	}
-
-	public void setValue(String in)
+	public void setValue(String value)
 	{
-		if(in.equals("true"))
-		{
-			this.value = true;
-		}
-		else this.value = false;
+        this.value = value.equals("true");
 	}
-
 	public Boolean getValue()
 	{
 		return this.value;
 	}
-
 	public void toggleValue()
 	{
 		value = !value;

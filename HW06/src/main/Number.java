@@ -6,15 +6,15 @@ package main;
  */
 public class Number implements Value<Double>
 {
-	double value;
+	private double value;
 	
-	public Number(double in)
+	public Number(double value)
 	{
-		this.value = in;
+		this.value = value;
 	}
-	public void setValue(Double in)
+	public void setValue(Double value)
 	{
-		this.value = in;
+		this.value = value;
 	}
 	public Double getValue()
 	{
