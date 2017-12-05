@@ -53,6 +53,7 @@ public class CodeEmitter
         return "invokestatic " + CodeEmitter.program_name + "/div(FF)F\n";
 	}
 
+	// todo: change to input()?, and add string parameter as the prompt message like python...?!
 	public static String read(String type)
 	{
         return "getstatic java/lang/System/in Ljava/io/InputStream;\n" +
@@ -76,7 +77,7 @@ public class CodeEmitter
 		//StringBuilder construct = new StringBuilder("ldc " + value.getValue().getValue() + "\n");
 		StringBuilder construct = new StringBuilder("");
 		var.setSlot(num);
-		construct.append(assignVariable(var) + "\n");
+		construct.append(assignVariable(var)).append("\n");
 		return construct.toString();
 	}
 	/**
@@ -95,30 +96,25 @@ public class CodeEmitter
 	}
 	/**
 	 * Put a constant string onto the stack
-	 * @param  in [string to put onto stack]
-	 * @return    [assembly code to put string on stack]
+	 * @param constant [string to put onto stack]
+	 * @return         [assembly code to put string on stack]
 	 */
-	public static String loadConstant(String in)
+	public static String loadConstant(String constant)
 	{
-		return "ldc " + "\"" + in + "\"";
+		return "ldc " + "\"" + constant + "\"";
 	}
-	public static String loadConstant(Boolean a)
+	public static String loadConstant(Boolean constant)
 	{
-		if (a)
-		{
-			return "ldc " + 1;
-		}
-		else
-		    return "ldc " + -1;
+	    return constant? "ldc 1" : "ldc -1";
 	}
 	/**
 	 * Load constant onto stack
-	 * @param  in number to put onto stack
-	 * @return    assembly code to push requested number onto stack
+	 * @param  constant number to put onto stack
+	 * @return          assembly code to push requested number onto stack
 	 */
-	public static String loadConstant(double in)
+	public static String loadConstant(double constant)
 	{
-		return "ldc " + in;
+		return "ldc " + constant;
 	}
 
     /**
@@ -142,12 +138,8 @@ public class CodeEmitter
 	}
 	public static String ifOperation(String type, String label)
 	{
-		String compare_type = "";
-		type = type.toUpperCase();
-		compare_type = if_operations.get(type);
-		if (compare_type == null)
-		    compare_type = "iflt";
-		return compare_type + " " + label.replaceAll(":", "");
+		String compareType = if_operations.get(type.toUpperCase());
+        return compareType == null? "iflt" : compareType + " " + label.replaceAll(":", "");
 	}
 
 	public static void initialize()
@@ -159,7 +151,6 @@ public class CodeEmitter
 		if_operations = new HashMap<String, String>();
 		boolean_operations = new HashMap<String, String>();
 		type_ops = new HashMap<String, Map<String,String>>();
-
         String[] types          = {"NUMBER", "TEXT", "BOOLEAN"};
         String[] load_commands  = {"fload ", "aload ", "iload "};
         String[] store_commands = {"fstore ", "astore ", "istore "};
