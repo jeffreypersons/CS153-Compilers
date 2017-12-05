@@ -12,7 +12,7 @@ public class CodeEmitter
 	private static final String START_FUNCTION = "\n.method public static ";
 	private static final String END_FUNCTION = ".end method\n";
 	private static final String STACK_SIZE = ".limit stack ";
-	public  static String program_name = "a";
+	private static String program_name = "a";
 	private static Map<String, String> boolean_operations, if_operations;
 	private static Map<String, Map<String,String>> type_ops;
 	private static Boolean isInitialized = false;
@@ -20,8 +20,7 @@ public class CodeEmitter
 	public static String program(String name)
 	{
 		CodeEmitter.program_name = name;
-		StringBuilder construct = new StringBuilder(SET_NAME);
-		return construct.append(name).append("\n").append(INIT).toString();
+        return SET_NAME + name + "\n" + INIT;
 	}
 	public static String main()
 	{
@@ -30,50 +29,41 @@ public class CodeEmitter
 
 	public static String setStack(int limit)
 	{
-		StringBuilder construct = new StringBuilder(STACK_SIZE);
-		return construct.append(limit + "\n").toString();
+		return STACK_SIZE + limit + "\n";
 	}
 	public static String setLocals(int locals)
 	{
-		StringBuilder construct = new StringBuilder(".limit locals " + locals + "\n");
-		return construct.toString();
+        return ".limit locals " + locals + "\n";
 	}
 
 	public static String add()
 	{
-		//StringBuilder construct = new StringBuilder("ldc " + a).append("\nldc " + b);
-		StringBuilder construct = new StringBuilder("");
-		construct.append("invokestatic " + CodeEmitter.program_name + "/add(FF)F\n");
-		return construct.toString();
+        return "invokestatic " + CodeEmitter.program_name + "/add(FF)F\n";
 	}
 	public static String sub()
 	{
-		StringBuilder construct = new StringBuilder("");
-		construct.append("invokestatic " + CodeEmitter.program_name + "/sub(FF)F\n");
-		return construct.toString();
+        return "invokestatic " + CodeEmitter.program_name + "/sub(FF)F\n";
 	}
 	public static String mul()
 	{
-		StringBuilder construct = new StringBuilder("");
-		construct.append("invokestatic " + CodeEmitter.program_name + "/mul(FF)F\n");
-		return construct.toString();
+        return "invokestatic " + CodeEmitter.program_name + "/mul(FF)F\n";
 	}
 	public static String div()
 	{
-		StringBuilder construct = new StringBuilder("");
-		construct.append("invokestatic " + CodeEmitter.program_name + "/div(FF)F\n");
-		return construct.toString();
+        return "invokestatic " + CodeEmitter.program_name + "/div(FF)F\n";
 	}
 
 	public static String printi(String in)
 	{
-		StringBuilder construct = new StringBuilder("getstatic java/lang/System/out Ljava/io/PrintStream;\n");
-		return construct.append("ldc " + "\"" + in + "\"\n").append("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\nreturn\n").toString();
+        return "getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
+                "ldc \"" + in + "\"\n" +
+                "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
+                "return\n";
 	}
 	public static String read(String type)
 	{
-		StringBuilder construct = new StringBuilder("getstatic java/lang/System/in Ljava/io/InputStream;\n");
-		return construct.append("invokevirtual java/io/InputStream/read()").append(type).append("\n").toString();
+        return "getstatic java/lang/System/in Ljava/io/InputStream;\n" +
+               "invokevirtual java/io/InputStream/read()" + type + "\n";
 	}
 	public static String endMethod()
 	{
