@@ -17,9 +17,8 @@ import gen.SimpLParser;
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 {
     private int stackSize;
-
     private int necessaryStackSize;
-    private int locals;
+    private int localCount;
     private int labelCount;
     private int condLabelCount;
     private List<String> text;
@@ -33,21 +32,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         ifMemory = new HashMap<>();
         stackSize = 0;
         necessaryStackSize = 0;
-        locals = 1;
+        localCount = 1;
         labelCount = 0;
         condLabelCount = 0;
         CodeEmitter.initialize();
     }
-
-    public void incLabelCount()
-    {
-        labelCount++;
-    }
-    public void incCondLabelCount()
-    {
-        condLabelCount++;
-    }
-
     public List<String> getText()
     {
         return text;
@@ -56,7 +45,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     {
         return necessaryStackSize;
     }
-    public java.util.Map<String, Value> getMemory()
+    public Map<String, Value> getMemory()
     {
         return memory;
     }
@@ -73,14 +62,15 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         text.add(CodeEmitter.getLibraryCode("math"));
         text.add(CodeEmitter.main());
 
-        int stack_size_line = 0;
-        stack_size_line = text.size();
-        text.add(CodeEmitter.setStack(stackSize) + CodeEmitter.setLocals(locals));
+        // todo: rename stackSizeLine - it's not clear what it's doing
+        int stackSizeLine = 0;
+        stackSizeLine = text.size();
+        text.add(CodeEmitter.setStack(stackSize) + CodeEmitter.setLocals(localCount));
 
         TerminalNode node = super.visitChildren(ctx);
         text.set(
             // since everything is stored as float, multiply by 2 I think
-            stack_size_line, CodeEmitter.setStack((stackSize + locals) * 2) + CodeEmitter.setLocals(locals)
+            stackSizeLine, CodeEmitter.setStack((stackSize + localCount) * 2) + CodeEmitter.setLocals(localCount)
         );
         return node;
     }
@@ -102,7 +92,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitDeclaration(SimpLParser.DeclarationContext ctx)
     {
-        // No check typing - need to add
+        // todo: add type-checking
         String name = ctx.NAME().toString();
         CommonToken token = new CommonToken(visit(ctx.expr()).getSymbol());
         Value val = null;
@@ -111,12 +101,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         {
             val = getOperandValue(token);
             var = new Variable(name, val, val.getType());
-            text.add(CodeEmitter.declareVariable(var, locals));
+            text.add(CodeEmitter.declareVariable(var, localCount));
             memory.put(name, var);
             //System.out.println("creating " + name + " and setting to " + val.getValue());
         }
         else memory.put(name, null); // add typing regardless of assignment or not
-        incLocals();
+        localCount++;
+
         if (val != null)
             return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, "0"));
         /*
@@ -140,13 +131,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         String identifier = ctx.NAME().getSymbol().getText();
         Value val = getOperandValue(visit(ctx.expr()).getSymbol());
 
-        int parser_type = 0;
+        int parserType = 0;
         if (val.getType().equals("NUMBER"))
-            parser_type = SimpLParser.NUMBER;
+            parserType = SimpLParser.NUMBER;
         else if (val.getType().equals("BOOLEAN"))
-            parser_type = SimpLParser.BOOLEAN;
+            parserType = SimpLParser.BOOLEAN;
         else
-            parser_type = SimpLParser.TEXT;
+            parserType = SimpLParser.TEXT;
 
         incStackSize(2);
         if (memory.get(identifier) == null)
@@ -164,7 +155,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         memory.put(identifier, var);
         text.add(CodeEmitter.assignVariable(var));
         decStackSize(2);
-        if (parser_type == SimpLParser.NUMBER)
+        if (parserType == SimpLParser.NUMBER)
             return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString((double)val.getValue())));
         else
             return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, val.getValue().toString()));
@@ -173,16 +164,16 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     @Override public TerminalNode visitWhile_loop(SimpLParser.While_loopContext ctx)
     {
         String label = CodeEmitter.getLabel(labelCount);
-        incLabelCount();
-        String exit_label = CodeEmitter.getLabel(labelCount);
-        incLabelCount();
+        labelCount++;
+        String exitLabel = CodeEmitter.getLabel(labelCount);
+        labelCount++;
 
         text.add(label);
         String expr_type = visit(ctx.expr()).getSymbol().getText();
-        text.add(CodeEmitter.ifOperation(expr_type, exit_label));
+        text.add(CodeEmitter.ifOperation(expr_type, exitLabel));
         visit(ctx.block());
         text.add(CodeEmitter.getGoTo(label));
-        text.add(exit_label);
+        text.add(exitLabel);
         return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "loop"));
     }
     /**
@@ -197,7 +188,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         int block_count = 0;
         String label = CodeEmitter.getLabel(labelCount);
         text.add(label);
-        incLabelCount();
+        labelCount++;
 
         String evaluate_type, cond_label = null;
         List<Integer> lastLabelSkip = new ArrayList<>();
@@ -212,7 +203,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
             text.add(CodeEmitter.getGoTo("temp"));
             text.add(cond_label);
-            incCondLabelCount();
+            condLabelCount++;
             block_count++;
         }
 
@@ -222,7 +213,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             visit(ctx.block(block_count));
             cond_label = CodeEmitter.getCondLabel(condLabelCount);
             text.add(cond_label);
-            incCondLabelCount();
+            condLabelCount++;
         }
         for (int labelNum : lastLabelSkip)
             text.set(labelNum, CodeEmitter.getGoTo(cond_label));
@@ -359,14 +350,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         {
             double result = (double)loperand.getValue() * (double)roperand.getValue();
             text.add(CodeEmitter.mul());
-            decStackSize();
+            decStackSize(1);
             node = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         else if (ctx.DIV() != null)
         {
             double result = (double)loperand.getValue() / (double)roperand.getValue();
             text.add(CodeEmitter.div());
-            decStackSize();
+            decStackSize(1);
             node = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         else if (ctx.ADD() != null)
@@ -374,14 +365,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             // currently only supports double
             double result = (double)loperand.getValue() + (double)roperand.getValue();
             text.add(CodeEmitter.add());
-            decStackSize();
+            decStackSize(1);
             node =  new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         else if (ctx.SUB() != null)
         {
             double result = (double)loperand.getValue() - (double)roperand.getValue();
             text.add(CodeEmitter.sub());
-            decStackSize();
+            decStackSize(1);
             node = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         // Boolean operators
@@ -608,36 +599,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         Value value = ValueBuilder.getValue(token, memory);
         return value.getType().equalsIgnoreCase("IDENTIFIER")? (Value) value.getValue() : value;
     }
-
-    private void incStackSize()
+    private void incStackSize(int sizeIncrease)
     {
-        stackSize++;
+        stackSize += sizeIncrease;
         if (stackSize > necessaryStackSize)
             necessaryStackSize = stackSize;
     }
-    private void incLocals()
+    private void decStackSize(int sizeDecrease)
     {
-        locals++;
-    }
-    private void decLocals()
-    {
-        locals--;
-    }
-    private void decStackSize()
-    {
-        if (stackSize > 0)
-            stackSize--;
-    }
-    private void incStackSize(long a)
-    {
-        stackSize += a;
-        if (stackSize > necessaryStackSize)
-            necessaryStackSize = stackSize;
-    }
-    private void decStackSize(long a)
-    {
-        if (a >= stackSize)
-            stackSize = 0;
-        else stackSize -= a;
+        stackSize = (sizeDecrease >= stackSize)? 0 : stackSize - sizeDecrease;
     }
 }
