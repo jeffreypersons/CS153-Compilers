@@ -4,29 +4,34 @@ package main;
 /** Used for variables. Used to fetch the values stored in the map. */
 public class Variable implements Value<Value>
 {
-    final String cast;
-    String identifier;
-    Value a;
-    int slot_number;
+    private final String cast;
+    private String identifier;
+    private Value value;
+    private int slotNumber;
 
     public Variable(String identifier, Value value, String cast)
     {
         this.cast = cast;
-        this.a = value;
+        this.value = value;
         this.identifier = identifier;
-        this.slot_number = -1;
+        this.slotNumber = -1;
     }
     public void setValue(Value value)
     {
-        this.a.setValue(value.getValue());
+        this.value.setValue(value.getValue());
     }
+    public void setSlot(int slotNumber)
+    {
+        this.slotNumber = slotNumber;
+    }
+    
     public Value getValue()
     {
-        return a;
+        return value;
     }
     public String getID()
     {
-        return this.identifier;
+        return identifier;
     }
     public String getType()
     {
@@ -34,14 +39,10 @@ public class Variable implements Value<Value>
     }
     public String getCast()
     {
-        return this.cast;
-    }
-    public void setSlot(int slot)
-    {
-        this.slot_number = slot;
+        return cast;
     }
     public int getSlot()
     {
-        return this.slot_number;
+        return slotNumber;
     }
 }
