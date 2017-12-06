@@ -1,5 +1,8 @@
 package main;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.antlr.v4.runtime.CommonToken;
@@ -7,9 +10,6 @@ import org.antlr.v4.runtime.Token;
 
 import gen.SimpLBaseVisitor;
 import gen.SimpLParser;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class SVisitor extends SimpLBaseVisitor<TerminalNode>

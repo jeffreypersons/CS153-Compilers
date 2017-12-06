@@ -1,16 +1,17 @@
 package main;
 
-import gen.SimpLBaseVisitor;
-import gen.SimpLParser;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import gen.SimpLBaseVisitor;
+import gen.SimpLParser;
 
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>

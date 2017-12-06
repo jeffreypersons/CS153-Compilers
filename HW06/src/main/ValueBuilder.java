@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Map;
+
 import org.antlr.v4.runtime.Token;
 
 import gen.SimpLParser;
@@ -16,7 +18,7 @@ public class ValueBuilder
      * @param  map   map used to store identifiers
      * @return       a Value created from the token and map
      */
-    public static Value getValue(Token token, java.util.Map<String, Value> map)
+    public static Value getValue(Token token, Map<String, Value> map)
     {
         if (token.getType() == SimpLParser.NAME)
         {

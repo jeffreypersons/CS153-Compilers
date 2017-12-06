@@ -3,7 +3,7 @@ package main;
 
 public class Text implements Value<String>
 {
-    String value;
+    private String value;
 
     public Text()
     {
