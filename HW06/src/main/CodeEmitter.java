@@ -12,14 +12,14 @@ public class CodeEmitter
     private static final String START_FUNCTION = "\n.method public static ";
     private static final String END_FUNCTION = ".end method\n";
     private static final String STACK_SIZE = ".limit stack ";
-    private static String program_name = "a";
-    private static Map<String, String> boolean_operations, if_operations;
-    private static Map<String, Map<String,String>> type_ops;
+    private static String programName = "a";
+    private static Map<String, String> booleanOperations, ifOperations;
+    private static Map<String, Map<String,String>> typeOps;
     private static Boolean isInitialized = false;
 
     public static String program(String name)
     {
-        CodeEmitter.program_name = name;
+        CodeEmitter.programName = name;
         return SET_NAME + name + "\n" + INIT;
     }
     public static String main()
@@ -38,19 +38,19 @@ public class CodeEmitter
 
     public static String add()
     {
-        return "invokestatic " + CodeEmitter.program_name + "/add(FF)F\n";
+        return "invokestatic " + CodeEmitter.programName + "/add(FF)F\n";
     }
     public static String sub()
     {
-        return "invokestatic " + CodeEmitter.program_name + "/sub(FF)F\n";
+        return "invokestatic " + CodeEmitter.programName + "/sub(FF)F\n";
     }
     public static String mul()
     {
-        return "invokestatic " + CodeEmitter.program_name + "/mul(FF)F\n";
+        return "invokestatic " + CodeEmitter.programName + "/mul(FF)F\n";
     }
     public static String div()
     {
-        return "invokestatic " + CodeEmitter.program_name + "/div(FF)F\n";
+        return "invokestatic " + CodeEmitter.programName + "/div(FF)F\n";
     }
 
     // todo: change to input()?, and add string parameter as the prompt message like python...?!
@@ -88,11 +88,10 @@ public class CodeEmitter
     public static String assignVariable(Variable var)
     {
         if (var.getSlot() < 0)
-            ;  //throw error here. Undeclared variable
+            ;  // todo: throw error here. Undeclared variable
         Value val = var.getValue();
-        String store_type = "";
-        store_type = type_ops.get(val.getType()).get("store");
-        return store_type + var.getSlot();
+        String storeType = typeOps.get(val.getType()).get("store");
+        return storeType + var.getSlot();
     }
     /**
      * Put a constant string onto the stack
@@ -126,19 +125,19 @@ public class CodeEmitter
         // no checking
         Value val = a.getValue();
         String load_type = "";
-        load_type = type_ops.get(val.getType()).get("load");
+        load_type = typeOps.get(val.getType()).get("load");
         return load_type + a.getSlot();
     }
     public static String booleanOperation(String type)
     {
-        String result = boolean_operations.get(type.toUpperCase());
+        String result = booleanOperations.get(type.toUpperCase());
         if (result == null)
             result = "";
         return result;
     }
     public static String ifOperation(String type, String label)
     {
-        String compareType = if_operations.get(type.toUpperCase());
+        String compareType = ifOperations.get(type.toUpperCase());
         return compareType == null? "iflt" : compareType + " " + label.replaceAll(":", "");
     }
 
@@ -148,9 +147,9 @@ public class CodeEmitter
         if (isInitialized)
             return;
 
-        if_operations = new HashMap<String, String>();
-        boolean_operations = new HashMap<String, String>();
-        type_ops = new HashMap<String, Map<String,String>>();
+        ifOperations = new HashMap<String, String>();
+        booleanOperations = new HashMap<String, String>();
+        typeOps = new HashMap<String, Map<String,String>>();
         String[] types          = {"NUMBER", "TEXT", "BOOLEAN"};
         String[] load_commands  = {"fload ", "aload ", "iload "};
         String[] store_commands = {"fstore ", "astore ", "istore "};
@@ -162,16 +161,16 @@ public class CodeEmitter
 
         Map<String, String> loads;
         for (int x = 0; x < if_ops.length; x++)
-            if_operations.put(ops[x], if_ops[x]);
+            ifOperations.put(ops[x], if_ops[x]);
         for (int x = 0; x < bool_ops.length; x++)
-            boolean_operations.put(ops[x], bool_ops[x]);
+            booleanOperations.put(ops[x], bool_ops[x]);
         for (int x = 0; x < types.length; x++)
         {
             loads = new HashMap<String, String>();
             loads.put(command_types[0], store_commands[x]);
             loads.put(command_types[1], load_commands[x]);
 
-            type_ops.put(types[x], loads);
+            typeOps.put(types[x], loads);
         }
         isInitialized = true;
     }

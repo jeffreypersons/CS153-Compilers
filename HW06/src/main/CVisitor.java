@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
@@ -76,12 +75,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         int stack_size_line = 0;
         stack_size_line = text.size();
         text.add(CodeEmitter.setStack(stackSize) + CodeEmitter.setLocals(locals));
-        TerminalNode a = super.visitChildren(ctx);
+
+        TerminalNode node = super.visitChildren(ctx);
         text.set(
-                // since everything is stored as float, multiply by 2 I think
-                stack_size_line, CodeEmitter.setStack((stackSize + locals) * 2) + CodeEmitter.setLocals(locals)
+            // since everything is stored as float, multiply by 2 I think
+            stack_size_line, CodeEmitter.setStack((stackSize + locals) * 2) + CodeEmitter.setLocals(locals)
         );
-        return a;
+        return node;
     }
     /**
      * {@inheritDoc}
@@ -199,7 +199,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         incLabelCount();
 
         String evaluate_type, cond_label = null;
-        List<Integer> last_label_skip = new ArrayList<Integer>();
+        List<Integer> lastLabelSkip = new ArrayList<>();
         for (SimpLParser.ExprContext exp : expressions)
         {
             evaluate_type = visit(exp).getSymbol().getText();
@@ -207,7 +207,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             cond_label = CodeEmitter.getCondLabel(condLabelCount);
             text.add(CodeEmitter.ifOperation(evaluate_type, cond_label));
             visit(ctx.block(block_count));
-            last_label_skip.add(text.size());
+            lastLabelSkip.add(text.size());
 
             text.add(CodeEmitter.getGoTo("temp"));
             text.add(cond_label);
@@ -223,10 +223,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             text.add(cond_label);
             incCondLabelCount();
         }
-        for (int a : last_label_skip)
-        {
-            text.set(a, CodeEmitter.getGoTo(cond_label));
-        }
+        for (int labelNum : lastLabelSkip)
+            text.set(labelNum, CodeEmitter.getGoTo(cond_label));
 
         //System.out.print("resulting node: " + a);
         // if then body. if condition is not met, the label sends it outside if statement, otherwise continue normally
@@ -263,7 +261,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     {
         // Terribly written, we should come back and review this. Just trying to get some working code in
         // would be easy to change grammar to encompass symbols by category. e.g. POW, NUL, DIV .. belong to arithmetic_operators
-        TerminalNodeImpl a = null;
+        TerminalNodeImpl node = null;
         if (ctx.NAME() != null)
         {
             Value val = memory.get(ctx.NAME().getSymbol().getText()); // if undeclared throw error
@@ -277,13 +275,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 Value operand = var.getValue();
                 text.add(CodeEmitter.putVarStack(var));
                 if (operand.getType().equals("BOOLEAN"))
-                {
                     return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, operand.getValue().toString()));
-                }
                 else if (!operand.getType().equals("NUMBER"))
-                {
                     return new TerminalNodeImpl(new CommonToken(SimpLParser.TEXT, (String)operand.getValue()));
-                }
                 else
                     result = (double)operand.getValue();
             }
@@ -320,14 +314,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 System.out.println("no matching paren");
             return new TerminalNodeImpl(visit(ctx.expr(0)).getSymbol());
         }
-        /*else if (ctx.RPAREN() != null)
+        else if (ctx.RPAREN() != null)
         {
-            return ctx.RPAREN();
+            // todo: handle this? or maybe not...
         }
-        */
+
+        // try for single operator such as not
         Value loperand, roperand;
         incStackSize(2);
-        // try for single operator such as not
         if (ctx.NOT() != null)
         {
             loperand = getOperandValue(visit(ctx.expr(0)).getSymbol());
@@ -348,8 +342,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         }
         catch (Exception e)
         {
-            loperand = ValueBuilder.getValue(0);
-            roperand = ValueBuilder.getValue(0);
             return visit(ctx.func_call());
         }
 
@@ -367,14 +359,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             double result = (double)loperand.getValue() * (double)roperand.getValue();
             text.add(CodeEmitter.mul());
             decStackSize();
-            a = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
+            node = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         else if (ctx.DIV() != null)
         {
             double result = (double)loperand.getValue() / (double)roperand.getValue();
             text.add(CodeEmitter.div());
             decStackSize();
-            a = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
+            node = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         else if (ctx.ADD() != null)
         {
@@ -382,14 +374,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             double result = (double)loperand.getValue() + (double)roperand.getValue();
             text.add(CodeEmitter.add());
             decStackSize();
-            a =  new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
+            node =  new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         else if (ctx.SUB() != null)
         {
             double result = (double)loperand.getValue() - (double)roperand.getValue();
             text.add(CodeEmitter.sub());
             decStackSize();
-            a = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
+            node = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         // Boolean operators
         else if (ctx.AND() != null)
@@ -520,7 +512,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             text.add(CodeEmitter.booleanOperation("neq"));
             return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "NEQ"));
         }
-        return a;
+        return node;
     }
     // todo: address the return values of the CodeEmitter function calls
     /**
