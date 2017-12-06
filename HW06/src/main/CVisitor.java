@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
@@ -351,31 +352,26 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             roperand = ValueBuilder.getValue(0);
             return visit(ctx.func_call());
         }
+
         if (ctx.POW() != null)
         {
-            double lvalue, rvalue = 0;
-            lvalue = (double)loperand.getValue();
-            rvalue = (double)roperand.getValue();
-            double result = java.lang.Math.pow(lvalue,  rvalue);
-            System.out.println(lvalue + " ^ " + rvalue + " = " + result);  // push result onto stack
+            double result = Math.pow(
+                (double)loperand.getValue(),
+                (double)roperand.getValue()
+            );
+            // todo: add codeEmitter text.add? or scrap pow all together?...
             return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         else if (ctx.MUL() != null)
         {
-            double lvalue, rvalue = 0;
-            lvalue = (double)loperand.getValue();
-            rvalue = (double)roperand.getValue();
-            double result = lvalue * rvalue;
+            double result = (double)loperand.getValue() * (double)roperand.getValue();
             text.add(CodeEmitter.mul());
             decStackSize();
             a = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         else if (ctx.DIV() != null)
         {
-            double lvalue, rvalue = 0;
-            lvalue = (double)loperand.getValue();
-            rvalue = (double)roperand.getValue();
-            double result = lvalue / rvalue;
+            double result = (double)loperand.getValue() / (double)roperand.getValue();
             text.add(CodeEmitter.div());
             decStackSize();
             a = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
@@ -383,20 +379,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         else if (ctx.ADD() != null)
         {
             // currently only supports double
-            double lvalue, rvalue = 0;
-            lvalue = (double)loperand.getValue();
-            rvalue = (double)roperand.getValue();
-            double result = lvalue + rvalue;
+            double result = (double)loperand.getValue() + (double)roperand.getValue();
             text.add(CodeEmitter.add());
             decStackSize();
             a =  new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
         }
         else if (ctx.SUB() != null)
         {
-            double lvalue, rvalue = 0;
-            lvalue = (double)loperand.getValue();
-            rvalue = (double)roperand.getValue();
-            double result = lvalue - rvalue;
+            double result = (double)loperand.getValue() - (double)roperand.getValue();
             text.add(CodeEmitter.sub());
             decStackSize();
             a = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
