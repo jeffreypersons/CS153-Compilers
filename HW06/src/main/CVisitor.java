@@ -60,38 +60,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         return memory;
     }
 
-    private void incStackSize()
-    {
-        stackSize++;
-        if (stackSize > necessaryStackSize)
-            necessaryStackSize = stackSize;
-    }
-    private void incLocals()
-    {
-        locals++;
-    }
-    private void decLocals()
-    {
-        locals--;
-    }
-    private void decStackSize()
-    {
-        if (stackSize > 0)
-            stackSize--;
-    }
-    private void incStackSize(long a)
-    {
-        stackSize += a;
-        if (stackSize > necessaryStackSize)
-            necessaryStackSize = stackSize;
-    }
-    private void decStackSize(long a)
-    {
-        if (a >= stackSize)
-            stackSize = 0;
-        else stackSize -= a;
-    }
-
     /**
      * {@inheritDoc}
      *
@@ -564,25 +532,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         }
         return a;
     }
-
-    private Value getOperandValue(Token a)
-    {
-        Value val = ValueBuilder.getValue(a, memory);
-        if (val.getType().compareTo("IDENTIFIER") == 0)
-        {
-            val = (Value) val.getValue();
-        }
-        return val;
-    }
-    private Value getOperandValue(Value val)
-    {
-        if (val.getType().compareTo("IDENTIFIER") == 0)
-        {
-            val = (Value) val.getValue();
-        }
-        return val;
-    }
-
     // todo: address the return values of the CodeEmitter function calls
     /**
      * {@inheritDoc}
@@ -592,7 +541,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitFunc_call(SimpLParser.Func_callContext ctx)
     {
-        TerminalNode a = null;
+        TerminalNode node = null;
         String name = ctx.NAME().toString();
         Value val = null;
         Variable var = null;
@@ -601,20 +550,20 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             List<SimpLParser.ExprContext> expressions = ctx.expr();
             for(SimpLParser.ExprContext exp : expressions)
             {
-                a = visit(exp);
-                val = ValueBuilder.getValue(a.getSymbol(), memory);
-                if (a.getSymbol().getType() == SimpLParser.NUMBER)
+                node = visit(exp);
+                val = ValueBuilder.getValue(node.getSymbol(), memory);
+                if (node.getSymbol().getType() == SimpLParser.NUMBER)
                 {
                     text.add(CodeEmitter.println("NUMBER"));
                 }
-                else if (a.getSymbol().getType() == SimpLParser.NAME)
+                else if (node.getSymbol().getType() == SimpLParser.NAME)
                 {
                     var = (Variable) val;
                     val = var.getValue();
                     text.add(CodeEmitter.putVarStack(var));
                     text.add(CodeEmitter.println(val.getType()));
                 }
-                else if (a.getSymbol().getType() == SimpLParser.BOOLEAN)
+                else if (node.getSymbol().getType() == SimpLParser.BOOLEAN)
                 {
                     text.add(CodeEmitter.println("BOOLEAN"));
                 }
@@ -630,20 +579,20 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             List<SimpLParser.ExprContext> expressions = ctx.expr();
             for (SimpLParser.ExprContext exp : expressions)
             {
-                a = visit(exp);
-                val = ValueBuilder.getValue(a.getSymbol(), memory);
-                if (a.getSymbol().getType() == SimpLParser.NUMBER)
+                node = visit(exp);
+                val = ValueBuilder.getValue(node.getSymbol(), memory);
+                if (node.getSymbol().getType() == SimpLParser.NUMBER)
                 {
                     text.add(CodeEmitter.print("NUMBER"));
                 }
-                else if (a.getSymbol().getType() == SimpLParser.NAME)
+                else if (node.getSymbol().getType() == SimpLParser.NAME)
                 {
                     var = (Variable) val;
                     val = var.getValue();
                     text.add(CodeEmitter.putVarStack(var));
                     text.add(CodeEmitter.print(val.getType()));
                 }
-                else if (a.getSymbol().getType() == SimpLParser.BOOLEAN)
+                else if (node.getSymbol().getType() == SimpLParser.BOOLEAN)
                 {
                     text.add(CodeEmitter.print("BOOLEAN"));
                 }
@@ -658,8 +607,10 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         {
 
         }
-        return a;
+        return node;
     }
+
+    // ------ private helpers
     private int countLines()
     {
         int numLines = 0;
@@ -668,5 +619,42 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 if (str.charAt(x) == '\n' || str.charAt(x) == '\r')
                     numLines++;
         return numLines + text.size();
+    }
+    private Value getOperandValue(Token token)
+    {
+        Value value = ValueBuilder.getValue(token, memory);
+        return value.getType().equalsIgnoreCase("IDENTIFIER")? (Value) value.getValue() : value;
+    }
+
+    private void incStackSize()
+    {
+        stackSize++;
+        if (stackSize > necessaryStackSize)
+            necessaryStackSize = stackSize;
+    }
+    private void incLocals()
+    {
+        locals++;
+    }
+    private void decLocals()
+    {
+        locals--;
+    }
+    private void decStackSize()
+    {
+        if (stackSize > 0)
+            stackSize--;
+    }
+    private void incStackSize(long a)
+    {
+        stackSize += a;
+        if (stackSize > necessaryStackSize)
+            necessaryStackSize = stackSize;
+    }
+    private void decStackSize(long a)
+    {
+        if (a >= stackSize)
+            stackSize = 0;
+        else stackSize -= a;
     }
 }
