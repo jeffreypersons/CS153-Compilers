@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jasmin.Main;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -16,8 +15,20 @@ import utils.FileUtils;
 
 
 // todo: reconsider what is source file dependent in SimpL compiler (instance) vs what is independent (static)
+// todo: add below exception to a proper exception hierarchy
 
-class SourceFileNotFoundException extends RuntimeException {}
+/** Thrown when source file is invalid (eg doesn't exist, bad extension, etc). */
+class InvalidSourceFileException extends RuntimeException
+{
+    public InvalidSourceFileException()
+    {
+        super();
+    }
+    public InvalidSourceFileException(String message)
+    {
+        super(message);
+    }
+}
 
 /**
  * Client class for wrapping all the compiler components (lexer/parser/parseTree/symTabs/etc).
@@ -34,16 +45,21 @@ public class SimpLCompiler
 
     public SimpLCompiler(String filepath)
     {
-        this.workingDirectory = FileUtils.getParentDir(filepath);
-        this.sourceFilename = FileUtils.getBaseName(filepath);
+        if (!FileUtils.getEntireFileExtension(filepath).equals(".simpl"))
+        {
+            throw new InvalidSourceFileException("Source file must end with .simpl extension");
+        }
         try
         {
             this.lexer = new SimpLLexer(CharStreams.fromFileName(filepath));
         }
         catch (IOException e)
         {
-            throw new SourceFileNotFoundException();
+            throw new InvalidSourceFileException("Internal IOException occurred while lexing program");
         }
+
+        this.workingDirectory = FileUtils.getParentDir(filepath);
+        this.sourceFilename = FileUtils.getBaseName(filepath);
         this.parser = new SimpLParser(new CommonTokenStream(lexer));
         this.parser.addParseListener(new SimpLBaseListener());
         this.parseTree = parser.program();
@@ -65,7 +81,6 @@ public class SimpLCompiler
         FileUtils.appendText(
             jasminPath, "\nreturn\n" + CodeEmitter.endMethod()
         );
-        System.out.println(jasminPath);
         jasmin.Main.main(new String[]{jasminPath});
     }
 }

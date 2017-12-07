@@ -19,14 +19,15 @@ public class SimpLMain
         if (!FileUtils.isFile(simpFilepath))
         {
             System.out.println("**Error processing SimpL input file**");
-            System.out.println("  Invalid file path " + FileUtils.getLastExtension(simpFilepath));
+            System.out.println("  Invalid file path " + FileUtils.getEntireFileExtension(simpFilepath));
             System.out.println("  File does not exist");
             System.exit(1);
         }
-        if (!FileUtils.getLastExtension(simpFilepath).equals("simpl"))
+        if (!FileUtils.getEntireFileExtension(simpFilepath).equals(".simpl"))
         {
+            System.out.println(FileUtils.getEntireFileExtension(simpFilepath));
             System.out.println("**Error processing SimpL input file**");
-            System.out.println("  Invalid file extension for file " + FileUtils.getLastExtension(simpFilepath));
+            System.out.println("  Invalid file extension for file " + FileUtils.getEntireFileExtension(simpFilepath));
             System.out.println("  Only .simpl files are supported");
             System.exit(1);
         }

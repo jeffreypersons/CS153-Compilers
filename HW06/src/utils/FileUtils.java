@@ -22,23 +22,6 @@ public class FileUtils
 {
     public static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
 
-    /**
-     * Return basename of given path, without extension or leading dot.
-     * For example:
-     *   ~/Users/.tmp => tmp, /.x.y.z/ => x, foo.tar.gz => foo
-     */
-    public static String getBaseName(String path)
-    {
-        String rawName = new File(path).getName();
-        if (rawName.equals("") || rawName.equals("."))
-            return "";
-
-        // ignoring starting dots, and end at the first dot found
-        int dotIndex = rawName.substring(1).indexOf('.');
-        int start = rawName.startsWith(".")? 1 : 0;
-        int end = dotIndex == -1? rawName.length() : dotIndex + 1;
-        return rawName.substring(start, end);
-    }
     /** Return true if path exists as file, false otherwise. */
     public static boolean isFile(String path)
     {
@@ -73,17 +56,37 @@ public class FileUtils
             .normalize().toString();
     }
 
-    // todo: change to return entire extension (eg foo.x.y.z => x.y.z)
     /**
-     * Return last extension of given filePath, empty string if not a file
-     *  empty string if no extension, null if not a file, else extension without dot of given file.
+     * Return basename of given path, without extension or leading dot.
+     * For example: ~/Users/.tmp => tmp, /.x.y.z/ => x, foo.tar.gz => foo, .gitignore => ""
      */
-    public static String getLastExtension(String filePath)
+    public static String getBaseName(String path)
     {
-        File file = new File(filePath);
-        String fileName = file.getName();
-        int dotIndex = fileName.lastIndexOf('.');
-        return file.isFile()? fileName.substring(dotIndex + 1) : "";
+        String rawName = new File(path).getName();
+        if (rawName.equals("") || rawName.equals("."))
+            return "";
+
+        // ignoring starting dots, and end at the first dot found
+        int dotIndex = rawName.substring(1).indexOf('.');
+        int start = rawName.startsWith(".")? 1 : 0;
+        int end = dotIndex == -1? rawName.length() : dotIndex + 1;
+        return rawName.substring(start, end);
+    }
+    /**
+     * Return extension if path is existing file with at least one file extension, empty string otherwise.
+     * For example: foo.tar.gz => .tar.gz, .gitignore => ""
+     */
+    public static String getEntireFileExtension(String path)
+    {
+        // empty string if empty path, starts or ends with ., or no extension
+        File file = new File(path);
+        String basename = file.getName();
+        
+        boolean hasFileExtension = (
+            !basename.equals("") && file.isFile() &&
+            !basename.startsWith(".") && !basename.endsWith(".") && basename.contains(".")
+        );
+        return hasFileExtension? basename.substring(basename.indexOf('.')) : "";
     }
 
     /** Overwrites contents (newlines are recognized) of given text file, creating if not present. */

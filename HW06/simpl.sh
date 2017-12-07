@@ -29,18 +29,6 @@ if [ $# -ne 1 ]; then
     echo "  Run as $ ./simpl.sh <source_filepath>.simpl"
     exit 1
 fi
-if [ ! -f ${simplpath} ]; then
-    echo "**Error processing input for simpl.sh**"
-    echo "  Invalid file path $simplpath"
-    echo "  File does not exist"
-    exit 1
-fi
-if [[ $(get_extension ${simplpath}) != .simpl ]]; then
-    echo "**Error processing input for simpl.sh**"
-    echo "  Invalid file extension for file $simplpath"
-    echo "  Only .simpl files are supported"
-    exit 1
-fi
 
 # ------ produce jasmin file from simpl file (todo: split up compile/run using commandline arguments)
 export CLASSPATH="out:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
