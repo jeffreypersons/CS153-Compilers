@@ -32,6 +32,10 @@ public class SimpLCompiler
 
     public SimpLCompiler(String filepath)
     {
+        if (!FileUtils.isFile(filepath))
+        {
+            throw new InvalidSourceFileException("Source file must end with .simpl extension");
+        }
         if (!FileUtils.getEntireFileExtension(filepath).equals(".simpl"))
         {
             throw new InvalidSourceFileException("Source file must end with .simpl extension");
@@ -62,6 +66,7 @@ public class SimpLCompiler
         FileUtils.delete(jasminPath);
         FileUtils.delete(classPath);
 
+        // todo: look into moving some of this somewhere else, eg we should care about how text is appended at this level
         FileUtils.appendText(jasminPath, CodeEmitter.program(jasminPath));
         visitor.visit(parseTree);
         FileUtils.appendLines(jasminPath, visitor.getText());

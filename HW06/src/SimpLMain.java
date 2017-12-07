@@ -8,6 +8,7 @@ public class SimpLMain
     /** Takes simpl filepath, and generates jasmin code in the same directory. */
     public static void main(String[] args)
     {
+        // todo: move these error messages to exceptions thrown in compiler class
         if (args.length != 1)
         {
             System.out.println("**Error processing SimpL input file**");
