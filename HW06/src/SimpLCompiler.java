@@ -9,26 +9,13 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import gen.SimpLBaseListener;
 import gen.SimpLLexer;
 import gen.SimpLParser;
+import exceptions.InvalidSourceFileException;
 import main.CodeEmitter;
 import main.CVisitor;
 import utils.FileUtils;
 
 
 // todo: reconsider what is source file dependent in SimpL compiler (instance) vs what is independent (static)
-// todo: add below exception to a proper exception hierarchy
-
-/** Thrown when source file is invalid (eg doesn't exist, bad extension, etc). */
-class InvalidSourceFileException extends RuntimeException
-{
-    public InvalidSourceFileException()
-    {
-        super();
-    }
-    public InvalidSourceFileException(String message)
-    {
-        super(message);
-    }
-}
 
 /**
  * Client class for wrapping all the compiler components (lexer/parser/parseTree/symTabs/etc).
