@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -34,15 +35,17 @@ public class SimpLCompiler
     {
         if (!FileUtils.isFile(filepath))
         {
-            throw new InvalidSourceFileException("Source file must end with .simpl extension");
+            throw new InvalidSourceFileException("Source file does not exist");
         }
         if (!FileUtils.getEntireFileExtension(filepath).equals(".simpl"))
         {
             throw new InvalidSourceFileException("Source file must end with .simpl extension");
         }
+        CharStream sourceFileStream;
         try
         {
-            this.lexer = new SimpLLexer(CharStreams.fromFileName(filepath));
+            // todo: look into moving this sort of logic to other wrapper class...
+            sourceFileStream = CharStreams.fromFileName(filepath);
         }
         catch (IOException e)
         {
@@ -51,6 +54,8 @@ public class SimpLCompiler
 
         this.workingDirectory = FileUtils.getParentDir(filepath);
         this.sourceFilename = FileUtils.getBaseName(filepath);
+
+        this.lexer = new SimpLLexer(sourceFileStream);
         this.parser = new SimpLParser(new CommonTokenStream(lexer));
         this.parser.addParseListener(new SimpLBaseListener());
         this.parseTree = parser.program();
