@@ -28,44 +28,44 @@ public class SimpLCompiler
     private final SimpLParser parser;
     private final ParseTree parseTree;
     private final CVisitor visitor;
-    private final String simplFilepath;
-    private final String jasminFilepath;
+    private final String sourceFilename;
+    private final String workingDirectory;
     private final List<String> program = new ArrayList<>();
 
-    public SimpLCompiler(String simplFilepath)
+    public SimpLCompiler(String filepath)
     {
+        this.workingDirectory = FileUtils.getParentDir(filepath);
+        this.sourceFilename = FileUtils.getBaseName(filepath);
         try
         {
-            lexer = new SimpLLexer(CharStreams.fromFileName(simplFilepath));
+            this.lexer = new SimpLLexer(CharStreams.fromFileName(filepath));
         }
         catch (IOException e)
         {
             throw new SourceFileNotFoundException();
         }
-        this.simplFilepath = simplFilepath;
-        this.jasminFilepath = FileUtils.joinPaths(
-            FileUtils.getParentDir(simplFilepath), FileUtils.getBaseName(simplFilepath) + ".j"
-        );
-        System.out.println(this.jasminFilepath);
-        parser = new SimpLParser(new CommonTokenStream(lexer));
-        parser.addParseListener(new SimpLBaseListener());
-
-        parseTree = parser.program();
-        visitor = new CVisitor();
+        this.parser = new SimpLParser(new CommonTokenStream(lexer));
+        this.parser.addParseListener(new SimpLBaseListener());
+        this.parseTree = parser.program();
+        this.visitor = new CVisitor();
     }
     /**
      * Generate jasmine code for given SimpL code file.
      */
-    public void generateObjectCode()
+    public void compile()
     {
-        FileUtils.delete(jasminFilepath);
-        FileUtils.appendText(jasminFilepath, CodeEmitter.program(jasminFilepath));
+        String jasminPath = FileUtils.joinPaths(workingDirectory, sourceFilename + ".j");
+        String classPath = FileUtils.joinPaths(workingDirectory, sourceFilename + ".class");
+        FileUtils.delete(jasminPath);
+        FileUtils.delete(classPath);
+
+        FileUtils.appendText(jasminPath, CodeEmitter.program(jasminPath));
         visitor.visit(parseTree);
-        FileUtils.appendLines(jasminFilepath, visitor.getText());
+        FileUtils.appendLines(jasminPath, visitor.getText());
         FileUtils.appendText(
-            jasminFilepath, System.lineSeparator() + "return" + System.lineSeparator() + CodeEmitter.endMethod()
+            jasminPath, "\nreturn\n" + CodeEmitter.endMethod()
         );
-        System.out.println(jasminFilepath);
-        jasmin.Main.main(new String[]{jasminFilepath});
+        System.out.println(jasminPath);
+        jasmin.Main.main(new String[]{jasminPath});
     }
 }

@@ -17,10 +17,7 @@
 get_extension() { echo "."$(echo $(basename $1) | cut -d '.' -f2-); }
 
 # ensure working dir is HW06, and given argument is an existing simpl filepath
-rawpath=${1}
-inputdir="$(dirname "${rawpath}")"
-name=$(basename ${rawpath} .simpl)
-export CLASSPATH="out:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
+simplpath=${1}
 if [[ $(basename $(pwd)) != HW06 ]]; then
     echo "**Error processing input file for simpl.sh**"
     echo "  simpl.sh can only be run with HW06 as the working directory"
@@ -32,47 +29,19 @@ if [ $# -ne 1 ]; then
     echo "  Run as $ ./simpl.sh <source_filepath>.simpl"
     exit 1
 fi
-if [ ! -f ${rawpath} ]; then
+if [ ! -f ${simplpath} ]; then
     echo "**Error processing input for simpl.sh**"
-    echo "  Invalid file path $rawpath"
+    echo "  Invalid file path $simplpath"
     echo "  File does not exist"
     exit 1
 fi
-if [[ $(get_extension ${rawpath}) != .simpl ]]; then
+if [[ $(get_extension ${simplpath}) != .simpl ]]; then
     echo "**Error processing input for simpl.sh**"
-    echo "  Invalid file extension for file $rawpath"
+    echo "  Invalid file extension for file $simplpath"
     echo "  Only .simpl files are supported"
     exit 1
 fi
 
-# ------ setup cache folder for simpl/jasmin/class files
-source_filepath=${inputdir}/${name}.simpl
-jasmin_filepath=${inputdir}/${name}.j
-class_filepath=${inputdir}/${name}.class
-
-# ------ produce jasmin file from simpl file
-java -cp ${CLASSPATH} SimpLMain ${inputdir}/${name}.simpl
-if [ $? == 0 ]; then
-    echo "Successfully produced file $jasmin_filepath"
-else
-    echo "**Error generating file $jasmin_filepath**"
-    exit $?
-fi
-
-# ------ produce class file from jasmin file
-java -jar lib/jasmin-2.4-complete.jar -g ${inputdir}/${name}.j
-if [ $? == 0 ]; then
-    echo "Successfully produced file $class_filepath"
-else
-    echo "**Error generating file $class_filepath**"
-    exit $?
-fi
-
-# ------ run class file
-java -cp "${inputdir}" ${inputdir} ${name}
-if [ $? == 0 ]; then
-    echo "Successfully ran file $class_filepath"
-else
-    echo "**Error running file $class_filepath**"
-    exit $?
-fi
+# ------ produce jasmin file from simpl file (todo: split up compile/run using commandline arguments)
+export CLASSPATH="out:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
+java -cp ${CLASSPATH} SimpLMain ${simplpath}

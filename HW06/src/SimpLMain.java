@@ -1,5 +1,6 @@
 import utils.FileUtils;
 
+// todo: split up run compile functionality as command line option (via java program args)
 
 /** High level client class for running the SimpL Compiler. */
 public class SimpLMain
@@ -31,6 +32,6 @@ public class SimpLMain
         }
         System.out.println();
         SimpLCompiler simpLCompiler = new SimpLCompiler(simpFilepath);
-        simpLCompiler.generateObjectCode();
+        simpLCompiler.compile();
     }
 }
