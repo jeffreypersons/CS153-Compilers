@@ -57,7 +57,8 @@ public class SimpLCompiler
     public void generateObjectCode()
     {
         FileUtils.delete(jasminFilepath);
-        FileUtils.appendText(jasminFilepath, CodeEmitter.program(jasminFilepath));
+        // todo: needs to change to filename
+        FileUtils.appendText(jasminFilepath, CodeEmitter.program( FileUtils.getBaseName(jasminFilepath)));
         visitor.visit(parseTree);
         FileUtils.appendLines(jasminFilepath, visitor.getText());
         FileUtils.appendText(
