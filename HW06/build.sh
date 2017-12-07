@@ -17,6 +17,7 @@
 # emulate realpath (not on all os) and then validate input
 realpath() { [[ $1 = /* ]] && echo $1 || echo "$(pwd)/${1#./}" | sed 's/\/*$//g'; }
 cwd=$(realpath)
+export CLASSPATH="lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
 
 # ensure working dir is HW06 and no arguments are given
 if [[ $(basename $(pwd)) != HW06 ]]; then
@@ -33,7 +34,7 @@ fi
 
 # generate antlr sources using absolute paths to avoid tool conflicts
 echo "Generating antlr4 source files into ./src/gen"
-java -jar ${cwd}/lib/antlr-4.7-complete.jar \
+java -jar lib/antlr-4.7-complete.jar \
       ${cwd}/src/SimpL.g4 \
      -long-messages       \
      -encoding utf-8      \
@@ -45,4 +46,5 @@ java -jar ${cwd}/lib/antlr-4.7-complete.jar \
 echo "Compiling all Java files in ./src sources into ./out"
 rm -rf out; mkdir out
 find . -name '*.java' > out/sources.txt
-javac -cp "lib/antlr-4.7-complete.jar" -d out @out/sources.txt
+javac -cp lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar \
+      -d out @out/sources.txt \

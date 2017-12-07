@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import static java.nio.file.StandardOpenOption.APPEND;
 
 
-/** Utility functions for file input/output: does normalization and returns full paths as much as possible. */
+/** Utility functions for file input/output: does normalization as much as possible. */
 public class FileUtils
 {
     public static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
@@ -58,8 +58,7 @@ public class FileUtils
     /** Return given paths joined to base. */
     public static String joinPaths(String basepath, String... paths)
     {
-        return Paths.get(basepath, paths).toAbsolutePath()
-            .normalize().toString();
+        return Paths.get(basepath, paths).normalize().toString();
     }
     /** Return absolute path of given file (wraps Paths's toAbsolutePath()). */
     public static String getAbsolutePath(String filePath)

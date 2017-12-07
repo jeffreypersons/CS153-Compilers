@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jasmin.Main;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -45,6 +46,7 @@ public class SimpLCompiler
         this.jasminFilepath = FileUtils.joinPaths(
             FileUtils.getParentDir(simplFilepath), FileUtils.getBaseName(simplFilepath) + ".j"
         );
+        System.out.println(this.jasminFilepath);
         parser = new SimpLParser(new CommonTokenStream(lexer));
         parser.addParseListener(new SimpLBaseListener());
 
@@ -63,5 +65,7 @@ public class SimpLCompiler
         FileUtils.appendText(
             jasminFilepath, System.lineSeparator() + "return" + System.lineSeparator() + CodeEmitter.endMethod()
         );
+        System.out.println(jasminFilepath);
+        jasmin.Main.main(new String[]{jasminFilepath});
     }
 }

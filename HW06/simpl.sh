@@ -20,6 +20,7 @@ get_extension() { echo "."$(echo $(basename $1) | cut -d '.' -f2-); }
 rawpath=${1}
 inputdir="$(dirname "${rawpath}")"
 name=$(basename ${rawpath} .simpl)
+export CLASSPATH="out:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
 if [[ $(basename $(pwd)) != HW06 ]]; then
     echo "**Error processing input file for simpl.sh**"
     echo "  simpl.sh can only be run with HW06 as the working directory"
@@ -50,7 +51,7 @@ jasmin_filepath=${inputdir}/${name}.j
 class_filepath=${inputdir}/${name}.class
 
 # ------ produce jasmin file from simpl file
-java -cp "out:lib/antlr-4.7-complete.jar" SimpLMain ${inputdir}/${name}.simpl
+java -cp ${CLASSPATH} SimpLMain ${inputdir}/${name}.simpl
 if [ $? == 0 ]; then
     echo "Successfully produced file $jasmin_filepath"
 else
