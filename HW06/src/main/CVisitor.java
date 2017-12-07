@@ -108,14 +108,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         else memory.put(name, null); // add typing regardless of assignment or not
         localCount++;
 
-        if (val != null)
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, "0"));
-        /*
-        else if (parser_type == SimpLParser.NUMBER)
-            return new TerminalNodeImpl(new CommonToken(parser_type, Double.toString((double)val.getValue())));
-        else
-            return new TerminalNodeImpl(new CommonToken(parser_type, val.getValue().toString()));
-        */
         return new TerminalNodeImpl(token);
     }
     /**
@@ -131,17 +123,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         String identifier = ctx.NAME().getSymbol().getText();
         Value val = getOperandValue(visit(ctx.expr()).getSymbol());
 
-        int parserType = 0;
-        if (val.getType().equals("NUMBER"))
-            parserType = SimpLParser.NUMBER;
-        else if (val.getType().equals("BOOLEAN"))
-            parserType = SimpLParser.BOOLEAN;
-        else
-            parserType = SimpLParser.TEXT;
+        int parserType = getParseType(val);
 
         incStackSize(2);
         if (memory.get(identifier) == null)
         {
+            //todo: add error for if identifier exists. if not, it must be declared
             // throw error, assignment on undeclared identifier
             //throw new Exception("UNDELCARED IDENTIFIER");
         }
@@ -150,15 +137,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             var.setValue(val);
         else
             System.out.println("Improper cast!"); // todo: throw error here since different type
-        //var.setValue(val);
 
         memory.put(identifier, var);
         text.add(CodeEmitter.assignVariable(var));
         decStackSize(2);
-        if (parserType == SimpLParser.NUMBER)
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString((double)val.getValue())));
-        else
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, val.getValue().toString()));
+        return new TerminalNodeImpl(new CommonToken(parserType, Double.toString((double)val.getValue())));
     }
 
     @Override public TerminalNode visitWhile_loop(SimpLParser.While_loopContext ctx)
@@ -174,7 +157,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         visit(ctx.block());
         text.add(CodeEmitter.getGoTo(label));
         text.add(exitLabel);
-        return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "loop"));
+        return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "WHILE"));
     }
     /**
      * {@inheritDoc}
@@ -218,7 +201,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         for (int labelNum : lastLabelSkip)
             text.set(labelNum, CodeEmitter.getGoTo(cond_label));
 
-        //System.out.print("resulting node: " + a);
         // if then body. if condition is not met, the label sends it outside if statement, otherwise continue normally
         return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true"));
     }
@@ -608,5 +590,19 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     private void decStackSize(int sizeDecrease)
     {
         stackSize = (sizeDecrease >= stackSize)? 0 : stackSize - sizeDecrease;
+    }
+
+    private int getParseType(String type)
+    {
+        if(type.equals("NUMBER")) return SimpLParser.NUMBER;
+        else if(type.equals("TEXT")) return SimpLParser.TEXT;
+        else if(type.equals("BOOLEAN")) return SimpLParser.BOOLEAN;
+        // todo: else assume text?
+        return SimpLParser.TEXT;
+    }
+
+    private int getParseType(Value type)
+    {
+        return getParseType(type.getType());
     }
 }
