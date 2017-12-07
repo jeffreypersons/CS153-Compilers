@@ -44,5 +44,5 @@ java -jar ${cwd}/lib/antlr-4.7-complete.jar \
 # generate class files in out dir
 echo "Compiling all Java files in ./src sources into ./out"
 rm -rf out; mkdir out
-find -name '*.java' > out/sources.txt
+find . -name '*.java' > out/sources.txt
 javac -cp "lib/antlr-4.7-complete.jar" -d out @out/sources.txt
