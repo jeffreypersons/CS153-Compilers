@@ -1,5 +1,4 @@
 
-// todo: split up run compile functionality as command line option (via java program args)
 
 /** High level client class for running the SimpL Compiler. */
 public class SimpLMain
@@ -7,6 +6,7 @@ public class SimpLMain
     /** Takes simpl filepath, and generates jasmin code in the same directory. */
     public static void main(String[] args)
     {
+        // todo: add arguments for running/compiling
         if (args.length != 1)
         {
             System.out.println("**Error processing SimpL input file**");

@@ -16,7 +16,7 @@ import main.CVisitor;
 import utils.FileUtils;
 
 
-// todo: reconsider what is source file dependent in SimpL compiler (instance) vs what is independent (static)
+// todo: move lexer/parser/visitor/tree creation/code generation details to another wrapper class and use here
 
 /**
  * Client class for wrapping all the compiler components (lexer/parser/parseTree/symTabs/etc).
@@ -44,7 +44,6 @@ public class SimpLCompiler
         CharStream sourceFileStream;
         try
         {
-            // todo: look into moving this sort of logic to other wrapper class...
             sourceFileStream = CharStreams.fromFileName(filepath);
         }
         catch (IOException e)
@@ -71,7 +70,6 @@ public class SimpLCompiler
         FileUtils.delete(jasminPath);
         FileUtils.delete(classPath);
 
-        // todo: look into moving some of this somewhere else, eg we should care about how text is appended at this level
         FileUtils.appendText(jasminPath, CodeEmitter.program(jasminPath));
         visitor.visit(parseTree);
         FileUtils.appendLines(jasminPath, visitor.getText());
