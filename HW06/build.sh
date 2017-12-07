@@ -14,8 +14,6 @@
 #     .java file)
 # ==============================================================================
 
-# todo: split script into separate gen and build scripts (eg gen.sh and build.sh)
-
 # emulate realpath (not on all os) and then validate input
 realpath() { [[ $1 = /* ]] && echo $1 || echo "$(pwd)/${1#./}" | sed 's/\/*$//g'; }
 cwd=$(realpath)

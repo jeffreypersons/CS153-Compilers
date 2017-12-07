@@ -14,8 +14,6 @@
 # (3) Run class file
 # ==============================================================================
 
-# todo: split script into separate compile run scripts (eg simplc.sh and simpl.sh)
-
 get_extension() { echo "."$(echo $(basename $1) | cut -d '.' -f2-); }
 
 # ensure working dir is HW06, and given argument is an existing simpl filepath
@@ -24,7 +22,7 @@ inputdir="$(dirname "${rawpath}")"
 name=$(basename ${rawpath} .simpl)
 if [[ $(basename $(pwd)) != HW06 ]]; then
     echo "**Error processing input file for simpl.sh**"
-    echo "  Script can only be run with HW06 as the working directory"
+    echo "  simpl.sh can only be run with HW06 as the working directory"
     exit 1
 fi
 if [ $# -ne 1 ]; then
