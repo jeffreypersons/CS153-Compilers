@@ -30,8 +30,8 @@ func_def
 block
     : EOL LCURL EOL
           stmt*
-          ('return' expr)?
-      EOL RCURL EOL
+          ('return' expr EOL)?
+      RCURL EOL  // no need for EOL here, since statement requires it
     ;
 // expressions: note that as of version 4.1, ANTLR rewrites the below as unambiguous rules
 // TODO: to make the evaluation rules more clear, incorporate ANTLR syntax for left/right associativity
