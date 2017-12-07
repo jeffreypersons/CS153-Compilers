@@ -40,11 +40,10 @@ public class ValueBuilder
             catch (Exception e)
             {
                 String text = token.getText();
-                if(text.equals("true") || text.equals("false"))
-                {
+                if (text.equals("true") || text.equals("false"))
                     val = new Bool(text);
-                }
-                else val = new Text(text);
+                else
+                    val = new Text(text);
             }
             return val;
         }
