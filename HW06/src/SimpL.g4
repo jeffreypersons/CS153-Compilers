@@ -58,7 +58,7 @@ NONE          : 'None';
 TEXT          : 'Text';
 NUMBER        : 'Number';
 BOOLEAN       : 'Boolean';
-TEXT_VALUE    : QUOTE (~('\\'| '\r' | '\n') | '\\\'' | '\\\\')* QUOTE;  // ' and \ must be escaped with \
+TEXT_VALUE    : QUOTE (~['\r\n] | '\\\'' | '\\\\')* QUOTE;  // one line text literal, \' and \\ is OK
 NUMBER_VALUE  : DIGIT+ | DIGIT+.DIGIT+;
 BOOLEAN_VALUE : 'true' | 'false';
 
