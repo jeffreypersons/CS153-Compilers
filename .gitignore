@@ -57,6 +57,9 @@ CMakeFiles/cmake.check_cache
 # jetbrains
 *.iml
 .idea/
+*.*___jb_bak___
+*.*___jb_tmp___
+*.*___jb_old___
 
 # eclipse
 *.snap
@@ -83,4 +86,3 @@ local.properties
 .DS_Store
 __MACOSX/
 xcuserdata/
-*.java___jb_tmp___
