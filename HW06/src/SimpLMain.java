@@ -3,7 +3,7 @@
 /** High level client class for running the SimpL Compiler. */
 public class SimpLMain
 {
-    /** Takes simpl filepath, and generates jasmin code in the same directory. */
+    /** Compile and run a simpl file (jasmin and class file generated in same directory as input). */
     public static void main(String[] args)
     {
         // todo: add arguments for running/compiling

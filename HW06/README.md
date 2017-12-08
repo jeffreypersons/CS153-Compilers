@@ -10,7 +10,7 @@
 
     ./build.sh
 
-#### Building SimpL
+#### Testing SimpL
 
     ./test.sh
 
@@ -18,11 +18,25 @@
 
     ./simpl.sh <source_file>
 
+Without script, assuming classpath is set correctly:
+    
+    java SimpLMain <source_file>
+
 #### For example
 
     ./build.sh
     ./simpl.sh tests/basic_compile.simpl
     ./test.sh
+
+#### Internals
+
+    Currently only a single file can be compiled/run at a time
+    Given filepath must end with a single .simpl extension
+
+    Following steps occur:
+    (1) Produce jasmin file from simpl file
+    (2) Produce class file from jasmin file
+    (3) Run class file using JVM
 
 #### Troubleshooting
 - Ensure your working from the HW06 directory (this will change in future versions)
