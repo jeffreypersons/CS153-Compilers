@@ -4,14 +4,18 @@
 # Example usage: ./simpl.sh tests/basic_compile.simpl
 # ==============================================================================
 
+# emulate realpath (its not available on all systems)
+realpath() { [[ $1 = /* ]] && echo $1 || echo "$(pwd)/${1#./}" | sed 's/\/*$//g'; }
+
 # ensure working dir is HW06 and no arguments are given
 cwd=$(realpath)
+filepath=${1}
 if [[ ${cwd} != */*HW06 ]]; then
     echo "**Error processing input for build.sh**"
     echo "  simpl.sh can only be run with HW06 as the working directory"
     exit 1
 fi
-if [ ${#} -ne 0 ]; then
+if [ ${#} -ne 1 ]; then
     echo "**Error processing input for build.sh**"
     echo "  Invalid number of arguments"
     echo "  Run as $ ./simpl.sh"
