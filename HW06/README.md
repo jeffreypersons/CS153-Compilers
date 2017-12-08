@@ -1,50 +1,27 @@
 # SimpL Programming Language Overview
 
-## Setup
-- To ensure it builds and runs on your machine, try: `./build.sh` followed by
-  `./simpl.sh tests/basic_compile1.simpl`. This should create an out dir with all
-  the generated class files from HW06 src, and then generate basic_compile1.j and
-  basic_compile1.class
-
-#### Building SimpL
-
-    ./build.sh
-
-#### Testing SimpL
-
-    ./test.sh
+## Building SimpL Codebase from sources
+    
+    Build SimpL by executing `./build.sh` from project directory.
+    This should generate sources from antlr, an out folder with all compiled class files.
+    
+    To ensure it runs on your system, execute `.test.sh` from project directory.
 
 #### Running SimpL
 
-    ./simpl.sh <source_file>
+    Run a .simpl file by executing `./simpl.sh <source_file>`, or by running
+    `java SimpLMain <source_file>`.
+    This should produce a corresponding .j (jvm assembly) and .class (jvm bytecode)
+    adjacent to the given source file.
 
-Without script, assuming classpath is set correctly:
-    
-    java SimpLMain <source_file>
+### Troubleshooting
 
-#### For example
-
-    ./build.sh
-    ./simpl.sh tests/basic_compile.simpl
-    ./test.sh
-
-#### Internals
-
-    Currently only a single file can be compiled/run at a time
-    Given filepath must end with a single .simpl extension
-
-    Following steps occur:
-    (1) Produce jasmin file from simpl file
-    (2) Produce class file from jasmin file
-    (3) Run class file using JVM
-
-#### Troubleshooting
-- Ensure your working from the HW06 directory (this will change in future versions)
-- Ensure shell script permissions are set, use `chmod +x ./<file_name>.sh` before
-  running for the first time
-- Ensure newlines and utf-8 are set for the scripts, use `sed -i 's/\r$//' ./<file>`
-  on any shell scripts that are failing due to newlines issues such as $'\r', etc
-- A helpful command for cleaning up class files, use `find <dir_name> -name '*.class' -type f -delete`
+1. If executing `java` or `javac` directly, ensure classpath is set correctly, as in
+   `export CLASSPATH=out:<path-to-jasmin2.4-jar>:<path-to-antlr4.7-jar>$CLASSPATH`
+2. If permission denied errors occurred running scripts, then allow access by running
+   `chmod +x ./<file_name>.sh`
+3. If newline issues occur after modifying the scripts on windows, use
+   `sed -i 's/\r$//' ./<file>` to remove windows newline characters
 
 
 ## Syntax
