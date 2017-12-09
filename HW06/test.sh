@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 # ============================ Test SimpL Code Base ============================
-# Test SimpL from sources
-# example usage: ./test.sh
-#
-# This script does the following steps:
-# (1) test simpl using all the test files in the tests/dir
+# Test a single SimpL file
+# Example usage: ./test.sh
 # ==============================================================================
-
-# todo: add more test cases (possibly using the antlr test rig tool)
 
 # ensure working dir is HW06 and no arguments are given
 if [[ $(basename $(pwd)) != HW06 ]]; then
@@ -22,10 +17,9 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-echo "Testing simpl: tests/basic_compile1.class"
-rm -rf tests/basic_compile1.j tests/basic_compile1.class
-./simpl.sh tests/basic_compile1.simpl
-
-echo "Testing simp2: tests/basic_compile2.class"
-rm -rf tests/basic_compile2.j tests/basic_compile2.class
-./simpl.sh tests/basic_compile2.simpl
+# run SimpL compiler on given test file
+# todo: add more test/report functionality using antlr test rig
+source_file=${1}
+echo "Testing simpl: ${source_file}"
+rm -rf tests/basic_compile1.j ${source_file}
+./simpl.sh ${source_file}

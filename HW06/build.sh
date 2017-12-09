@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
-# ========================= Generate and Build SimpL Sources ===================
-# Generate antlr sources and compile SimpL codebase from HW06 directory
+# ================================ Build SimpL =================================
+# Generate antlr sources, compile codebase, and run tests
 # Example usage: ./build.sh
 # ==============================================================================
 
-# emulate realpath (its not available on all systems)
-realpath() { [[ $1 = /* ]] && echo $1 || echo "$(pwd)/${1#./}" | sed 's/\/*$//g'; }
-
 # ensure working dir is HW06 and no arguments are given
-cwd=$(realpath)
-if [[ ${cwd} != */*HW06 ]]; then
+if [[ $(basename $(pwd)) != HW06 ]]; then
     echo "**Error processing input for build.sh**"
     echo "  build.sh can only be run with HW06 as the working directory"
     exit 1
@@ -20,6 +16,10 @@ if [ ${#} -ne 0 ]; then
     echo "  Run as $ ./build.sh"
     exit 1
 fi
+
+# define realpath command (since unavailable on OSX) to get full path of working directory
+realpath() { [[ $1 = /* ]] && echo $1 || echo "$(pwd)/${1#./}" | sed 's/\/*$//g'; }
+cwd=$(realpath)
 
 # generate simpl listener/visitor/parser/tokens files, using full paths to avoid conflicts
 echo "Generating antlr4 source files into ./src/gen"
