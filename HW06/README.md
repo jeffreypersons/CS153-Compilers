@@ -14,6 +14,9 @@ Run a .simpl file by executing `./simpl.sh <source_file>`, or by running
 This should produce a corresponding .j (jvm assembly) and .class (jvm bytecode)
 adjacent to the given source file.
 
+Tip: a helpful command for cleaning up class or jasmin files, use
+`find <dir_name> -name '*.class' -type -delete` and `find <dir_name> -name '*.j' -type -delete`
+
 
 #### Troubleshooting
 
