@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
@@ -12,7 +13,6 @@ import org.antlr.v4.runtime.Token;
 
 import gen.SimpLBaseVisitor;
 import gen.SimpLParser;
-
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 {
@@ -24,12 +24,20 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     private List<String> text;
     private Map<String, Value> memory;
     private Map<String, Integer> ifMemory;
+    private Map<String, Supplier<String>> codeEmissionMap;
 
     public CVisitor()
     {
         super();
         memory = new HashMap<>();
         ifMemory = new HashMap<>();
+
+        // create and populate list with typical code emission functions
+        codeEmissionMap = new HashMap();
+        List<Supplier<String>> codeEmissionFunctions = java.util.Arrays.asList(CodeEmitter::add, CodeEmitter::sub, CodeEmitter::mul, CodeEmitter::div);
+        String [] functionTokens = {"ADD", "SUB", "MUL", "DIV"};
+        for(int x = 0; x < functionTokens.length; x++) codeEmissionMap.put(functionTokens[x], codeEmissionFunctions.get(x));
+
         stackSize = 0;
         necessaryStackSize = 0;
         localCount = 1;
@@ -166,13 +174,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     @Override public TerminalNode visitIf_stmt(SimpLParser.If_stmtContext ctx)
     {
         List<SimpLParser.ExprContext> expressions = ctx.expr();
-        int block_count = 0;
         String label = CodeEmitter.getLabel(labelCount);
         text.add(label);
         labelCount++;
 
         String evaluate_type, cond_label = null;
         List<Integer> lastLabelSkip = new ArrayList<>();
+        int block_count = 0;
         for (SimpLParser.ExprContext exp : expressions)
         {
             evaluate_type = visit(exp).getSymbol().getText();
@@ -182,7 +190,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             visit(ctx.block(block_count));
             lastLabelSkip.add(text.size());
 
-            text.add(CodeEmitter.getGoTo("temp"));
+            text.add(CodeEmitter.getGoTo("temp")); // create a temporary label
             text.add(cond_label);
             condLabelCount++;
             block_count++;
@@ -247,46 +255,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         Value val = null;
         Variable var = null;
         List<SimpLParser.ExprContext> expressions = ctx.expr();
-        if (name.equals("println"))
-        {
-            for(SimpLParser.ExprContext exp : expressions)
-            {
-                node = visit(exp);
-                val = ValueBuilder.getValue(node.getSymbol(), memory);
-                if (node.getSymbol().getType() == SimpLParser.NUMBER)
-                {
-                    text.add(CodeEmitter.println("NUMBER"));
-                }
-                else if (node.getSymbol().getType() == SimpLParser.NAME)
-                {
-                    var = (Variable) val;
-                    val = var.getValue();
-                    text.add(CodeEmitter.putVarStack(var));
-                    text.add(CodeEmitter.println(val.getType()));
-                }
-                else if (node.getSymbol().getType() == SimpLParser.BOOLEAN)
-                {
-                    text.add(CodeEmitter.println("BOOLEAN"));
-                }
-                else
-                {
-                    CodeEmitter.loadConstant(val.getValue().toString());
-                    text.add(CodeEmitter.println("TEXT"));
-                }
-            }
-        }
-        else if (name.equals("print"))
+        if (name.equals("print") || name.equals("println"))
         {
             for (SimpLParser.ExprContext exp : expressions)
             {
                 node = visit(exp);
                 val = ValueBuilder.getValue(node.getSymbol(), memory);
-                text.add(CodeEmitter.print(val.getType()));
+                text.add(name.equals("print") ? CodeEmitter.print(val.getType()) : CodeEmitter.println(val.getType())); // check if print or println
             }
-        }
-        else if (name.equals("read"))
-        {
-
         }
         return node;
     }
@@ -301,6 +277,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                     numLines++;
         return numLines + text.size();
     }
+
     private Value getOperandValue(Token token)
     {
         Value value = ValueBuilder.getValue(token, memory);
@@ -309,10 +286,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
     private Value getOperandValue(Value val)
     {
-        Value result = null;
-        if(val.getType().equals("IDENTIFIER")) result = (Value) val.getValue();
-        else result = val;
-        return val;
+        return val.getType().equals("IDENTIFIER") ? (Value) val.getValue() : val;
     }
 
     private void incStackSize(int sizeIncrease)
@@ -337,8 +311,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
     private int getParseType(Value type)
     {
-        Value v = getOperandValue(type);
-        return getParseType(v.getType());
+        return getParseType(getOperandValue(type).getType());
     }
 
     private String getExprCtxType(SimpLParser.ExprContext ctx)
@@ -353,32 +326,23 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
     private Boolean checkParens(SimpLParser.ExprContext ctx)
     {
-        if(ctx.LPAREN() != null && ctx.RPAREN() == null) return false;
-        else return true;
+        return (ctx.LPAREN() != null && ctx.RPAREN() == null) ? false : true;
     }
 
     private Boolean containsParens(SimpLParser.ExprContext ctx)
     {
-        if(ctx.LPAREN() != null || ctx.RPAREN() != null) return true;
-        else return false;
+        return (ctx.LPAREN() != null || ctx.RPAREN() != null) ? true : false;
     }
 
     private String getCtxOperation(SimpLParser.ExprContext ctx)
     {
-        if(ctx.ADD() != null) return "ADD";
-        else if(ctx.SUB() != null) return "SUB";
-        else if(ctx.POW() != null) return "POW";
-        else if(ctx.MUL() != null) return "MUL";
-        else if(ctx.DIV() != null) return "DIV";
-        else if(ctx.AND() != null) return "AND";
-        else if(ctx.OR() != null) return "OR";
-        else if(ctx.GT() != null) return "GT";
-        else if(ctx.LT() != null) return "LT";
-        else if(ctx.GTE() != null) return "GTE";
-        else if(ctx.LTE() != null) return "LTE";
-        else if(ctx.EQ() != null) return "EQ";
-        else if(ctx.NEQ() != null) return "NEQ";
-        else return "ERROR";
+        String [] operations = {"ADD", "SUB", "POW", "MUL", "DIV", "AND", "OR", "GT", "LT", "GTE", "LTE", "EQ", "NEQ"};
+        List<Supplier<TerminalNode>> ctxFunctions = java.util.Arrays.asList(ctx::ADD, ctx::SUB, ctx::POW, ctx::MUL, ctx::DIV, ctx::AND, ctx::OR, ctx::GT, ctx::LT, ctx::GTE, ctx::LTE, ctx::EQ, ctx::NEQ);
+        for(int x = 0; x < operations.length; x++)
+        {
+            if(ctxFunctions.get(x).get() != null) return operations[x];
+        }
+        return "ERROR";
     }
 
     private TerminalNode processExprContext(SimpLParser.ExprContext ctx)
@@ -395,7 +359,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             Value val = memory.get(ctx.NAME().getSymbol().getText().toString()); // if undeclared throw error
             if (val == null) return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true")); // todo: throw error, value shouldn't be null
             Value operand = (Value) val.getValue();
-            System.out.println(operand.toString());
             text.add(CodeEmitter.putVarStack((Variable) val));
             node = new TerminalNodeImpl(new CommonToken(getParseType(operand), getNodeField(operand)));
         }
@@ -411,7 +374,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         }
         else
         {
-            // try for single operator such as not
+            // try for single operator such as NOT
             Value loperand, roperand;
             incStackSize(2);
             // do this before try because NOT has 1 operator
@@ -434,11 +397,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             if(getExprCtxType(ctx).equals("ARITHMETIC"))
             {
                 Number result = Number.performOperation((Number) loperand, (Number) roperand, operation);
-                if(operation.equals("ADD")) text.add(CodeEmitter.add());
-                else if (operation.equals("SUB")) text.add(CodeEmitter.sub());
-                else if (operation.equals("MUL")) text.add(CodeEmitter.mul());
-                else if (operation.equals("DIV")) text.add(CodeEmitter.div());
-                else text.add(CodeEmitter.div());
+                Supplier<String> supFunction = codeEmissionMap.get(operation);
+                if(supFunction == null); // todo: invalid operation throw error
+                else text.add(supFunction.get());
                 node = new TerminalNodeImpl(new CommonToken(getParseType(result), getNodeField(result)));
                 decStackSize(1);
             }
