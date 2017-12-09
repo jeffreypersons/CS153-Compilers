@@ -1,5 +1,6 @@
 grammar SimpL;
 
+// todo: rename if_stmt to conditional, stmt to stat
 program : stmt*;
 stmt
     : func_def
