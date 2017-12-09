@@ -20,6 +20,4 @@ fi
 # run SimpL compiler on given test file
 # todo: add more test/report functionality using antlr test rig
 source_file=${1}
-echo "Testing simpl: ${source_file}"
-rm -rf tests/basic_compile1.j ${source_file}
 ./simpl.sh ${source_file}
