@@ -39,4 +39,8 @@ export CLASSPATH="lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
 javac -cp lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar \
       -d out @out/sources.txt \
 
-# todo: add tests here using the antlr tool
+# run tests
+echo ""
+echo "Running tests"
+./test.sh tests/basic_compile1.simpl
+./test.sh tests/basic_compile2.simpl
