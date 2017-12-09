@@ -70,7 +70,7 @@ public class SimpLCompiler
         FileUtils.delete(jasminPath);
         FileUtils.delete(classPath);
 
-        FileUtils.appendText(jasminPath, CodeEmitter.program(jasminPath));
+        FileUtils.appendText(jasminPath, CodeEmitter.program(FileUtils.getBaseName(jasminPath)));
         visitor.visit(parseTree);
         FileUtils.appendLines(jasminPath, visitor.getText());
         FileUtils.appendText(
