@@ -15,19 +15,17 @@ if [[ $(basename $(pwd)) != HW06 ]]; then
     echo "  test.sh can only be run with HW06 as the working directory"
     exit 1
 fi
-if [ $# -ne 0 ]; then
+if [ $# -ne 1 ]; then
     echo "**Error processing input for test.sh**"
     echo "  Invalid number of arguments"
-    echo "  Run as $ ./test.sh"
+    echo "  Run as $ ./test.sh <source_file>"
     exit 1
 fi
 
-printf "\n--------------- Running tests/basic_compile1.simpl ----------------\n"
-rm -rf tests/basic_compile1.j; rm -rf tests/basic_compile1.class
+echo "Testing simpl: tests/basic_compile1.class"
+rm -rf tests/basic_compile1.j tests/basic_compile1.class
 ./simpl.sh tests/basic_compile1.simpl
 
-printf "\n--------------- Running tests/basic_compile2.simpl ----------------\n"
-rm -rf tests/basic_compile2.j; rm -rf tests/basic_compile2.class
+echo "Testing simp2: tests/basic_compile2.class"
+rm -rf tests/basic_compile2.j tests/basic_compile2.class
 ./simpl.sh tests/basic_compile2.simpl
-
-printf "\n"
