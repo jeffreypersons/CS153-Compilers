@@ -38,3 +38,5 @@ find . -name '*.java' > out/sources.txt
 export CLASSPATH="lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
 javac -cp lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar \
       -d out @out/sources.txt \
+
+# todo: add tests here using the antlr tool
