@@ -76,6 +76,6 @@ public class SimpLCompiler
         FileUtils.appendText(
             jasminPath, "\nreturn\n" + CodeEmitter.endMethod()
         );
-        jasmin.Main.main(new String[]{jasminPath});  // todo: move to a utility class...
+        jasmin.Main.main(new String[]{jasminPath, "-d", workingDirectory});  // todo: move to a utility class...
     }
 }
