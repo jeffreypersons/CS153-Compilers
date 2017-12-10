@@ -35,7 +35,6 @@ public class SimpLCompiler
     {
         FileUtils.ensureFileExists(filepath);
         FileUtils.ensureFileExtension(filepath, ".simpl");
-
         CharStream sourceFileStream;
         try
         {
