@@ -61,7 +61,8 @@ public class SimpLCompiler
         this.visitor = new CVisitor();
     }
     /**
-     * Generate jasmine code for given SimpL code file.
+     * Compile single SimpL source file.
+     * Note: Jasmin and class files are generated in same directory as SimpL file.
      */
     public void compile()
     {
@@ -76,6 +77,8 @@ public class SimpLCompiler
         FileUtils.appendText(
             jasminPath, "\nreturn\n" + CodeEmitter.endMethod()
         );
-        jasmin.Main.main(new String[]{jasminPath, "-d", workingDirectory});  // todo: move to a utility class...
+
+        // equivalent to `$ jasmin <jasmin_filepath> -d <working_directory> -g`
+        jasmin.Main.main(new String[]{jasminPath, "-d", workingDirectory, "-g"});
     }
 }
