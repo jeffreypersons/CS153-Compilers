@@ -3,9 +3,8 @@
 
 #### Building SimpL Codebase from sources
 Build SimpL by executing `./build.sh` from project directory.
-This should generate sources from antlr, an out folder with all compiled class files.
-
-To ensure it runs on your system, execute `./test.sh` from project directory.
+This should generate sources from antlr, an out folder with all compiled class files,
+and run tests.
 
 
 #### Running SimpL
