@@ -17,6 +17,7 @@ import utils.FileUtils;
 
 
 // todo: move lexer/parser/visitor/tree creation/code generation details to another wrapper class and use here
+// todo: utilize antlr lexer errors as wrapped syntax errors
 
 /**
  * Client class for wrapping all the compiler components (lexer/parser/parseTree/symTabs/etc).
@@ -48,7 +49,7 @@ public class SimpLCompiler
         }
         catch (IOException e)
         {
-            throw new InvalidSourceFileException("Internal IOException occurred while lexing program");
+            throw new InvalidSourceFileException("Internal IOException occurred while lexing program", e);
         }
 
         this.workingDirectory = FileUtils.getParentDir(filepath);
