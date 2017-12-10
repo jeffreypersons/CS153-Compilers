@@ -22,6 +22,19 @@ public class FileUtils
 {
     public static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
 
+    /** Throw IOException if given extension (including leading dot) does not match path's extension. */
+    public static void ensureFileExtension(String path, String extension) throws IOException
+    {
+        if (!FileUtils.getEntireFileExtension(path).equals(".simpl"))
+            throw new IOException("Source file " + path + " is invalid - only " + extension + " extensions are supported");
+    }
+    /** Throw IOException if invalid */
+    public static void ensureFileExists(String path) throws IOException
+    {
+        if (!FileUtils.getEntireFileExtension(path).equals(".simpl"))
+            throw new IOException("Source file " + path + " is invalid - " + path);
+    }
+
     /** Return true if path exists as file, false otherwise. */
     public static boolean isFile(String path)
     {
@@ -81,7 +94,6 @@ public class FileUtils
         // empty string if empty path, starts or ends with ., or no extension
         File file = new File(path);
         String basename = file.getName();
-        
         boolean hasFileExtension = (
             !basename.equals("") && file.isFile() &&
             !basename.startsWith(".") && !basename.endsWith(".") && basename.contains(".")

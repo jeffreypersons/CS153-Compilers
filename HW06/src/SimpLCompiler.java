@@ -10,7 +10,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import gen.SimpLBaseListener;
 import gen.SimpLLexer;
 import gen.SimpLParser;
-import exceptions.InvalidSourceFileException;
 import main.CodeEmitter;
 import main.CVisitor;
 import utils.FileUtils;
@@ -32,16 +31,11 @@ public class SimpLCompiler
     private final String workingDirectory;
     private final List<String> program = new ArrayList<>();
 
-    public SimpLCompiler(String filepath)
+    public SimpLCompiler(String filepath) throws IOException
     {
-        if (!FileUtils.isFile(filepath))
-        {
-            throw new InvalidSourceFileException("Source file does not exist");
-        }
-        if (!FileUtils.getEntireFileExtension(filepath).equals(".simpl"))
-        {
-            throw new InvalidSourceFileException("Source file must end with .simpl extension");
-        }
+        FileUtils.ensureFileExists(filepath);
+        FileUtils.ensureFileExtension(filepath, ".simpl");
+
         CharStream sourceFileStream;
         try
         {
@@ -49,7 +43,7 @@ public class SimpLCompiler
         }
         catch (IOException e)
         {
-            throw new InvalidSourceFileException("Internal IOException occurred while lexing program", e);
+            throw new IOException("Internal IOException occurred while decoding source file " + filepath, e);
         }
 
         this.workingDirectory = FileUtils.getParentDir(filepath);
@@ -61,6 +55,7 @@ public class SimpLCompiler
         this.parseTree = parser.program();
         this.visitor = new CVisitor();
     }
+
     /**
      * Compile single SimpL source file.
      * Note: Jasmin and class files are generated in same directory as SimpL file.
@@ -75,9 +70,7 @@ public class SimpLCompiler
         FileUtils.appendText(jasminPath, CodeEmitter.program(FileUtils.getBaseName(jasminPath)));
         visitor.visit(parseTree);
         FileUtils.appendLines(jasminPath, visitor.getText());
-        FileUtils.appendText(
-            jasminPath, "\nreturn\n" + CodeEmitter.endMethod()
-        );
+        FileUtils.appendText(jasminPath, "\nreturn\n" + CodeEmitter.endMethod());
 
         // equivalent to `$ jasmin <jasmin_filepath> -d <working_directory> -g`
         jasmin.Main.main(new String[]{jasminPath, "-d", workingDirectory, "-g"});

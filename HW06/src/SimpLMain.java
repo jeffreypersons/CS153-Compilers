@@ -1,10 +1,11 @@
+import java.io.IOException;
 
 
 /** High level client class for running the SimpL Compiler. */
 public class SimpLMain
 {
     /** Compile and run a simpl file (jasmin and class file generated in same directory as input). */
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
         // todo: add arguments for running/compiling
         if (args.length != 1)
