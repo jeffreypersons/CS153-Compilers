@@ -15,6 +15,8 @@ import org.antlr.v4.runtime.Token;
 import gen.SimpLBaseVisitor;
 import gen.SimpLParser;
 
+// todo: remove extra checks, and implement error handling in the parsers/lexer classes instead!
+
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 {
     private int stackSize;
@@ -35,7 +37,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
         // create and populate list with typical code emission functions
         codeEmissionMap = new HashMap();
-        List<Supplier<String>> codeEmissionFunctions = Arrays.asList(CodeEmitter::add, CodeEmitter::sub, CodeEmitter::mul, CodeEmitter::div);
+        List<Supplier<String>> codeEmissionFunctions = Arrays.asList(
+            CodeEmitter::add, CodeEmitter::sub, CodeEmitter::mul, CodeEmitter::div
+        );
         String [] functionTokens = {"ADD", "SUB", "MUL", "DIV"};
         for(int x = 0; x < functionTokens.length; x++) codeEmissionMap.put(functionTokens[x], codeEmissionFunctions.get(x));
 
@@ -135,8 +139,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         incStackSize(2);
         if (memory.get(identifier) == null)
         {
-            //todo: add error for if identifier exists. if not, it must be declared
-            // throw error, assignment on undeclared identifier
+            // todo: add error for if identifier exists. if not, it must be declared
             //throw new Exception("UNDELCARED IDENTIFIER");
         }
         Variable var = (Variable) memory.get(identifier);
