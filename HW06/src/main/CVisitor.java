@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
         // create and populate list with typical code emission functions
         codeEmissionMap = new HashMap();
-        List<Supplier<String>> codeEmissionFunctions = java.util.Arrays.asList(CodeEmitter::add, CodeEmitter::sub, CodeEmitter::mul, CodeEmitter::div);
+        List<Supplier<String>> codeEmissionFunctions = Arrays.asList(CodeEmitter::add, CodeEmitter::sub, CodeEmitter::mul, CodeEmitter::div);
         String [] functionTokens = {"ADD", "SUB", "MUL", "DIV"};
         for(int x = 0; x < functionTokens.length; x++) codeEmissionMap.put(functionTokens[x], codeEmissionFunctions.get(x));
 
@@ -374,10 +375,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         }
         else
         {
-            // try for single operator such as NOT
+            // try for unary operator: `not`
             Value loperand, roperand;
             incStackSize(2);
-            // do this before try because NOT has 1 operator
             if (ctx.NOT() != null)
             {
                 loperand = getOperandValue(visit(ctx.expr(0)).getSymbol());
@@ -394,22 +394,25 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 return visit(ctx.func_call());
             }
             String operation = getCtxOperation(ctx);
-            if(getExprCtxType(ctx).equals("ARITHMETIC"))
+            if (getExprCtxType(ctx).equals("ARITHMETIC"))
             {
-                Number result = Number.performOperation((Number) loperand, (Number) roperand, operation);
+                Number result = performOperation((Number) loperand, (Number) roperand, operation);
                 Supplier<String> supFunction = codeEmissionMap.get(operation);
-                if(supFunction == null); // todo: invalid operation throw error
+                if (supFunction == null)
+                    /* todo: invalid operation throw error */;
                 else text.add(supFunction.get());
                 node = new TerminalNodeImpl(new CommonToken(getParseType(result), getNodeField(result)));
                 decStackSize(1);
             }
-            else if(getExprCtxType(ctx).equals("BOOL OPERATION"))
+            else if (getExprCtxType(ctx).equals("BOOL OPERATION"))
             {
-                if (loperand.getType().equals("IDENTIFIER")) text.add(CodeEmitter.putVarStack((Variable)loperand));
-                if (roperand.getType().equals("IDENTIFIER")) text.add(CodeEmitter.putVarStack((Variable)roperand));
+                if (loperand.getType().equals("IDENTIFIER"))
+                    text.add(CodeEmitter.putVarStack((Variable)loperand));
+                if (roperand.getType().equals("IDENTIFIER"))
+                    text.add(CodeEmitter.putVarStack((Variable)roperand));
                 text.add(CodeEmitter.booleanOperation(operation.toLowerCase()));
                 node = new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, operation));
-            }    
+            }
         }
         return node;
     }
@@ -417,14 +420,29 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     private String getNodeField(Value val)
     {
         Value value = getOperandValue(val);
-        if(value.getType().equals("NUMBER")) return Double.toString((double) value.getValue());
-        else if(value.getType().equals("TEXT")) return value.getValue().toString();
-        else if(value.getType().equals("BOOLEAN")) return String.valueOf((Boolean)value.getValue());
-        else return val.getType().toString();
+        if (value.getType().equals("NUMBER"))
+            return Double.toString((double) value.getValue());
+        if (value.getType().equals("TEXT"))
+            return value.getValue().toString();
+        if (value.getType().equals("BOOLEAN"))
+            return String.valueOf(value.getValue());
+        return val.getType();
     }
-
-    private String getNodeField(Double a)
+    public static Number performOperation(Number a, Number b, String operation)
     {
-        return Double.toString(a);
+        Number result = null;
+        if (operation.equals("ADD"))
+            return new Number(a.getValue() + b.getValue());
+        if (operation.equals("SUB"))
+            return new Number(a.getValue() - b.getValue());
+        if (operation.equals("MUL"))
+            return new Number(a.getValue() * b.getValue());
+        if (operation.equals("DIV"))
+            return new Number(a.getValue() / b.getValue());
+        if (operation.equals("POW"))
+            /* Currently unsupported. */;
+        else
+            /* todo: add error handling here... */;
+        return result;
     }
 }
