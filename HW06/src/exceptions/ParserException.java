@@ -1,6 +1,5 @@
 package exceptions;
 
-
 /** Thrown for any error that occurs while Parsing. */
 public class ParserException extends SimpLException
 {

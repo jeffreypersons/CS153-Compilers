@@ -1,6 +1,5 @@
 import java.io.IOException;
 
-
 // todo: add output directory command option for compiled files (eg -d <dirname>)
 
 /** High level client class for running the SimpL Compiler. */

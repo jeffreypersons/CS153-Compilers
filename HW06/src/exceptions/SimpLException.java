@@ -1,6 +1,5 @@
 package exceptions;
 
-
 // todo: look into adding format messages that include the input causing the error
 // todo: look into providing error skipping methods for compiler
 // todo: look into providing error factories to facilitate reuse (to avoid endless constructor overrides)

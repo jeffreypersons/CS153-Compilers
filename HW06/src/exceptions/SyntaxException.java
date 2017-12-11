@@ -1,6 +1,5 @@
 package exceptions;
 
-
 /** Thrown for any error that occurs while lexing. */
 public class SyntaxException extends SimpLException
 {

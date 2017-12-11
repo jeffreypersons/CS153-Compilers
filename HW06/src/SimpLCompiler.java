@@ -14,7 +14,6 @@ import main.CodeEmitter;
 import main.CVisitor;
 import utils.FileUtils;
 
-
 // todo: move lexer/parser/visitor/tree creation/code generation details to another wrapper class and use here
 // todo: utilize antlr lexer errors as wrapped syntax errors
 

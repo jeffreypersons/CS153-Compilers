@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 
-
 /** Utility functions for file input/output: does normalization as much as possible. */
 public class FileUtils
 {
