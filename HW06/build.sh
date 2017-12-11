@@ -21,9 +21,6 @@ fi
 realpath() { [[ $1 = /* ]] && echo $1 || echo "$(pwd)/${1#./}" | sed 's/\/*$//g'; }
 cwd=$(realpath)
 
-# include jasmin and antlr libraries in java classpath
-export CLASSPATH="out:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar:${CLASSPATH}"
-
 # generate simpl listener/visitor/parser/tokens files, using full paths to avoid conflicts
 echo "Generating antlr4 source files into ./src/gen"
 java -jar lib/antlr-4.7-complete.jar \
@@ -34,14 +31,20 @@ java -jar lib/antlr-4.7-complete.jar \
      -package gen         \
      -o ${cwd}/src/gen    \
 
-# compile entire SimpL compiler codebase with antlr4.7 and jasmin2.4 libraries
+# compile entire SimpL compiler codebase with antlr and jasmin libraries in classpath
 echo "Compiling all Java files in ./src sources into ./out"
 rm -rf out; mkdir out
 find . -name '*.java' > out/sources.txt
-javac -cp lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar \
+javac -cp "lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar" \
       -d out @out/sources.txt \
 
 # run tests for SimpL compiler by compiling and running each simpl file
-test_simpl() { ./simplc.sh $1; ./simplr.sh "$(dirname $1)/$(basename $1 .simpl).class"; echo ""; }
+test_simpl()
+{
+    printf "\n----------- Testing $1 -----------\n"
+    ./simplc.sh $1
+    ./simplr.sh "$(dirname $1)/$(basename $1 .simpl).class"
+    printf "\n"
+}
 test_simpl tests/basic_compile1.simpl
 test_simpl tests/basic_compile2.simpl

@@ -28,10 +28,6 @@ if [[ $(get_extension ${class_file}) != .class ]]; then
     exit 1
 fi
 
-# include parent directory of class file in java classpath
+# run compiled simpl file with its parent directory in classpath
 program_name=$(basename ${class_file} .class)
-export CLASSPATH="$(dirname ${class_file}):${CLASSPATH}"
-
-# run class file using jvm
-echo "---- ${program_name} output ----"
-java -cp ${CLASSPATH} ${program_name} ${program_name}
+java -cp "$(dirname ${class_file})" ${program_name} ${program_name}

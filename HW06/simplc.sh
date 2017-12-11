@@ -18,9 +18,6 @@ if [ ${#} -ne 1 ]; then
     exit 1
 fi
 
-# include jasmin and antlr libraries in java classpath
+# compile simpl file with jasmin and antlr libraries in classpath
 export CLASSPATH="out:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar:${CLASSPATH}"
-
-# compile file using SimpL compiler
-echo ""; echo "---- Testing: ${source_file}"
 java -cp ${CLASSPATH} SimpLMain ${source_file}
