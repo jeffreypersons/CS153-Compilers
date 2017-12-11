@@ -61,6 +61,11 @@ each of which are terminated with a line break.
 Statements include function definition, declaration, assignment,
 standalone expression, conditional, and while loop.
 
+Blocks consist of a `{` <0 or more statements> `}`, with the braces on their own
+lines. Blocks are expected following conditionals, function signatures, and
+loops. Again, curly braces MUST be on their own separate lines - this means
+egyptian/K & R style braces are NOT supported, sorry!
+
 Expressions are any mix of enclosed parentheses, literals, identifiers,
 function calls, and operations.
 
@@ -91,9 +96,15 @@ Support for parenthetical, arithmetic, boolean, comparison operations
 Syntax for conditionals is as follows:
 ```
 if <expression>
+{
     <0 or more statements>
+}
 elif <expression>
+{
     <0 or more statements>
+}
 else
+{
     <0 or more statements>
+}
 ```
