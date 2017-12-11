@@ -3,7 +3,7 @@ Number b
 Number c
 Number d
 
-# HI I'm Takeshi! this is my #1 favorite test program...;!
+# HI I'm Takeshi! This is my #1 favorite test program...!
 a = 10 - 2 ^ 2
 b = a / 3
 c = b * 4

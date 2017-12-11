@@ -1,123 +1,136 @@
-// Generated from simpL.g4 by ANTLR 4.7
+// Generated from /mnt/c/Users/jperm/Dropbox/College/SJSU/CS153-Compilers/Assignments/HW06/src/SimpL.g4 by ANTLR 4.7
+package gen;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
- * This class provides an empty implementation of {@link simpLListener},
+ * This class provides an empty implementation of {@link SimpLListener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-public class simpLBaseListener implements simpLListener {
+public class SimpLBaseListener implements SimpLListener {
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProgram(simpLParser.ProgramContext ctx) { }
+	@Override public void enterProgram(SimpLParser.ProgramContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProgram(simpLParser.ProgramContext ctx) { }
+	@Override public void exitProgram(SimpLParser.ProgramContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStmt(simpLParser.StmtContext ctx) { }
+	@Override public void enterStat(SimpLParser.StatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStmt(simpLParser.StmtContext ctx) { }
+	@Override public void exitStat(SimpLParser.StatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDeclaration(simpLParser.DeclarationContext ctx) { }
+	@Override public void enterDeclaration(SimpLParser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDeclaration(simpLParser.DeclarationContext ctx) { }
+	@Override public void exitDeclaration(SimpLParser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignment(simpLParser.AssignmentContext ctx) { }
+	@Override public void enterAssignment(SimpLParser.AssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignment(simpLParser.AssignmentContext ctx) { }
+	@Override public void exitAssignment(SimpLParser.AssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIf_stmt(simpLParser.If_stmtContext ctx) { }
+	@Override public void enterWhile_loop(SimpLParser.While_loopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIf_stmt(simpLParser.If_stmtContext ctx) { }
+	@Override public void exitWhile_loop(SimpLParser.While_loopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunc_def(simpLParser.Func_defContext ctx) { }
+	@Override public void enterConditional(SimpLParser.ConditionalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunc_def(simpLParser.Func_defContext ctx) { }
+	@Override public void exitConditional(SimpLParser.ConditionalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBlock(simpLParser.BlockContext ctx) { }
+	@Override public void enterFunc_def(SimpLParser.Func_defContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBlock(simpLParser.BlockContext ctx) { }
+	@Override public void exitFunc_def(SimpLParser.Func_defContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr(simpLParser.ExprContext ctx) { }
+	@Override public void enterBlock(SimpLParser.BlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr(simpLParser.ExprContext ctx) { }
+	@Override public void exitBlock(SimpLParser.BlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunc_call(simpLParser.Func_callContext ctx) { }
+	@Override public void enterExpr(SimpLParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunc_call(simpLParser.Func_callContext ctx) { }
+	@Override public void exitExpr(SimpLParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunc_call(SimpLParser.Func_callContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunc_call(SimpLParser.Func_callContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
