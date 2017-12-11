@@ -1,10 +1,10 @@
 grammar SimpL;
 
-// todo: rename if_stmt to conditional, stmt to stat
-program : stmt*;
-stmt
+// todo: rename conditional to conditional, stat to stat
+program : stat*;
+stat
     : func_def
-    | if_stmt
+    | conditional
     | while_loop
     | declaration
     | assignment
@@ -19,7 +19,7 @@ assignment
 while_loop
     : 'while' expr block
     ;
-if_stmt
+conditional
     : ('if' expr block)
       ('elif' expr block)*
       ('else' block)?
@@ -30,7 +30,7 @@ func_def
 // any number of statements enclosed in braces, ending with an optional return
 block
     : EOL LCURL EOL
-          stmt*
+          stat*
           ('return' expr EOL)?
       RCURL EOL  // no need for EOL here, since statement requires it
     ;

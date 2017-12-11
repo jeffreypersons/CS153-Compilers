@@ -18,15 +18,15 @@ public interface SimpLListener extends ParseTreeListener {
 	 */
 	void exitProgram(SimpLParser.ProgramContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#stmt}.
+	 * Enter a parse tree produced by {@link SimpLParser#stat}.
 	 * @param ctx the parse tree
 	 */
-	void enterStmt(SimpLParser.StmtContext ctx);
+	void enterStat(SimpLParser.StatContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#stmt}.
+	 * Exit a parse tree produced by {@link SimpLParser#stat}.
 	 * @param ctx the parse tree
 	 */
-	void exitStmt(SimpLParser.StmtContext ctx);
+	void exitStat(SimpLParser.StatContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SimpLParser#declaration}.
 	 * @param ctx the parse tree
@@ -58,15 +58,15 @@ public interface SimpLListener extends ParseTreeListener {
 	 */
 	void exitWhile_loop(SimpLParser.While_loopContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#if_stmt}.
+	 * Enter a parse tree produced by {@link SimpLParser#conditional}.
 	 * @param ctx the parse tree
 	 */
-	void enterIf_stmt(SimpLParser.If_stmtContext ctx);
+	void enterConditional(SimpLParser.ConditionalContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#if_stmt}.
+	 * Exit a parse tree produced by {@link SimpLParser#conditional}.
 	 * @param ctx the parse tree
 	 */
-	void exitIf_stmt(SimpLParser.If_stmtContext ctx);
+	void exitConditional(SimpLParser.ConditionalContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SimpLParser#func_def}.
 	 * @param ctx the parse tree

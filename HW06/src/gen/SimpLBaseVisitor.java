@@ -24,7 +24,7 @@ public class SimpLBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStmt(SimpLParser.StmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStat(SimpLParser.StatContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -52,7 +52,7 @@ public class SimpLBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIf_stmt(SimpLParser.If_stmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitConditional(SimpLParser.ConditionalContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

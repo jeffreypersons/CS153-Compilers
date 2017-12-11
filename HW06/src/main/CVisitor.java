@@ -95,7 +95,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
-    @Override public TerminalNode visitStmt(SimpLParser.StmtContext ctx)
+    @Override public TerminalNode visitStat(SimpLParser.StatContext ctx)
     {
         return super.visitChildren(ctx);
     }
@@ -177,7 +177,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
-    @Override public TerminalNode visitIf_stmt(SimpLParser.If_stmtContext ctx)
+    @Override public TerminalNode visitConditional(SimpLParser.ConditionalContext ctx)
     {
         List<SimpLParser.ExprContext> expressions = ctx.expr();
         String label = CodeEmitter.getLabel(labelCount);
@@ -232,8 +232,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     @Override public TerminalNode visitBlock(SimpLParser.BlockContext ctx)
     {
         // don't execute expr yet. this would be the return statement
-        List<SimpLParser.StmtContext> stmts = ctx.stmt();
-        for (SimpLParser.StmtContext stmt : stmts)
+        List<SimpLParser.StatContext> stmts = ctx.stat();
+        for (SimpLParser.StatContext stmt : stmts)
             visit(stmt);
         return new TerminalNodeImpl(new CommonToken(SimpLParser.LITERAL, "block"));
     }

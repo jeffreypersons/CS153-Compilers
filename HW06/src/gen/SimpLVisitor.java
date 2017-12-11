@@ -17,11 +17,11 @@ public interface SimpLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram(SimpLParser.ProgramContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#stmt}.
+	 * Visit a parse tree produced by {@link SimpLParser#stat}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStmt(SimpLParser.StmtContext ctx);
+	T visitStat(SimpLParser.StatContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimpLParser#declaration}.
 	 * @param ctx the parse tree
@@ -41,11 +41,11 @@ public interface SimpLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhile_loop(SimpLParser.While_loopContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#if_stmt}.
+	 * Visit a parse tree produced by {@link SimpLParser#conditional}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIf_stmt(SimpLParser.If_stmtContext ctx);
+	T visitConditional(SimpLParser.ConditionalContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimpLParser#func_def}.
 	 * @param ctx the parse tree

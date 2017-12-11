@@ -28,13 +28,13 @@ public class SimpLBaseListener implements SimpLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStmt(SimpLParser.StmtContext ctx) { }
+	@Override public void enterStat(SimpLParser.StatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStmt(SimpLParser.StmtContext ctx) { }
+	@Override public void exitStat(SimpLParser.StatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -76,13 +76,13 @@ public class SimpLBaseListener implements SimpLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIf_stmt(SimpLParser.If_stmtContext ctx) { }
+	@Override public void enterConditional(SimpLParser.ConditionalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIf_stmt(SimpLParser.If_stmtContext ctx) { }
+	@Override public void exitConditional(SimpLParser.ConditionalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

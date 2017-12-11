@@ -24,11 +24,11 @@ public class SimpLParser extends Parser {
 		EQ=32, NEQ=33, NOT=34, AND=35, OR=36, ASSIGN=37, EOL=38, NAME=39, WHITESPACE=40, 
 		LINE_COMMENT=41, BLOCK_COMMENT=42;
 	public static final int
-		RULE_program = 0, RULE_stmt = 1, RULE_declaration = 2, RULE_assignment = 3, 
-		RULE_while_loop = 4, RULE_if_stmt = 5, RULE_func_def = 6, RULE_block = 7, 
+		RULE_program = 0, RULE_stat = 1, RULE_declaration = 2, RULE_assignment = 3, 
+		RULE_while_loop = 4, RULE_conditional = 5, RULE_func_def = 6, RULE_block = 7, 
 		RULE_expr = 8, RULE_func_call = 9;
 	public static final String[] ruleNames = {
-		"program", "stmt", "declaration", "assignment", "while_loop", "if_stmt", 
+		"program", "stat", "declaration", "assignment", "while_loop", "conditional", 
 		"func_def", "block", "expr", "func_call"
 	};
 
@@ -96,11 +96,11 @@ public class SimpLParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class ProgramContext extends ParserRuleContext {
-		public List<StmtContext> stmt() {
-			return getRuleContexts(StmtContext.class);
+		public List<StatContext> stat() {
+			return getRuleContexts(StatContext.class);
 		}
-		public StmtContext stmt(int i) {
-			return getRuleContext(StmtContext.class,i);
+		public StatContext stat(int i) {
+			return getRuleContext(StatContext.class,i);
 		}
 		public ProgramContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -135,7 +135,7 @@ public class SimpLParser extends Parser {
 				{
 				{
 				setState(20);
-				stmt();
+				stat();
 				}
 				}
 				setState(25);
@@ -155,12 +155,12 @@ public class SimpLParser extends Parser {
 		return _localctx;
 	}
 
-	public static class StmtContext extends ParserRuleContext {
+	public static class StatContext extends ParserRuleContext {
 		public Func_defContext func_def() {
 			return getRuleContext(Func_defContext.class,0);
 		}
-		public If_stmtContext if_stmt() {
-			return getRuleContext(If_stmtContext.class,0);
+		public ConditionalContext conditional() {
+			return getRuleContext(ConditionalContext.class,0);
 		}
 		public While_loopContext while_loop() {
 			return getRuleContext(While_loopContext.class,0);
@@ -175,28 +175,28 @@ public class SimpLParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public TerminalNode EOL() { return getToken(SimpLParser.EOL, 0); }
-		public StmtContext(ParserRuleContext parent, int invokingState) {
+		public StatContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_stmt; }
+		@Override public int getRuleIndex() { return RULE_stat; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof SimpLListener ) ((SimpLListener)listener).enterStmt(this);
+			if ( listener instanceof SimpLListener ) ((SimpLListener)listener).enterStat(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof SimpLListener ) ((SimpLListener)listener).exitStmt(this);
+			if ( listener instanceof SimpLListener ) ((SimpLListener)listener).exitStat(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SimpLVisitor ) return ((SimpLVisitor<? extends T>)visitor).visitStmt(this);
+			if ( visitor instanceof SimpLVisitor ) return ((SimpLVisitor<? extends T>)visitor).visitStat(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final StmtContext stmt() throws RecognitionException {
-		StmtContext _localctx = new StmtContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_stmt);
+	public final StatContext stat() throws RecognitionException {
+		StatContext _localctx = new StatContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_stat);
 		try {
 			setState(34);
 			_errHandler.sync(this);
@@ -212,7 +212,7 @@ public class SimpLParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(27);
-				if_stmt();
+				conditional();
 				}
 				break;
 			case 3:
@@ -427,7 +427,7 @@ public class SimpLParser extends Parser {
 		return _localctx;
 	}
 
-	public static class If_stmtContext extends ParserRuleContext {
+	public static class ConditionalContext extends ParserRuleContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
@@ -440,28 +440,28 @@ public class SimpLParser extends Parser {
 		public BlockContext block(int i) {
 			return getRuleContext(BlockContext.class,i);
 		}
-		public If_stmtContext(ParserRuleContext parent, int invokingState) {
+		public ConditionalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_if_stmt; }
+		@Override public int getRuleIndex() { return RULE_conditional; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof SimpLListener ) ((SimpLListener)listener).enterIf_stmt(this);
+			if ( listener instanceof SimpLListener ) ((SimpLListener)listener).enterConditional(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof SimpLListener ) ((SimpLListener)listener).exitIf_stmt(this);
+			if ( listener instanceof SimpLListener ) ((SimpLListener)listener).exitConditional(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SimpLVisitor ) return ((SimpLVisitor<? extends T>)visitor).visitIf_stmt(this);
+			if ( visitor instanceof SimpLVisitor ) return ((SimpLVisitor<? extends T>)visitor).visitConditional(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final If_stmtContext if_stmt() throws RecognitionException {
-		If_stmtContext _localctx = new If_stmtContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_if_stmt);
+	public final ConditionalContext conditional() throws RecognitionException {
+		ConditionalContext _localctx = new ConditionalContext(_ctx, getState());
+		enterRule(_localctx, 10, RULE_conditional);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -621,11 +621,11 @@ public class SimpLParser extends Parser {
 		}
 		public TerminalNode LCURL() { return getToken(SimpLParser.LCURL, 0); }
 		public TerminalNode RCURL() { return getToken(SimpLParser.RCURL, 0); }
-		public List<StmtContext> stmt() {
-			return getRuleContexts(StmtContext.class);
+		public List<StatContext> stat() {
+			return getRuleContexts(StatContext.class);
 		}
-		public StmtContext stmt(int i) {
-			return getRuleContext(StmtContext.class,i);
+		public StatContext stat(int i) {
+			return getRuleContext(StatContext.class,i);
 		}
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
@@ -669,7 +669,7 @@ public class SimpLParser extends Parser {
 				{
 				{
 				setState(91);
-				stmt();
+				stat();
 				}
 				}
 				setState(96);
