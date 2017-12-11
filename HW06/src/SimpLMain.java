@@ -12,7 +12,7 @@ public class SimpLMain
         {
             System.out.println("**Error processing SimpL input file**");
             System.out.println("  Invalid number of arguments");
-            System.out.println("  Run as $ java SimpLMain <simpl_filepath>");
+            System.out.println("  Run as $ java SimpLMain <source_filepath>");
             System.out.println();
             System.exit(1);
         }

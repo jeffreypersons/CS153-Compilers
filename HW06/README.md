@@ -41,16 +41,16 @@ using:
 If a `permission denied` error occurred while running scripts, grant access by
 using:
 
-    chmod +x ./<script_name>.sh
+    chmod +x ./<script_filepath>.sh
 
 If newline issues occur after modifying the scripts on windows, remove excess
 new line characters by using:
 
-    sed -i 's/\r$//' ./<script_name>
+    sed -i 's/\r$//' ./<script_filepath>
 
 Delete any generated jasmin and class files by using:
 
-    find <output_directory> -maxdepth 1 -regex ".*\.\(j\|class\)" -type f -delete
+    find <output_directorypath> -maxdepth 1 -regex ".*\.\(j\|class\)" -type f -delete
 
 
 ## Syntax

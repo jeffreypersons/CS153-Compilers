@@ -14,7 +14,7 @@ fi
 if [ ${#} -ne 1 ]; then
     echo "**Error processing input for simplc.sh**"
     echo "  Invalid number of arguments"
-    echo "  Run as $ ./simplc.sh <source_file>"
+    echo "  Run as $ ./simplc.sh <source_filepath>"
     exit 1
 fi
 
