@@ -36,9 +36,9 @@ console.
 If executing `java` or `javac` directly, ensure classpath is set correctly by
 using:
     
-    export CLASSPATH="out:<jasmin2.4-jar-path>:<antlr4.7-jar-path>$CLASSPATH"
+    export CLASSPATH="out:<jasmin2.4-jar-path>:<antlr4.7-jar-path>:$CLASSPATH"
 
-If a `permission denied` error occurred while running scripts, grant access by
+If a `permission denied` error occurred while running a script, grant access by
 using:
 
     chmod +x ./<script_filepath>.sh
