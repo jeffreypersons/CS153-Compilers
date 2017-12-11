@@ -10,7 +10,7 @@ if [[ $(basename $(pwd)) != HW06 ]]; then
     echo "  build.sh can only be run with HW06 as the working directory"
     exit 1
 fi
-if [ ${#} -ne 0 ]; then
+if [ $# -ne 0 ]; then
     echo "**Error processing input for build.sh**"
     echo "  Invalid number of arguments"
     echo "  Run as $ ./build.sh"
@@ -20,6 +20,9 @@ fi
 # define realpath command (since unavailable on OSX) to get full path of working directory
 realpath() { [[ $1 = /* ]] && echo $1 || echo "$(pwd)/${1#./}" | sed 's/\/*$//g'; }
 cwd=$(realpath)
+
+# include jasmin and antlr libraries in java classpath
+export CLASSPATH="out:lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar:${CLASSPATH}"
 
 # generate simpl listener/visitor/parser/tokens files, using full paths to avoid conflicts
 echo "Generating antlr4 source files into ./src/gen"
@@ -35,12 +38,10 @@ java -jar lib/antlr-4.7-complete.jar \
 echo "Compiling all Java files in ./src sources into ./out"
 rm -rf out; mkdir out
 find . -name '*.java' > out/sources.txt
-export CLASSPATH="lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar"
 javac -cp lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar \
       -d out @out/sources.txt \
 
-# run tests
-echo ""
-echo "Running tests"
-./test.sh tests/basic_compile1.simpl
-./test.sh tests/basic_compile2.simpl
+# run tests for SimpL compiler by compiling and running each simpl file
+test_simpl() { ./simplc.sh $1; ./simplr.sh "$(dirname $1)/$(basename $1 .simpl).class"; echo ""; }
+test_simpl tests/basic_compile1.simpl
+test_simpl tests/basic_compile2.simpl
