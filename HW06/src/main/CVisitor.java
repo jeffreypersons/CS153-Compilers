@@ -303,9 +303,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
     private int getParseType(String type)
     {
-        if(type.equals("NUMBER")) return SimpLParser.NUMBER;
-        else if(type.equals("TEXT")) return SimpLParser.TEXT;
-        else if(type.equals("BOOLEAN")) return SimpLParser.BOOLEAN;
+        if (type.equals("NUMBER")) return SimpLParser.NUMBER;
+        else if (type.equals("TEXT")) return SimpLParser.TEXT;
+        else if (type.equals("BOOLEAN")) return SimpLParser.BOOLEAN;
         // todo: else assume text?
         return SimpLParser.TEXT;
     }
@@ -317,32 +317,40 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
     private String getExprCtxType(SimpLParser.ExprContext ctx)
     {
-        if(ctx.NAME() != null) return "IDENTIFIER";
-        else if (ctx.LITERAL() != null) return "LITERAL";
-        //else if () return "BOOL OPERATION";// bool
-        else if (ctx.POW() != null || ctx.ADD() != null || ctx.SUB() != null || ctx.MUL() != null || ctx.DIV() != null) return "ARITHMETIC";
-        else if (ctx.AND() != null || ctx.OR() != null || ctx.GT() != null || ctx.LT() != null || ctx.GTE() != null || ctx.LTE() != null || ctx.EQ() != null || ctx.NEQ() != null) return "BOOL OPERATION";
+        if (ctx.NAME() != null)
+            return "IDENTIFIER";
+        else if (ctx.LITERAL() != null)
+            return "LITERAL";
+        //else if () return "BOOL OPERATION";
+        else if (ctx.ADD() != null || ctx.SUB() != null ||
+                 ctx.DIV() != null || ctx.MUL() != null || ctx.POW() != null)
+            return "ARITHMETIC";
+        else if (ctx.AND() != null || ctx.OR() != null  || ctx.GT() != null || ctx.LT() != null ||
+                 ctx.GTE() != null || ctx.LTE() != null ||
+                 ctx.EQ()  != null || ctx.NEQ() != null)
+            return "BOOL OPERATION";
         return "TEST";
     }
 
     private Boolean checkParens(SimpLParser.ExprContext ctx)
     {
-        return (ctx.LPAREN() != null && ctx.RPAREN() == null) ? false : true;
+        return ctx.LPAREN() == null || ctx.RPAREN() != null;
     }
-
     private Boolean containsParens(SimpLParser.ExprContext ctx)
     {
-        return (ctx.LPAREN() != null || ctx.RPAREN() != null) ? true : false;
+        return ctx.LPAREN() != null || ctx.RPAREN() != null;
     }
 
     private String getCtxOperation(SimpLParser.ExprContext ctx)
     {
         String [] operations = {"ADD", "SUB", "POW", "MUL", "DIV", "AND", "OR", "GT", "LT", "GTE", "LTE", "EQ", "NEQ"};
-        List<Supplier<TerminalNode>> ctxFunctions = java.util.Arrays.asList(ctx::ADD, ctx::SUB, ctx::POW, ctx::MUL, ctx::DIV, ctx::AND, ctx::OR, ctx::GT, ctx::LT, ctx::GTE, ctx::LTE, ctx::EQ, ctx::NEQ);
-        for(int x = 0; x < operations.length; x++)
-        {
-            if(ctxFunctions.get(x).get() != null) return operations[x];
-        }
+        List<Supplier<TerminalNode>> ctxFunctions = Arrays.asList(
+            ctx::ADD, ctx::SUB, ctx::POW, ctx::MUL, ctx::DIV,
+            ctx::AND, ctx::OR, ctx::GT, ctx::LT, ctx::GTE, ctx::LTE, ctx::EQ, ctx::NEQ
+        );
+        for (int x = 0; x < operations.length; x++)
+            if (ctxFunctions.get(x).get() != null)
+                return operations[x];
         return "ERROR";
     }
 
@@ -357,8 +365,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         }*/
         if (getExprCtxType(ctx).equals("IDENTIFIER"))
         {
-            Value val = memory.get(ctx.NAME().getSymbol().getText().toString()); // if undeclared throw error
-            if (val == null) return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true")); // todo: throw error, value shouldn't be null
+            Value val = memory.get(ctx.NAME().getSymbol().getText()); // if undeclared throw error
+            if (val == null)  // todo: throw error, value shouldn't be null
+                return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true"));
             Value operand = (Value) val.getValue();
             text.add(CodeEmitter.putVarStack((Variable) val));
             node = new TerminalNodeImpl(new CommonToken(getParseType(operand), getNodeField(operand)));
@@ -416,33 +425,28 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         }
         return node;
     }
-
-    private String getNodeField(Value val)
+    // todo: replace conditionals/switches with polymorphism in value class (eg like getTextualValue() as replacement)
+    private String getNodeField(Value nodeVal)
     {
-        Value value = getOperandValue(val);
-        if (value.getType().equals("NUMBER"))
-            return Double.toString((double) value.getValue());
-        if (value.getType().equals("TEXT"))
-            return value.getValue().toString();
-        if (value.getType().equals("BOOLEAN"))
-            return String.valueOf(value.getValue());
-        return val.getType();
+        Value value = getOperandValue(nodeVal);
+        switch (getOperandValue(nodeVal).getType())
+        {
+            case "NUMBER":  return Double.toString((double) value.getValue());
+            case "TEXT":    return value.getValue().toString();
+            case "BOOLEAN": return String.valueOf(value.getValue());
+            default: return null;
+        }
     }
-    public static Number performOperation(Number a, Number b, String operation)
+    private static Number performOperation(Number a, Number b, String operation)
     {
-        Number result = null;
-        if (operation.equals("ADD"))
-            return new Number(a.getValue() + b.getValue());
-        if (operation.equals("SUB"))
-            return new Number(a.getValue() - b.getValue());
-        if (operation.equals("MUL"))
-            return new Number(a.getValue() * b.getValue());
-        if (operation.equals("DIV"))
-            return new Number(a.getValue() / b.getValue());
-        if (operation.equals("POW"))
-            /* Currently unsupported. */;
-        else
-            /* todo: add error handling here... */;
-        return result;
+        switch (operation)
+        {
+            case "ADD": return new Number(a.getValue() + b.getValue());
+            case "SUB": return new Number(a.getValue() + b.getValue());
+            case "MUL": return new Number(a.getValue() + b.getValue());
+            case "DIV": return new Number(a.getValue() + b.getValue());
+            case "POW": /* Currently unsupported. */
+            default: return null;
+        }
     }
 }
