@@ -25,7 +25,7 @@ conditional
       ('else' block)?
     ;
 func_def
-    : 'def' NAME LPAREN (TYPE NAME (SEPARATOR TYPE NAME)*)? RPAREN block
+    : TYPE NAME LPAREN (TYPE NAME (SEPARATOR TYPE NAME)*)? RPAREN block
     ;
 // any number of statements enclosed in braces, ending with an optional return
 block
