@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
@@ -12,7 +13,6 @@ import org.antlr.v4.runtime.Token;
 
 import gen.SimpLBaseVisitor;
 import gen.SimpLParser;
-
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 {
@@ -24,12 +24,20 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     private List<String> text;
     private Map<String, Value> memory;
     private Map<String, Integer> ifMemory;
+    private Map<String, Supplier<String>> codeEmissionMap;
 
     public CVisitor()
     {
         super();
         memory = new HashMap<>();
         ifMemory = new HashMap<>();
+
+        // create and populate list with typical code emission functions
+        codeEmissionMap = new HashMap();
+        List<Supplier<String>> codeEmissionFunctions = java.util.Arrays.asList(CodeEmitter::add, CodeEmitter::sub, CodeEmitter::mul, CodeEmitter::div);
+        String [] functionTokens = {"ADD", "SUB", "MUL", "DIV"};
+        for(int x = 0; x < functionTokens.length; x++) codeEmissionMap.put(functionTokens[x], codeEmissionFunctions.get(x));
+
         stackSize = 0;
         necessaryStackSize = 0;
         localCount = 1;
@@ -103,19 +111,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             var = new Variable(name, val, val.getType());
             text.add(CodeEmitter.declareVariable(var, localCount));
             memory.put(name, var);
-            //System.out.println("creating " + name + " and setting to " + val.getValue());
         }
         else memory.put(name, null); // add typing regardless of assignment or not
         localCount++;
-
-        if (val != null)
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, "0"));
-        /*
-        else if (parser_type == SimpLParser.NUMBER)
-            return new TerminalNodeImpl(new CommonToken(parser_type, Double.toString((double)val.getValue())));
-        else
-            return new TerminalNodeImpl(new CommonToken(parser_type, val.getValue().toString()));
-        */
         return new TerminalNodeImpl(token);
     }
     /**
@@ -131,17 +129,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         String identifier = ctx.NAME().getSymbol().getText();
         Value val = getOperandValue(visit(ctx.expr()).getSymbol());
 
-        int parserType = 0;
-        if (val.getType().equals("NUMBER"))
-            parserType = SimpLParser.NUMBER;
-        else if (val.getType().equals("BOOLEAN"))
-            parserType = SimpLParser.BOOLEAN;
-        else
-            parserType = SimpLParser.TEXT;
+        int parserType = getParseType(val);
 
         incStackSize(2);
         if (memory.get(identifier) == null)
         {
+            //todo: add error for if identifier exists. if not, it must be declared
             // throw error, assignment on undeclared identifier
             //throw new Exception("UNDELCARED IDENTIFIER");
         }
@@ -150,15 +143,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             var.setValue(val);
         else
             System.out.println("Improper cast!"); // todo: throw error here since different type
-        //var.setValue(val);
 
         memory.put(identifier, var);
         text.add(CodeEmitter.assignVariable(var));
         decStackSize(2);
-        if (parserType == SimpLParser.NUMBER)
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString((double)val.getValue())));
-        else
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, val.getValue().toString()));
+        return new TerminalNodeImpl(new CommonToken(parserType, getNodeField(val)));
     }
 
     @Override public TerminalNode visitWhile_loop(SimpLParser.While_loopContext ctx)
@@ -174,7 +163,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         visit(ctx.block());
         text.add(CodeEmitter.getGoTo(label));
         text.add(exitLabel);
-        return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "loop"));
+        return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "WHILE"));
     }
     /**
      * {@inheritDoc}
@@ -185,13 +174,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     @Override public TerminalNode visitIf_stmt(SimpLParser.If_stmtContext ctx)
     {
         List<SimpLParser.ExprContext> expressions = ctx.expr();
-        int block_count = 0;
         String label = CodeEmitter.getLabel(labelCount);
         text.add(label);
         labelCount++;
 
         String evaluate_type, cond_label = null;
         List<Integer> lastLabelSkip = new ArrayList<>();
+        int block_count = 0;
         for (SimpLParser.ExprContext exp : expressions)
         {
             evaluate_type = visit(exp).getSymbol().getText();
@@ -201,7 +190,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             visit(ctx.block(block_count));
             lastLabelSkip.add(text.size());
 
-            text.add(CodeEmitter.getGoTo("temp"));
+            text.add(CodeEmitter.getGoTo("temp")); // create a temporary label
             text.add(cond_label);
             condLabelCount++;
             block_count++;
@@ -218,7 +207,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         for (int labelNum : lastLabelSkip)
             text.set(labelNum, CodeEmitter.getGoTo(cond_label));
 
-        //System.out.print("resulting node: " + a);
         // if then body. if condition is not met, the label sends it outside if statement, otherwise continue normally
         return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true"));
     }
@@ -251,260 +239,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitExpr(SimpLParser.ExprContext ctx)
     {
-        // Terribly written, we should come back and review this. Just trying to get some working code in
-        // would be easy to change grammar to encompass symbols by category. e.g. POW, NUL, DIV .. belong to arithmetic_operators
-        TerminalNodeImpl node = null;
-        if (ctx.NAME() != null)
-        {
-            Value val = memory.get(ctx.NAME().getSymbol().getText()); // if undeclared throw error
-            if (val == null)
-                return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true"));
-
-            double result;
-            if (val.getType().equals("IDENTIFIER"))
-            {
-                Variable var = (Variable) val;
-                Value operand = var.getValue();
-                text.add(CodeEmitter.putVarStack(var));
-                if (operand.getType().equals("BOOLEAN"))
-                    return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, operand.getValue().toString()));
-                else if (!operand.getType().equals("NUMBER"))
-                    return new TerminalNodeImpl(new CommonToken(SimpLParser.TEXT, (String)operand.getValue()));
-                else
-                    result = (double)operand.getValue();
-            }
-            else
-                result = (double) val.getValue();
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
-        }
-        else if (ctx.LITERAL() != null)
-        {
-            // check if number of text for now assuming number
-            //CommonToken token = new CommonToken(ctx.LITERAL().getSymbol());
-            Value operand = getOperandValue(ctx.LITERAL().getSymbol());
-            if (operand.getType().equals("NUMBER"))
-            {
-                double result = (double)operand.getValue();
-                text.add(CodeEmitter.loadConstant(result));
-                return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
-            }
-            else if (operand.getType().equals("BOOLEAN"))
-            {
-                Boolean result = (Boolean) operand.getValue();
-                text.add(CodeEmitter.loadConstant(result));
-                return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, Boolean.toString(result)));
-            }
-            else
-            {
-                text.add(CodeEmitter.loadConstant(operand.getValue().toString()));
-                return new TerminalNodeImpl(new CommonToken(SimpLParser.TEXT, (String)operand.getValue()));
-            }
-        }
-        else if (ctx.LPAREN() != null)
-        {
-            if (ctx.RPAREN() == null)
-                System.out.println("no matching paren");
-            return new TerminalNodeImpl(visit(ctx.expr(0)).getSymbol());
-        }
-        else if (ctx.RPAREN() != null)
-        {
-            // todo: handle this? or maybe not...
-        }
-
-        // try for single operator such as not
-        Value loperand, roperand;
-        incStackSize(2);
-        if (ctx.NOT() != null)
-        {
-            loperand = getOperandValue(visit(ctx.expr(0)).getSymbol());
-            if (loperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)loperand));
-            }
-            // todo: check this else branch...
-            else
-                text.add(CodeEmitter.loadConstant((Boolean) loperand.getValue()));
-            text.add(CodeEmitter.booleanOperation("NOT"));
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "NOT"));
-        }
-        try
-        {
-            loperand = getOperandValue(visit(ctx.expr(0)).getSymbol());
-            roperand = getOperandValue(visit(ctx.expr(1)).getSymbol());
-        }
-        catch (Exception e)
-        {
-            return visit(ctx.func_call());
-        }
-
-        if (ctx.POW() != null)
-        {
-            double result = Math.pow(
-                (double)loperand.getValue(),
-                (double)roperand.getValue()
-            );
-            // todo: add codeEmitter text.add? or scrap pow all together?...
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
-        }
-        else if (ctx.MUL() != null)
-        {
-            double result = (double)loperand.getValue() * (double)roperand.getValue();
-            text.add(CodeEmitter.mul());
-            decStackSize(1);
-            node = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
-        }
-        else if (ctx.DIV() != null)
-        {
-            double result = (double)loperand.getValue() / (double)roperand.getValue();
-            text.add(CodeEmitter.div());
-            decStackSize(1);
-            node = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
-        }
-        else if (ctx.ADD() != null)
-        {
-            // currently only supports double
-            double result = (double)loperand.getValue() + (double)roperand.getValue();
-            text.add(CodeEmitter.add());
-            decStackSize(1);
-            node =  new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
-        }
-        else if (ctx.SUB() != null)
-        {
-            double result = (double)loperand.getValue() - (double)roperand.getValue();
-            text.add(CodeEmitter.sub());
-            decStackSize(1);
-            node = new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, Double.toString(result)));
-        }
-        // Boolean operators
-        else if (ctx.AND() != null)
-        {
-            System.out.println(loperand + "---" + roperand);
-            // todo: add check that both are boolean?
-            if (loperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)loperand));
-            }
-            else
-                CodeEmitter.loadConstant((Boolean) loperand.getValue());
-            if (roperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)roperand));
-            }
-            else
-                CodeEmitter.loadConstant((Boolean)loperand.getValue());
-            text.add(CodeEmitter.booleanOperation("and"));
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "AND"));
-        }
-        else if (ctx.OR() != null)
-        {
-            System.out.println(loperand + "---" + roperand);
-            // add check that both are boolean?
-            if (loperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)loperand));
-            }
-            else
-                CodeEmitter.loadConstant((Boolean) loperand.getValue());
-            if (roperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)roperand));
-            }
-            else
-                CodeEmitter.loadConstant((Boolean)loperand.getValue());
-            text.add(CodeEmitter.booleanOperation("or"));
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "OR"));
-        }
-        else if (ctx.LT() != null)
-        {
-            if (loperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)loperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
-            if (roperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)roperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
-            text.add(CodeEmitter.booleanOperation("lt"));
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "LT"));
-        }
-        else if (ctx.GT() != null)
-        {
-            if (loperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)loperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
-            if (roperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)roperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
-            text.add(CodeEmitter.booleanOperation("gt"));
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "GT"));
-        }
-        else if (ctx.GTE() != null)
-        {
-            if (loperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)loperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
-            if (roperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)roperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
-            text.add(CodeEmitter.booleanOperation("gte"));
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "GTE"));
-        }
-        else if (ctx.LTE() != null)
-        {
-            if (loperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)loperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
-            if (roperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)roperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
-            text.add(CodeEmitter.booleanOperation("lte"));
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "LTE"));
-        }
-        else if (ctx.EQ() != null)
-        {
-            if (loperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)loperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
-            if (roperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)roperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
-            text.add(CodeEmitter.booleanOperation("eq"));
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "EQ"));
-        }
-        else if (ctx.NEQ() != null)
-        {
-            if (loperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)loperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double)loperand.getValue()));
-            if (roperand.getType().equals("IDENTIFIER"))
-            {
-                text.add(CodeEmitter.putVarStack((Variable)roperand));
-            }
-            //else text.add(CodeEmitter.loadConstant((double) roperand.getValue()));
-            text.add(CodeEmitter.booleanOperation("neq"));
-            return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "NEQ"));
-        }
-        return node;
+        return processExprContext(ctx);
     }
     // todo: address the return values of the CodeEmitter function calls
     /**
@@ -519,67 +254,15 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         String name = ctx.NAME().toString();
         Value val = null;
         Variable var = null;
-        if (name.equals("println"))
+        List<SimpLParser.ExprContext> expressions = ctx.expr();
+        if (name.equals("print") || name.equals("println"))
         {
-            List<SimpLParser.ExprContext> expressions = ctx.expr();
-            for(SimpLParser.ExprContext exp : expressions)
-            {
-                node = visit(exp);
-                val = ValueBuilder.getValue(node.getSymbol(), memory);
-                if (node.getSymbol().getType() == SimpLParser.NUMBER)
-                {
-                    text.add(CodeEmitter.println("NUMBER"));
-                }
-                else if (node.getSymbol().getType() == SimpLParser.NAME)
-                {
-                    var = (Variable) val;
-                    val = var.getValue();
-                    text.add(CodeEmitter.putVarStack(var));
-                    text.add(CodeEmitter.println(val.getType()));
-                }
-                else if (node.getSymbol().getType() == SimpLParser.BOOLEAN)
-                {
-                    text.add(CodeEmitter.println("BOOLEAN"));
-                }
-                else
-                {
-                    CodeEmitter.loadConstant(val.getValue().toString());
-                    text.add(CodeEmitter.println("TEXT"));
-                }
-            }
-        }
-        else if (name.equals("print"))
-        {
-            List<SimpLParser.ExprContext> expressions = ctx.expr();
             for (SimpLParser.ExprContext exp : expressions)
             {
                 node = visit(exp);
                 val = ValueBuilder.getValue(node.getSymbol(), memory);
-                if (node.getSymbol().getType() == SimpLParser.NUMBER)
-                {
-                    text.add(CodeEmitter.print("NUMBER"));
-                }
-                else if (node.getSymbol().getType() == SimpLParser.NAME)
-                {
-                    var = (Variable) val;
-                    val = var.getValue();
-                    text.add(CodeEmitter.putVarStack(var));
-                    text.add(CodeEmitter.print(val.getType()));
-                }
-                else if (node.getSymbol().getType() == SimpLParser.BOOLEAN)
-                {
-                    text.add(CodeEmitter.print("BOOLEAN"));
-                }
-                else
-                {
-                    CodeEmitter.loadConstant(val.getValue().toString());
-                    text.add(CodeEmitter.print("TEXT"));
-                }
+                text.add(name.equals("print") ? CodeEmitter.print(val.getType()) : CodeEmitter.println(val.getType())); // check if print or println
             }
-        }
-        else if (name.equals("read"))
-        {
-
         }
         return node;
     }
@@ -594,11 +277,18 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                     numLines++;
         return numLines + text.size();
     }
+
     private Value getOperandValue(Token token)
     {
         Value value = ValueBuilder.getValue(token, memory);
         return value.getType().equalsIgnoreCase("IDENTIFIER")? (Value) value.getValue() : value;
     }
+
+    private Value getOperandValue(Value val)
+    {
+        return val.getType().equals("IDENTIFIER") ? (Value) val.getValue() : val;
+    }
+
     private void incStackSize(int sizeIncrease)
     {
         stackSize += sizeIncrease;
@@ -608,5 +298,133 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     private void decStackSize(int sizeDecrease)
     {
         stackSize = (sizeDecrease >= stackSize)? 0 : stackSize - sizeDecrease;
+    }
+
+    private int getParseType(String type)
+    {
+        if(type.equals("NUMBER")) return SimpLParser.NUMBER;
+        else if(type.equals("TEXT")) return SimpLParser.TEXT;
+        else if(type.equals("BOOLEAN")) return SimpLParser.BOOLEAN;
+        // todo: else assume text?
+        return SimpLParser.TEXT;
+    }
+
+    private int getParseType(Value type)
+    {
+        return getParseType(getOperandValue(type).getType());
+    }
+
+    private String getExprCtxType(SimpLParser.ExprContext ctx)
+    {
+        if(ctx.NAME() != null) return "IDENTIFIER";
+        else if (ctx.LITERAL() != null) return "LITERAL";
+        //else if () return "BOOL OPERATION";// bool
+        else if (ctx.POW() != null || ctx.ADD() != null || ctx.SUB() != null || ctx.MUL() != null || ctx.DIV() != null) return "ARITHMETIC";
+        else if (ctx.AND() != null || ctx.OR() != null || ctx.GT() != null || ctx.LT() != null || ctx.GTE() != null || ctx.LTE() != null || ctx.EQ() != null || ctx.NEQ() != null) return "BOOL OPERATION";
+        return "TEST";
+    }
+
+    private Boolean checkParens(SimpLParser.ExprContext ctx)
+    {
+        return (ctx.LPAREN() != null && ctx.RPAREN() == null) ? false : true;
+    }
+
+    private Boolean containsParens(SimpLParser.ExprContext ctx)
+    {
+        return (ctx.LPAREN() != null || ctx.RPAREN() != null) ? true : false;
+    }
+
+    private String getCtxOperation(SimpLParser.ExprContext ctx)
+    {
+        String [] operations = {"ADD", "SUB", "POW", "MUL", "DIV", "AND", "OR", "GT", "LT", "GTE", "LTE", "EQ", "NEQ"};
+        List<Supplier<TerminalNode>> ctxFunctions = java.util.Arrays.asList(ctx::ADD, ctx::SUB, ctx::POW, ctx::MUL, ctx::DIV, ctx::AND, ctx::OR, ctx::GT, ctx::LT, ctx::GTE, ctx::LTE, ctx::EQ, ctx::NEQ);
+        for(int x = 0; x < operations.length; x++)
+        {
+            if(ctxFunctions.get(x).get() != null) return operations[x];
+        }
+        return "ERROR";
+    }
+
+    private TerminalNode processExprContext(SimpLParser.ExprContext ctx)
+    {
+        // Terribly written, we should come back and review this. Just trying to get some working code in
+        // would be easy to change grammar to encompass symbols by category. e.g. POW, NUL, DIV .. belong to arithmetic_operators
+        TerminalNodeImpl node = null;
+        /*if(!checkParens(ctx))
+        {
+            System.out.println("unbalanced parens");    // todo: throw error, parens not balanced
+        }*/
+        if (getExprCtxType(ctx).equals("IDENTIFIER"))
+        {
+            Value val = memory.get(ctx.NAME().getSymbol().getText().toString()); // if undeclared throw error
+            if (val == null) return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true")); // todo: throw error, value shouldn't be null
+            Value operand = (Value) val.getValue();
+            text.add(CodeEmitter.putVarStack((Variable) val));
+            node = new TerminalNodeImpl(new CommonToken(getParseType(operand), getNodeField(operand)));
+        }
+        else if (getExprCtxType(ctx).equals("LITERAL"))
+        {
+            Value operand = getOperandValue(ctx.LITERAL().getSymbol());
+            text.add(CodeEmitter.loadConstant(operand));
+            node = new TerminalNodeImpl(new CommonToken(getParseType(operand), getNodeField(operand)));
+        }
+        else if(ctx.LPAREN() != null)
+        {
+            node = new TerminalNodeImpl(visit(ctx.expr(0)).getSymbol());
+        }
+        else
+        {
+            // try for single operator such as NOT
+            Value loperand, roperand;
+            incStackSize(2);
+            // do this before try because NOT has 1 operator
+            if (ctx.NOT() != null)
+            {
+                loperand = getOperandValue(visit(ctx.expr(0)).getSymbol());
+                text.add(CodeEmitter.booleanOperation("NOT"));
+                return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "NOT"));
+            }
+            try
+            {
+                loperand = getOperandValue(visit(ctx.expr(0)).getSymbol());
+                roperand = getOperandValue(visit(ctx.expr(1)).getSymbol());
+            }
+            catch (Exception e)
+            {
+                return visit(ctx.func_call());
+            }
+            String operation = getCtxOperation(ctx);
+            if(getExprCtxType(ctx).equals("ARITHMETIC"))
+            {
+                Number result = Number.performOperation((Number) loperand, (Number) roperand, operation);
+                Supplier<String> supFunction = codeEmissionMap.get(operation);
+                if(supFunction == null); // todo: invalid operation throw error
+                else text.add(supFunction.get());
+                node = new TerminalNodeImpl(new CommonToken(getParseType(result), getNodeField(result)));
+                decStackSize(1);
+            }
+            else if(getExprCtxType(ctx).equals("BOOL OPERATION"))
+            {
+                if (loperand.getType().equals("IDENTIFIER")) text.add(CodeEmitter.putVarStack((Variable)loperand));
+                if (roperand.getType().equals("IDENTIFIER")) text.add(CodeEmitter.putVarStack((Variable)roperand));
+                text.add(CodeEmitter.booleanOperation(operation.toLowerCase()));
+                node = new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, operation));
+            }    
+        }
+        return node;
+    }
+
+    private String getNodeField(Value val)
+    {
+        Value value = getOperandValue(val);
+        if(value.getType().equals("NUMBER")) return Double.toString((double) value.getValue());
+        else if(value.getType().equals("TEXT")) return value.getValue().toString();
+        else if(value.getType().equals("BOOLEAN")) return String.valueOf((Boolean)value.getValue());
+        else return val.getType().toString();
+    }
+
+    private String getNodeField(Double a)
+    {
+        return Double.toString(a);
     }
 }

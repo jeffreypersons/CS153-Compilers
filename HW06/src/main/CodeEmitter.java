@@ -301,4 +301,18 @@ public class CodeEmitter
         }
         return construct.toString();
     }
+
+    public static String loadConstant(Value val)
+    {
+        String output = null;
+        Object value = val.getValue();
+        if(val.getType().equals("NUMBER")) output = loadConstant((double) value);
+        else if(val.getType().equals("BOOLEAN")) output = loadConstant((Boolean) value);
+        else if(val.getType().equals("IDENTIFIER"))
+        {
+            output = putVarStack((Variable)val);
+        }
+        else output = loadConstant((String) value);
+        return output;
+    }
 }
