@@ -18,7 +18,8 @@ To compile a `.simpl` file, navigate to the SimpL directory and run:
 
 The above will generate .j (JVM assembly) and a .class (JVM bytecode) files of
 the same name. The output location defaults to the parent directory of the given
-sourcefile, but can be specified with the command line option `-d`.
+sourcefile, but can be specified with the command line option `-d`
+(to be added in the near future).
 
 
 #### Executing a SimpL program
