@@ -20,8 +20,7 @@ if [ $# -ne 1 ]; then
     echo "  Run as $ ./simplr.sh <source_file>"
     exit 1
 fi
-#  || [[ ! -f ${class_file} ]]; then
-if [[ $(get_extension ${class_file}) != .class ]]; then
+if [[ $(get_extension ${class_file}) != .class ]] || [[ ! -f ${class_file} ]]; then
     echo "**Error processing input for simplr.sh**"
     echo "  Invalid filepath: ${class_file}"
     echo "  Filepath be an existing .class file"
