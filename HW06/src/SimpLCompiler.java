@@ -14,9 +14,6 @@ import main.CodeEmitter;
 import main.CVisitor;
 import utils.FileUtils;
 
-// todo: move lexer/parser/visitor/tree creation/code generation details to another wrapper class and use here
-// todo: utilize antlr lexer errors as wrapped syntax errors
-
 /**
  * Client class for wrapping all the compiler components (lexer/parser/parseTree/symTabs/etc).
  */
@@ -28,7 +25,6 @@ public class SimpLCompiler
     private final CVisitor visitor;
     private final String sourceFilename;
     private final String workingDirectory;
-    private final List<String> program = new ArrayList<>();
 
     public SimpLCompiler(String filepath) throws IOException
     {
@@ -60,6 +56,7 @@ public class SimpLCompiler
      */
     public void compile()
     {
+        // todo: move the code emitter details to itself, and make it private not static based
         String jasminPath = FileUtils.joinPaths(workingDirectory, sourceFilename + ".j");
         String classPath = FileUtils.joinPaths(workingDirectory, sourceFilename + ".class");
         FileUtils.delete(jasminPath);
