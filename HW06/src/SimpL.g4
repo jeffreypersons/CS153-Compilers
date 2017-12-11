@@ -1,6 +1,5 @@
 grammar SimpL;
 
-// todo: rename conditional to conditional, stat to stat
 program : stat*;
 stat
     : func_def
@@ -34,8 +33,8 @@ block
           ('return' expr EOL)?
       RCURL EOL  // no need for EOL here, since statement requires it
     ;
-// expressions: note that as of version 4.1, ANTLR rewrites the below as unambiguous rules
-// TODO: to make the evaluation rules more clear, incorporate ANTLR syntax for left/right associativity
+// todo: to make the evaluation rules more clear, incorporate ANTLR's syntax for left/right associativity
+// note that left recursion is dealt with successfuly in ANTLR4, as it rewrites the below as unambiguous recursive rules
 expr
     : NAME
     | LITERAL
