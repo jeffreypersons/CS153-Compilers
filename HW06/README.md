@@ -1,44 +1,71 @@
 # SimpL: The Simple Programming Language ©
 ## Setup
 
-#### Building SimpL Codebase from sources
-Build SimpL by executing `./build.sh` from project directory.
-This should generate sources from antlr, an out folder with all compiled class files,
-and run tests.
+#### Building SimpL Source
+To build SimpL, navigate to the SimpL directory and run:
+
+    ./build.sh
+
+The above will generate antlr sources, compile all java into an `out` folder,
+and run various tests. The project is built with the only dependencies being
+the JVM assembler `Jasmin` and the parser generator `Antlr`.
 
 
-#### Running SimpL
-Run a .simpl file by executing `./simpl.sh <source_file>`, or by running
-`java SimpLMain <source_file>`.
-This should produce a corresponding .j (jvm assembly) and .class (jvm bytecode)
-adjacent to the given source file.
+#### Compiling a SimpL program
+To compile a `.simpl` file, navigate to the SimpL directory and run:
 
-Tip: a helpful command for cleaning up class or jasmin files, use
-`find <dir_name> -name '*.class' -type -delete` and `find <dir_name> -name '*.j' -type -delete`
+    ./simplc.sh <source_filepath>
+
+The above will generate .j (JVM assembly) and a .class (JVM bytecode) files of
+the same name. The output location defaults to the parent directory of the given
+sourcefile, but can be specified with the command line option `-d`.
 
 
-#### Troubleshooting
+#### Executing a SimpL program
+To execute a program, run it by specifying its compiled class filepath by using:
 
-If executing `java` or `javac` directly, ensure classpath is set correctly, as in
-`export CLASSPATH=out:<jasmin2.4-jar-path>:<antlr4.7-jar-path>$CLASSPATH`
+    ./simplr.sh <class_filepath>
 
-If permission denied errors occurred running scripts, then allow access by running
-`chmod +x ./<file_name>.sh`
+The above will run the compiled SimpL program with any output printed to
+console.
 
-If newline issues occur after modifying the scripts on windows, use
-`sed -i 's/\r$//' ./<file>` to remove windows newline characters
+
+#### Troubleshooting and Tips
+
+If executing `java` or `javac` directly, ensure classpath is set correctly by
+using:
+    
+    export CLASSPATH="out:<jasmin2.4-jar-path>:<antlr4.7-jar-path>$CLASSPATH"
+
+If a `permission denied` error occurred while running scripts, grant access by
+using:
+
+    chmod +x ./<script_name>.sh
+
+If newline issues occur after modifying the scripts on windows, remove excess
+new line characters by using:
+
+    sed -i 's/\r$//' ./<script_name>
+
+Delete any generated jasmin and class files by using:
+
+    find <output_directory> -maxdepth 1 -regex ".*\.\(j\|class\)" -type f -delete
 
 
 ## Syntax
 #### Overview
-Only single programs are supported, of which consistent of multiple statements, each of which
-are terminated with a line break.
+Only single programs are supported, of which consistent of multiple statements,
+each of which are terminated with a line break.
 
-Statements include function definition, declaration, assignment, standalone expression, conditional, and while loop.
-Expressions are any mix of enclosed parentheses, literals, identifiers, function calls, and operations.
+Statements include function definition, declaration, assignment,
+standalone expression, conditional, and while loop.
+
+Expressions are any mix of enclosed parentheses, literals, identifiers,
+function calls, and operations.
 
 Datatypes currently include `Number` and `Text`.
-The more elaborate `Map`, `List`, `Struct`, `Func` are planned for the future.
+The more elaborate constructs `Map`, `List`, `Struct`, `Func` are planned for
+the future.
 
 
 #### Operators
