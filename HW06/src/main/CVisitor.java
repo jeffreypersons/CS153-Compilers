@@ -16,6 +16,8 @@ import gen.SimpLBaseVisitor;
 import gen.SimpLParser;
 
 // todo: remove extra checks, and implement error handling in the parsers/lexer classes instead!
+// todo: at the very least, utilize the the convenience token groups from the grammar like BOOLEAN_OPERATIONS etc...
+// todo: add code emitter as a private field...
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 {
