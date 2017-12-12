@@ -352,10 +352,10 @@ public class CodeEmitter
         return call.toString();
     }
 
-    public static String functionCall(String functionName, Map<String, String> functionMap)
+    public static String functionCall(String functionName, Map<String, Function> functionMap)
     {
         StringBuilder functionCall = new StringBuilder("invokestatic ");
-        functionCall.append(programName + "/").append(functionMap.get(functionName));
+        functionCall.append(programName + "/").append(functionMap.get(functionName).getValue());
         return functionCall.toString();
     }
 
