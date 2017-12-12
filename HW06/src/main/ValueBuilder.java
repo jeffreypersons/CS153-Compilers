@@ -77,4 +77,12 @@ public class ValueBuilder
     {
         return new Number(value);
     }
+
+    public static Value getValue(String type)
+    {
+        if(type.equals("NUMBER")) return new Number(0);
+        else if(type.equals("TEXT")) return new Text("");
+        else if(type.equals("BOOLEAN")) return new Bool(false);
+        else return new Number(0); // should really throw error here
+    }
 }
