@@ -1,0 +1,4 @@
+# should throw error since (lowercase) text, and map/list aren:t types
+text a
+Map a
+List b

@@ -1,6 +1,6 @@
 Number attempt_num = 0
 
-def run_away()
+Number run_away()
 {
     if 0 == attempt_num
     {
