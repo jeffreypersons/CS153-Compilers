@@ -21,21 +21,25 @@ import gen.SimpLParser;
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 {
+    private int stackSizeLine;
     private int stackSize;
     private int necessaryStackSize;
     private int localCount;
     private int labelCount;
     private int condLabelCount;
     private List<String> text;
+    private int functionInsertLine; // line to store declared functions in assembly file
 
     private int memoryLevel;
     private List<Map<String, Value>> memory;
+    private Map<String, String> functions;
     private Map<String, Integer> ifMemory;
     private Map<String, Supplier<String>> codeEmissionMap;
 
     public CVisitor()
     {
         super();
+        functions = new HashMap<String, String>();
         memory = new ArrayList<Map<String,Value>>();//new HashMap<>();
         memory.add(new HashMap<String,Value>());
         memoryLevel = 0; // set to global hashmap
@@ -79,16 +83,16 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     {
         text = new ArrayList<String>();
         text.add(CodeEmitter.getLibraryCode("math"));
+        functionInsertLine = text.size();
         text.add(CodeEmitter.main());
 
         // todo: rename stackSizeLine - it's not clear what it's doing
-        int stackSizeLine = 0;
+        stackSizeLine = 0;
         stackSizeLine = text.size();
         text.add(CodeEmitter.setStack(stackSize) + CodeEmitter.setLocals(localCount));
 
         TerminalNode node = super.visitChildren(ctx);
         text.set(
-            // since everything is stored as float, multiply by 2 I think
             stackSizeLine, CodeEmitter.setStack((stackSize + localCount) * 2) + CodeEmitter.setLocals(localCount)
         );
         return node;
@@ -113,7 +117,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     {
         // todo: add type-checking
         String name = ctx.NAME().toString();
-        CommonToken token = new CommonToken(visit(ctx.expr()).getSymbol());
+        TerminalNode a = visit(ctx.expr());
+        CommonToken token = null;
+        if(a != null) token = new CommonToken(a.getSymbol());
         Value val = null;
         Variable var = null;
         if (ctx.ASSIGN() != null)
@@ -228,7 +234,37 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitFunc_def(SimpLParser.Func_defContext ctx)
     {
-        return super.visitChildren(ctx);
+        List<TerminalNode> typeNodes = ctx.TYPE(); // first element is the return type
+        String returnType = null;
+        String name = ctx.NAME().get(0).toString();
+        List<String> operandTypes = new ArrayList<String>();
+        List<String> operandNames = new ArrayList<String>();
+        String functionName = null;
+        for(int x = 0; x < typeNodes.size(); x++)
+        {
+            if(x == 0) returnType = typeNodes.get(x).getSymbol().getText();
+            else operandTypes.add(typeNodes.get(x).getSymbol().getText());
+        }
+        String declaration = CodeEmitter.functionDeclaration(name, operandTypes, returnType);
+
+        int prevDec = text.size();
+        text.add(declaration);
+        text.add(CodeEmitter.setLocals(15));
+        text.add(CodeEmitter.setStack(15));
+        visit(ctx.block());
+        text.add(CodeEmitter.createReturn(returnType.toUpperCase()));
+        text.add(CodeEmitter.endMethod());
+        int postDec = text.size();
+
+        String functionDeclaration = "";
+        for(int x = 0; x < postDec - prevDec; x++) functionDeclaration += text.get(prevDec + x) + "\n";
+        for(int x = 0; x < postDec - prevDec; x++) text.remove(prevDec);
+        text.add(functionInsertLine, functionDeclaration);
+        stackSizeLine++;
+
+        // create function reference in functions table
+        functions.put(name, CodeEmitter.functionCall(name, operandTypes, returnType));
+        return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, "1"));
     }
     /**
      * {@inheritDoc}
@@ -242,6 +278,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         List<SimpLParser.StatContext> stmts = ctx.stat();
         for (SimpLParser.StatContext stmt : stmts)
             visit(stmt);
+        if(ctx.expr() != null)
+        {
+            // deal with return statement here
+            //System.out.println(ctx.expr());
+            visit(ctx.expr());
+        }
         return new TerminalNodeImpl(new CommonToken(SimpLParser.LITERAL, "block"));
     }
     /**
@@ -277,6 +319,15 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 text.add(name.equals("print") ? CodeEmitter.print(val.getType()) : CodeEmitter.println(val.getType())); // check if print or println
             }
         }
+        else
+        {
+            for (SimpLParser.ExprContext exp : expressions)
+            {
+                node = visit(exp);
+                val = ValueBuilder.getValue(node.getSymbol(), memory);
+            }
+            text.add(CodeEmitter.functionCall(name, functions));
+        }
         return node;
     }
 
@@ -293,7 +344,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
     private Value getOperandValue(Token token)
     {
-        Value value = ValueBuilder.getValue(token, memory.get(0));
+        Value value = null;
+        if(token == null) 
+            value = new Number(0);
+        else
+            value = ValueBuilder.getValue(token, memory.get(0));
         return value.getType().equalsIgnoreCase("IDENTIFIER")? (Value) value.getValue() : value;
     }
 
@@ -329,7 +384,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
     private String getExprCtxType(SimpLParser.ExprContext ctx)
     {
-        if (ctx.NAME() != null)
+        if(ctx.func_call() != null)
+            return "FUNCTION_CALL";
+        else if (ctx.NAME() != null)
             return "IDENTIFIER";
         else if (ctx.LITERAL() != null)
             return "LITERAL";
@@ -415,8 +472,17 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 return visit(ctx.func_call());
             }
             String operation = getCtxOperation(ctx);
+
+            if(operation.equals("ERROR"))
+            {
+                System.out.println("terminal error occured");
+            }
+
+            System.out.println(getExprCtxType(ctx));
+
             if (getExprCtxType(ctx).equals("ARITHMETIC"))
             {
+                System.out.println(loperand + " " + roperand);
                 Number result = performOperation((Number) loperand, (Number) roperand, operation);
                 Supplier<String> supFunction = codeEmissionMap.get(operation);
                 if (supFunction == null)
