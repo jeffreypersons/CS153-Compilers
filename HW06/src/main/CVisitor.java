@@ -27,14 +27,18 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     private int labelCount;
     private int condLabelCount;
     private List<String> text;
-    private Map<String, Value> memory;
+
+    private int memoryLevel;
+    private List<Map<String, Value>> memory;
     private Map<String, Integer> ifMemory;
     private Map<String, Supplier<String>> codeEmissionMap;
 
     public CVisitor()
     {
         super();
-        memory = new HashMap<>();
+        memory = new ArrayList<Map<String,Value>>();//new HashMap<>();
+        memory.add(new HashMap<String,Value>());
+        memoryLevel = 0; // set to global hashmap
         ifMemory = new HashMap<>();
 
         // create and populate list with typical code emission functions
@@ -60,7 +64,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     {
         return necessaryStackSize;
     }
-    public Map<String, Value> getMemory()
+    public List<Map<String, Value>> getMemory()
     {
         return memory;
     }
@@ -117,9 +121,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             val = getOperandValue(token);
             var = new Variable(name, val, val.getType());
             text.add(CodeEmitter.declareVariable(var, localCount));
-            memory.put(name, var);
+            memory.get(0).put(name, var);
         }
-        else memory.put(name, null); // add typing regardless of assignment or not
+        else memory.get(0).put(name, null); // add typing regardless of assignment or not
         localCount++;
         return new TerminalNodeImpl(token);
     }
@@ -139,18 +143,18 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         int parserType = getParseType(val);
 
         incStackSize(2);
-        if (memory.get(identifier) == null)
+        if (memory.get(0).get(identifier) == null)
         {
             // todo: add error for if identifier exists. if not, it must be declared
             //throw new Exception("UNDELCARED IDENTIFIER");
         }
-        Variable var = (Variable) memory.get(identifier);
+        Variable var = (Variable) memory.get(0).get(identifier);
         if (var.getCast().equals(val.getType()))
             var.setValue(val);
         else
             System.out.println("Improper cast!"); // todo: throw error here since different type
 
-        memory.put(identifier, var);
+        memory.get(0).put(identifier, var);
         text.add(CodeEmitter.assignVariable(var));
         decStackSize(2);
         return new TerminalNodeImpl(new CommonToken(parserType, getNodeField(val)));
@@ -222,7 +226,10 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
-    @Override public TerminalNode visitFunc_def(SimpLParser.Func_defContext ctx) { return super.visitChildren(ctx); }
+    @Override public TerminalNode visitFunc_def(SimpLParser.Func_defContext ctx)
+    {
+        return super.visitChildren(ctx);
+    }
     /**
      * {@inheritDoc}
      *
@@ -286,7 +293,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
     private Value getOperandValue(Token token)
     {
-        Value value = ValueBuilder.getValue(token, memory);
+        Value value = ValueBuilder.getValue(token, memory.get(0));
         return value.getType().equalsIgnoreCase("IDENTIFIER")? (Value) value.getValue() : value;
     }
 
@@ -370,7 +377,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         }*/
         if (getExprCtxType(ctx).equals("IDENTIFIER"))
         {
-            Value val = memory.get(ctx.NAME().getSymbol().getText()); // if undeclared throw error
+            Value val = memory.get(0).get(ctx.NAME().getSymbol().getText()); // if undeclared throw error
             if (val == null)  // todo: throw error, value shouldn't be null
                 return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true"));
             Value operand = (Value) val.getValue();
