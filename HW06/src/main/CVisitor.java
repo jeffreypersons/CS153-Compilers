@@ -32,14 +32,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
     private int memoryLevel;
     private List<Map<String, Value>> memory;
-    private Map<String, String> functions;
+    private Map<String, Function> functions;
     private Map<String, Integer> ifMemory;
     private Map<String, Supplier<String>> codeEmissionMap;
 
     public CVisitor()
     {
         super();
-        functions = new HashMap<String, String>();
+        functions = new HashMap<String, Function>();
         memory = new ArrayList<Map<String,Value>>();//new HashMap<>();
         memory.add(new HashMap<String,Value>());
         memoryLevel = 0; // set to global hashmap
@@ -117,7 +117,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     {
         // todo: add type-checking
         String name = ctx.NAME().toString();
-        TerminalNode a = visit(ctx.expr());
+        TerminalNode a = null;
+        if(ctx.expr() != null)
+            a = visit(ctx.expr());
+        else
+            a = new TerminalNodeImpl(new CommonToken(SimpLParser.LITERAL, "ASSIGN"));
         CommonToken token = null;
         if(a != null) token = new CommonToken(a.getSymbol());
         Value val = null;
@@ -129,7 +133,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             text.add(CodeEmitter.declareVariable(var, localCount));
             memory.get(memoryLevel).put(name, var);
         }
-        else memory.get(memoryLevel).put(name, null); // add typing regardless of assignment or not
+        else
+        {
+            String type = ctx.TYPE().getSymbol().getText();
+            memory.get(memoryLevel).put(name, new Variable(name, ValueBuilder.getValue(type), type, localCount)); // add typing regardless of assignment or not
+            localCount++;
+        }
         localCount++;
         return new TerminalNodeImpl(token);
     }
@@ -158,7 +167,10 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         if (var.getCast().equals(val.getType()))
             var.setValue(val);
         else
-            System.out.println("Improper cast!"); // todo: throw error here since different type
+            {
+                System.out.println("Improper cast!"); // todo: throw error here since different type
+                System.out.println(var.getCast() + " " + val.getType());
+            }
 
         memory.get(memoryLevel).put(identifier, var);
         text.add(CodeEmitter.assignVariable(var));
@@ -273,7 +285,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         stackSizeLine++;
 
         // create function reference in functions table
-        functions.put(name, CodeEmitter.functionCall(name, operandTypes, returnType));
+        functions.put(name, new Function(name, CodeEmitter.functionCall(name, operandTypes, returnType), returnType));
         memory.remove(memoryLevel);
         memoryLevel--;
         return new TerminalNodeImpl(new CommonToken(SimpLParser.NUMBER, "1"));
@@ -340,7 +352,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             }
             text.add(CodeEmitter.functionCall(name, functions));
         }
-        node = new TerminalNodeImpl(new CommonToken(SimpLParser.LITERAL, "TEST"));
+        //node = new TerminalNodeImpl(new CommonToken(SimpLParser.LITERAL, "TEST"));
         return node;
     }
 
