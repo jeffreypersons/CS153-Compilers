@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -12,6 +10,7 @@ import gen.SimpLLexer;
 import gen.SimpLParser;
 import main.CodeEmitter;
 import main.CVisitor;
+import main.UnderlineListener;
 import utils.FileUtils;
 
 /**
@@ -46,6 +45,8 @@ public class SimpLCompiler
         this.lexer = new SimpLLexer(sourceFileStream);
         this.parser = new SimpLParser(new CommonTokenStream(lexer));
         this.parser.addParseListener(new SimpLBaseListener());
+        this.parser.removeErrorListeners(); // remove ConsoleErrorListener
+        this.parser.addErrorListener(new UnderlineListener());  // add our error listener
         this.parseTree = parser.program();
         this.visitor = new CVisitor();
     }

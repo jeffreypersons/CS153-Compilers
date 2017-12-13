@@ -1,8 +1,8 @@
-def sum_of_squares(Number a, Number b)
+Number sum_of_squares(Number a, Number b)
 {
     return a ^ 2 + b ^ 2
 }
-def distance(Number x1, Number y1, Number x2, Number y2)
+Number distance(Number x1, Number y1, Number x2, Number y2)
 {
     return (y2 - y1) / (x2 - x1)
 }

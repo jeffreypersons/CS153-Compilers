@@ -1,4 +1,4 @@
-def func123(Number x)
+None func123(Number x)
 {
     if x > 0
     {

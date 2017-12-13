@@ -1,4 +1,4 @@
-def numStatus(Number x)
+Number numStatus(Number x)
 {
     Text status = ''
     if x < 100

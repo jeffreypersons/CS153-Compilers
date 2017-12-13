@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.antlr.v4.runtime.CommonToken;
@@ -143,6 +145,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         {
             // todo: add error for if identifier exists. if not, it must be declared
             //throw new Exception("UNDELCARED IDENTIFIER");
+            /*
+            UnderlineListener err = new UnderlineListener();
+            Recognizer recognizer = CommonTokenStream();
+            err.syntaxError();
+            */
+
         }
         Variable var = (Variable) memory.get(identifier);
         if (var.getCast().equals(val.getType()))
