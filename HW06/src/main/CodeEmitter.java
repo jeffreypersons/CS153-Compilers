@@ -92,6 +92,11 @@ public class CodeEmitter
         return "invokestatic " + CodeEmitter.programName + "/div(FF)F\n";
     }
 
+    public static String pow()
+    {
+        return "invokestatic " + CodeEmitter.programName + "/pow(FF)F\n";
+    }
+
     // todo: change to input()?, and add string parameter as the prompt message like python...?!
     public static String read(String type)
     {
@@ -301,6 +306,30 @@ public class CodeEmitter
             construct.append("fload_0\n");
             construct.append("fload_1\n");
             construct.append("fsub\n");
+            construct.append("freturn\n");
+            construct.append(END_FUNCTION);
+
+            // create pow code
+            construct.append(START_FUNCTION + "pow(FF)F\n");
+            construct.append(setStack(4));
+            construct.append(setLocals(3));
+            
+            construct.append("ldc 1.0\nfstore_2\n");
+            construct.append("ldc 1.0\n");
+
+            construct.append("LOOP:\n");
+            construct.append("ldc 0.0\nfload_1\n");
+            construct.append("fcmpg\n");
+            construct.append("ifeq END_LOOP\n");
+
+            construct.append("fload_2\nfload_0\n" + CodeEmitter.mul());
+            construct.append("fstore_2\n");
+
+            construct.append("fload_1\nldc 1.0\n");
+            construct.append(CodeEmitter.sub() + "\nfstore_1\n");
+            construct.append("goto LOOP\n");
+            construct.append("END_LOOP:\n");
+            construct.append("pop\nfload_2\n");
             construct.append("freturn\n");
             construct.append(END_FUNCTION);
         }
