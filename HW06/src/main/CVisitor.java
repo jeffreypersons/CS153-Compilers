@@ -48,9 +48,10 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         // create and populate list with typical code emission functions
         codeEmissionMap = new HashMap();
         List<Supplier<String>> codeEmissionFunctions = Arrays.asList(
-            CodeEmitter::add, CodeEmitter::sub, CodeEmitter::mul, CodeEmitter::div
+            CodeEmitter::add, CodeEmitter::sub, CodeEmitter::mul, CodeEmitter::div,
+            CodeEmitter::pow
         );
-        String [] functionTokens = {"ADD", "SUB", "MUL", "DIV"};
+        String [] functionTokens = {"ADD", "SUB", "MUL", "DIV", "POW"};
         for(int x = 0; x < functionTokens.length; x++) codeEmissionMap.put(functionTokens[x], codeEmissionFunctions.get(x));
 
         stackSize = 0;
@@ -549,10 +550,10 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         switch (operation)
         {
             case "ADD": return new Number(a.getValue() + b.getValue());
-            case "SUB": return new Number(a.getValue() + b.getValue());
-            case "MUL": return new Number(a.getValue() + b.getValue());
-            case "DIV": return new Number(a.getValue() + b.getValue());
-            case "POW": /* Currently unsupported. */
+            case "SUB": return new Number(a.getValue() - b.getValue());
+            case "MUL": return new Number(a.getValue() * b.getValue());
+            case "DIV": return new Number(a.getValue() / b.getValue());
+            case "POW": return new Number(java.lang.Math.pow(a.getValue(), b.getValue()));
             default: return null;
         }
     }
