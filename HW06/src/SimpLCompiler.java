@@ -47,6 +47,7 @@ public class SimpLCompiler
         this.parser.addParseListener(new SimpLBaseListener());
         this.parser.removeErrorListeners(); // remove ConsoleErrorListener
         this.parser.addErrorListener(new UnderlineListener());  // add our error listener
+        //this.parser.setErrorHandler(new BailErrorStrategy());
         this.parseTree = parser.program();
         this.visitor = new CVisitor();
     }

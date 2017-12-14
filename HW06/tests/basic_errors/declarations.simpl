@@ -2,3 +2,5 @@
 text a
 Map a
 List b
+
+# Now this returns error properly
