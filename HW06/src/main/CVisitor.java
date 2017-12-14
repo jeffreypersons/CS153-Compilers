@@ -217,6 +217,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             cond_label = CodeEmitter.getCondLabel(condLabelCount);
             text.add(CodeEmitter.ifOperation(evaluate_type, cond_label));
             visit(ctx.block(block_count));
+            if(text.get(text.size() - 1).contains("return"))
+            {
+                text.remove(text.size() - 1);
+                text.remove(text.size() - 1);
+            }
             lastLabelSkip.add(text.size());
 
             text.add(CodeEmitter.getGoTo("temp")); // create a temporary label
@@ -230,6 +235,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         {
             visit(ctx.block(block_count));
             cond_label = CodeEmitter.getCondLabel(condLabelCount);
+            if(text.get(text.size() - 1).contains("return"))
+            {
+                text.remove(text.size() - 1);
+                text.remove(text.size() - 1);
+            }
             text.add(cond_label);
             condLabelCount++;
         }
