@@ -1,2 +1,6 @@
 Text a = 'test'
-b = a
+Text f()
+{
+    a = 'aaa'
+    return 100
+}

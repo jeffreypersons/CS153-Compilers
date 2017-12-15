@@ -31,6 +31,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     private Map<String, Value> memory;
     private Map<String, Integer> ifMemory;
     private Map<String, Supplier<String>> codeEmissionMap;
+    private String funcType; // hold function type to validate return statement
 
     public CVisitor()
     {
@@ -51,6 +52,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         localCount = 1;
         labelCount = 0;
         condLabelCount = 0;
+        funcType = "";
         CodeEmitter.initialize();
     }
     public List<String> getText()
@@ -142,7 +144,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitAssignment(SimpLParser.AssignmentContext ctx) {
         // check if it exists in the memory map
-        // TODO: check validity based on variable cast using .getCast() method
+        // TODO (COMPLETED): check validity based on variable cast using .getCast() method
         String identifier = ctx.NAME().getSymbol().getText();
         Value val = getOperandValue(visit(ctx.expr()).getSymbol());
         int parserType = getParseType(val);
@@ -246,7 +248,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
-    @Override public TerminalNode visitFunc_def(SimpLParser.Func_defContext ctx) { return super.visitChildren(ctx); }
+    @Override public TerminalNode visitFunc_def(SimpLParser.Func_defContext ctx)
+    {
+        funcType = ctx.getChild(0).getText().toUpperCase(); // store function type
+        return super.visitChildren(ctx);
+    }
     /**
      * {@inheritDoc}
      *
@@ -257,8 +263,15 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     {
         // don't execute expr yet. this would be the return statement
         List<SimpLParser.StatContext> stmts = ctx.stat();
+        Value val = getOperandValue(visit(ctx.expr()).getSymbol());
+
         for (SimpLParser.StatContext stmt : stmts)
             visit(stmt);
+        for(int i = 0; i < ctx.getChildCount(); i++)
+            if(ctx.getChild(i).getText().equals("return"))
+                if(!val.getType().equals(funcType))
+                    System.err.println("Returning different type");
+        funcType = ""; // reset function type
         return new TerminalNodeImpl(new CommonToken(SimpLParser.LITERAL, "block"));
     }
     /**
