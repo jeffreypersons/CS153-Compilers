@@ -38,7 +38,8 @@ find . -name '*.java' > out/sources.txt
 javac -cp "lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar" \
       -d out @out/sources.txt \
 
-# compile and run simpl files
+# clean all compiler output in tests directory then compile and run simpl files
+find tests -regex ".*\.\(j\|class\)" -type f -delete
 test_simpl()
 {
     printf "\n----------- Testing $1 -----------\n"
