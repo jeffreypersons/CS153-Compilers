@@ -30,7 +30,7 @@ public class FileUtils
     /** Throw IOException if invalid */
     public static void ensureFileExists(String path) throws IOException
     {
-        if (!FileUtils.getEntireFileExtension(path).equals(".simpl"))
+        if (!FileUtils.isFile(path))
             throw new IOException("Source file " + path + " is invalid - " + path);
     }
 
