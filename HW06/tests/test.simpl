@@ -1,4 +1,4 @@
-Number f()
+Number f(Number a, Text b, Number c)
 {
     return 3
 }

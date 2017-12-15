@@ -398,9 +398,24 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         }
         else
         {
+            ArrayList<String> typesInParam = new ArrayList<String>();
+            for(int i = 0; i < expressions.size(); i++)
+            {
+                String type = expressions.get(i).getChild(0).getText();
+                if(type.matches("\\d(\\.)?\\d*"))
+                    typesInParam.add("Number");
+                else if(type.matches("False | True"))
+                    typesInParam.add("Boolean");
+                else if(type.matches("\'\\w\'"))
+                    typesInParam.add("Text");
+                else if(type.matches("\\w"))
+                    typesInParam.add("Identifier");
+            }
+
+            //expressions.get(0).getChild(0).getText();
             boolean nameFound = false;
             boolean paramNumMatch = false;
-            boolean paramTypeMatch = false;
+            boolean paramTypeMatch = true;
             for(int i = 0; i < funcList.size(); i++)
             {
                 if(name.equals(funcList.get(i).getFuncName()))
@@ -409,7 +424,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                     if(expressions.size() == funcList.get(i).getNumOfParam())
                     {
                         paramNumMatch = true;
-                        //todo: add if stmt to check types in param
+                        int j = 0;
+                        while(paramTypeMatch && j < funcList.get(i).getParamTypeInfo().size())
+                        {
+                            if(!funcList.get(i).getParamTypeInfo().get(j).equals(typesInParam.get(j)) &&
+                                !typesInParam.get(j).equals("Identifier"))
+                                paramTypeMatch = false;
+                            j++;
+                        }
                     }
                 }
             }
@@ -423,6 +445,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             {
                 ErrorMsg err = new ErrorMsg();
                 err.throwError(ctx, "Number of parameter does not match.");
+            }
+            else if(!paramTypeMatch)
+            {
+                ErrorMsg err = new ErrorMsg();
+                err.throwError(ctx, "Type is not matched.");
             }
 
             for (SimpLParser.ExprContext exp : expressions)
