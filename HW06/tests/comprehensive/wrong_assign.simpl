@@ -1,7 +1,0 @@
-Text a = 'test'
-
-Text f()
-{
-    a = 'aaa'
-    return 100
-}

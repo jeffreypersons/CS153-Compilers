@@ -1,11 +1,11 @@
 # should work
 Number a
-Text a
+Text b
 
 # should work
 Text f()
 {
-    return 'abcs 123'
+    return 'a'
 }
 Number g()
 {
