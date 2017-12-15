@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ============================= Execute SimpL File =============================
 # Run a compiled SimpL file by executing given classfile
-# Example usage: ./simplr.sh tests/basic_compile.simpl
+# Example usage: ./simplc.sh tests/basic/operator.class
 # ==============================================================================
 
 # define function for full file extension with leading dot, and get class file path

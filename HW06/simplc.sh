@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ============================= Execute SimpL File =============================
 # Compile and run a single SimpL file
-# Example usage: ./simplc.sh tests/basic_compile.simpl
+# Example usage: ./simplc.sh tests/basic/operator.simpl
 # ==============================================================================
 
 # ensure working dir is HW06 and single argument is given

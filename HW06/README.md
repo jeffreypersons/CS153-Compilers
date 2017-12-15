@@ -48,9 +48,10 @@ new line characters by using:
 
     sed -i 's/\r$//' ./<script_filepath>
 
-Delete any generated jasmin and class files by using:
+Delete any generated jasmin and class files by using (optionally limit depth by
+adding `-maxdepth 1`):
 
-    find <output_directorypath> -maxdepth 1 -regex ".*\.\(j\|class\)" -type f -delete
+    find <output_directorypath> -regex ".*\.\(j\|class\)" -type f -delete
 
 
 ## Syntax

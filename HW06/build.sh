@@ -38,7 +38,7 @@ find . -name '*.java' > out/sources.txt
 javac -cp "lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar" \
       -d out @out/sources.txt \
 
-# run tests for SimpL compiler by compiling and running each simpl file
+# compile and run simpl files
 test_simpl()
 {
     printf "\n----------- Testing $1 -----------\n"
@@ -46,4 +46,19 @@ test_simpl()
     ./simplr.sh "$(dirname $1)/$(basename $1 .simpl).class"
     printf "\n"
 }
+# --------- basic simpl snippets that SHOULD work ---------
+test_simpl tests/basic/block.simpl
+test_simpl tests/basic/declaration.simpl
+test_simpl tests/basic/loop.simpl
 test_simpl tests/basic/operator.simpl
+# ------- basic simpl snippets that should NOT work -------
+test_simpl tests/basic/block_errors.simpl
+test_simpl tests/basic/declaration_errors.simpl
+test_simpl tests/basic/loop_errors.simpl
+test_simpl tests/basic/operator_errors.simpl
+# ----- comprehensive simpl snippets that SHOULD work -----
+test_simpl tests/comprehensive/global_state.simpl
+test_simpl tests/comprehensive/math_functions.simpl
+test_simpl tests/comprehensive/misc.simpl
+test_simpl tests/comprehensive/nested_empty_blocks.simpl
+test_simpl tests/comprehensive/global_state.simpl
