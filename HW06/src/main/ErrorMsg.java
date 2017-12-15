@@ -38,4 +38,16 @@ public class ErrorMsg {
 
         System.err.println();
     }
+
+    public void throwError(SimpLParser.ExprContext ctx, String msg)
+    {
+        System.err.println("line " + ctx.getStart().getLine() + ": " + msg);
+
+        for(int i = 0; i < ctx.getChildCount(); i++)
+            System.err.print(ctx.getChild(i).getText() + " ");
+
+        System.err.println();
+        System.err.println();
+
+    }
 }

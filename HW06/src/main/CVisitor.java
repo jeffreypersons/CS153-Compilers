@@ -503,6 +503,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         {
             System.out.println("unbalanced parens");    // todo: throw error, parens not balanced
         }*/
+        System.out.println(getExprCtxType(ctx));
         if (getExprCtxType(ctx).equals("IDENTIFIER"))
         {
             Value val = memory.get(memoryLevel).get(ctx.NAME().getSymbol().getText()); // if undeclared throw error
@@ -566,10 +567,29 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             }
             else if (getExprCtxType(ctx).equals("BOOL OPERATION"))
             {
+                if((operation.equals("EQ") || operation.equals("NEQ")) &&
+                        (!(loperand.getType().equals(roperand.getType()))) &&
+                        (!(loperand.getType().equals("IDENTIFIER")) || (roperand.getType().equals("IDENTIFIER"))))
+                {
+                    ErrorMsg err = new ErrorMsg();
+                    err.throwError(ctx, "Invalid Comparision.");
+                }
+
                 if (loperand.getType().equals("IDENTIFIER"))
                     text.add(CodeEmitter.putVarStack((Variable)loperand));
+                else if (loperand.getType().equals("TEXT") && !operation.equals("EQ") && !operation.equals("NEQ"))
+                {
+                    ErrorMsg err = new ErrorMsg();
+                    err.throwError(ctx, "There is TEXT on left operand. TEXT is not allowed at BOOLEAN expr.");
+                }
+
                 if (roperand.getType().equals("IDENTIFIER"))
                     text.add(CodeEmitter.putVarStack((Variable)roperand));
+                else if (loperand.getType().equals("TEXT") && !operation.equals("EQ") && !operation.equals("NEQ"))
+                {
+                    ErrorMsg err = new ErrorMsg();
+                    err.throwError(ctx, "There is TEXT on right operand. TEXT is not allowed at BOOLEAN expr.");
+                }
                 text.add(CodeEmitter.booleanOperation(operation.toLowerCase()));
                 node = new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, operation));
             }
