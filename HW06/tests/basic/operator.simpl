@@ -7,7 +7,6 @@ False
 False
 
 ##
-
 println('boolean')
 println('not True', not True)
 println(not False
