@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TypeCheckError;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
@@ -14,7 +15,6 @@ import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import gen.SimpLBaseVisitor;
 import gen.SimpLParser;
 
-import exceptions.ParserException;
 
 // todo: remove extra checks, and implement error handling in the parsers/lexer classes instead!
 // todo: at the very least, utilize the the convenience token groups from the grammar like BOOLEAN_OPERATIONS etc...
@@ -110,11 +110,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     {
         // todo: add type-checking
         String name = ctx.NAME().toString();
-        System.out.println(name);
-        System.out.println("ctx.getText(): " + ctx.getText());
-        System.out.println("ctx.getChiled(0): " + ctx.getChild(0));
         String type = ctx.getChild(0).toString().toUpperCase();
-
         CommonToken token = new CommonToken(visit(ctx.expr()).getSymbol());
         Value val = null;
         Variable var = null;
@@ -122,14 +118,15 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         {
             val = getOperandValue(token);
             var = new Variable(name, val, val.getType());
-            System.out.println("val: " + val.getType());
-            System.out.println("var: " + var.getCast());
             String valType = var.getCast();
+
             // Type checking here. if miss match, throw error in else statement
-            if(type.equals(valType))
-                System.out.println("type match");
-            else
-                System.out.println("type doesn't match");
+            if(!type.equals(valType))
+            {
+                ErrorMsg errorMsg = new ErrorMsg();
+                errorMsg.throwError(ctx, "type doesn't match");
+            }
+
             text.add(CodeEmitter.declareVariable(var, localCount));
             memory.put(name, var);
         }

@@ -18,7 +18,7 @@ public class UnderlineListener extends BaseErrorListener
                                   Token offendingToken, int line,
                                   int charPosInLine)
     {
-            CommonTokenStream tokens = (CommonTokenStream)recognizer.getInputStream();
+        CommonTokenStream tokens = (CommonTokenStream)recognizer.getInputStream();
         String input = tokens.getTokenSource().getInputStream().toString();
         String[] lines = input.split("\n");
         String errorLine = lines[line - 1];

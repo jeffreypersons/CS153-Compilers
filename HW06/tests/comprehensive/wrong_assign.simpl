@@ -1,6 +1,4 @@
 Text a = 3
 Number b = 1
-##
 Number c = 4
-Text d = 0
-##
+Number
