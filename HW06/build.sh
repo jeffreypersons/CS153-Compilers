@@ -42,9 +42,13 @@ javac -cp "lib/jasmin-2.4-complete.jar:lib/antlr-4.7-complete.jar" \
 find tests -regex ".*\.\(j\|class\)" -type f -delete
 test_simpl()
 {
+    # compile given simpl file, then run classfile if generated
     printf "\n----------- Testing $1 -----------\n"
     ./simplc.sh $1
-    ./simplr.sh "$(dirname $1)/$(basename $1 .simpl).class"
+    class_file="$(dirname $1)/$(basename $1 .simpl).class"
+    if [[ -f ${class_file} ]]; then
+        ./simplr.sh ${class_file}
+    fi
     printf "\n"
 }
 # --------- basic simpl snippets that SHOULD work ---------
