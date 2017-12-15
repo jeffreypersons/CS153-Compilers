@@ -3,11 +3,13 @@
 
 ## Getting Started
 
-    See `docs/Simpl Setup.pdf`
+    See docs/Simpl Setup.pdf
+
 
 ## Language Overview
 
-    See `docs/Simpl Overview.pdf`
+    See docs/Simpl Overview.pdf
+
 
 ## Project Structure
 
