@@ -2,5 +2,5 @@ Number f()
 {
     return 3
 }
-
-f(4, '2')
+Number a = 0
+f(4, '2', a)

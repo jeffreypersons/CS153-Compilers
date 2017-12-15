@@ -409,7 +409,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                     if(expressions.size() == funcList.get(i).getNumOfParam())
                     {
                         paramNumMatch = true;
-                        //add if stmt to check types in param
+                        //todo: add if stmt to check types in param
                     }
                 }
             }
