@@ -1,48 +1,18 @@
 # SimpL: The Simple Programming Language ©
 
+In short, run `./build.sh` to generate sources, compile SimpL, and run tests.
+To compile a `SimpL` source file, run `./simplc <simpl_file>`.
+To run a compiled `SimpL` class file, run `./simplc <class_file>`.
+For more information, goto the below documents.
 
 ## Getting Started
 
-    See docs/Simpl Setup.pdf
-
+    docs/Simpl - Getting Started.pdf
 
 ## Language Overview
 
-    See docs/Simpl Overview.pdf
+    docs/Simpl - Language Overview.pdf
 
+## Implementation Overview
 
-## Project Structure
-
-    docs
-    src
-        exceptions
-        gen
-        main
-        utils
-        SimpLCompiler.java
-        SimpLMain.java
-    
-    SimpL                   # project directory
-        \lib                # third party library jars
-        
-        \examples           # SimpL programs examples
-        
-        \docs               # language overview, diagrams, etc
-        
-        \src                # source directory
-            \exceptions     # collection of exceptions specific to SimpL
-            \gen            # antlr generated listener/visitor/parser/tokens files
-            \main           # core code including message handling, visitor, jasmin code emitter
-            \utils          # various utilities such as files
-        
-        \tests              # all SimpL test files go here
-            \basic          # small, basic tests
-            \comprehensive  # larger, more comprehensive tests
-        
-        simplc.sh           # script to compile a source input (.simpl) file
-        
-        simplr.sh           # script to run a compiled source (.class) file
-        
-        build.sh            # script to generate antlr sources, compile codebase, and run tests
-        
-        ...                 # readme/simpl scripts/etc files go here in outermost directory
+    docs/Simpl - Implementation Overview.pdf

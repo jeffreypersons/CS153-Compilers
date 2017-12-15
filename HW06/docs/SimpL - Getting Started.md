@@ -1,7 +1,7 @@
-# SimpL: The Simple Programming Language ©
+# SimpL ©: Getting Started
 ## Setup
 
-#### Building SimpL Source
+## Building SimpL Source
 To build SimpL, navigate to the SimpL directory and run:
 
     ./build.sh
@@ -11,7 +11,7 @@ and run various tests. The project is built with the only dependencies being
 the JVM assembler `Jasmin` and the parser generator `Antlr`.
 
 
-#### Compiling a SimpL program
+## Compiling a SimpL program
 To compile a `.simpl` file, navigate to the SimpL directory and run:
 
     ./simplc.sh <source_filepath>

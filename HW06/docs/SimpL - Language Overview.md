@@ -1,4 +1,4 @@
-# SimpL: The Simple Programming Language ©
+# SimpL ©: Language Overview
 
 ## Motivation and Summary
 SimpL is a _simple_ language for _simple_ people, who are tired of overbearing
