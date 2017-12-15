@@ -556,6 +556,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
             if (getExprCtxType(ctx).equals("ARITHMETIC"))
             {
+                if(!(loperand.getType().equals("Number") && roperand.getType().equals("Number")))
+                {
+                    ErrorMsg err = new ErrorMsg();
+                    err.throwError(ctx, "Invalid operand(s)");
+                }
                 System.out.println(loperand + " " + roperand);
                 Number result = performOperation((Number) loperand, (Number) roperand, operation);
                 Supplier<String> supFunction = codeEmissionMap.get(operation);
