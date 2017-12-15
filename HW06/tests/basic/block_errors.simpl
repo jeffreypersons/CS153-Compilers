@@ -1,0 +1,25 @@
+##
+
+##
+def g()
+# missing LPAREN: Should give a syntax error
+}
+
+#
+def f()
+{
+    if True
+    {
+    # missing RPAREN: Should give a syntax error
+    elif True
+    {
+    }
+    else
+    {
+    }
+    # parens still allowed because it is an expression
+    if False
+    {
+    
+    }
+}

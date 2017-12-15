@@ -31,3 +31,8 @@ Number run_away()
         return message
     }
 }
+
+println(run_away())
+println(run_away())
+println(run_away())
+println(run_away())
