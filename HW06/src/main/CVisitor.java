@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TypeCheckError;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
@@ -267,10 +266,20 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
         for (SimpLParser.StatContext stmt : stmts)
             visit(stmt);
+
         for(int i = 0; i < ctx.getChildCount(); i++)
             if(ctx.getChild(i).getText().equals("return"))
-                if(!val.getType().equals(funcType))
-                    System.err.println("Returning different type");
+                if(funcType.equals("VOID"))
+                {
+                    ErrorMsg err = new ErrorMsg();
+                    err.throwError(ctx, "Should not have return in Void function");
+                }
+                else if(!val.getType().equals(funcType))
+                {
+                    ErrorMsg err = new ErrorMsg();
+                    err.throwError(ctx, "Returning different type. Expecting " + funcType + " to return.");
+                }
+
         funcType = ""; // reset function type
         return new TerminalNodeImpl(new CommonToken(SimpLParser.LITERAL, "block"));
     }

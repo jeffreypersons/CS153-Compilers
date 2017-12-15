@@ -50,4 +50,15 @@ public class ErrorMsg {
 
         throw new RuntimeException();
     }
+
+    public void throwError(SimpLParser.BlockContext ctx, String msg)
+    {
+        System.err.print(msg);
+        for(int i = 0; i < ctx.getChildCount(); i++)
+            System.err.print(ctx.getChild(i).getText() + " ");
+
+        System.err.println();
+
+        throw new RuntimeException();
+    }
 }
