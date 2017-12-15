@@ -1,7 +1,0 @@
-Number a
-a = 1
-a += 2
-
-Number b
-b = 10
-b -= 2

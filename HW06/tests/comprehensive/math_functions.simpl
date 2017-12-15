@@ -6,3 +6,31 @@ Number distance(Number x1, Number y1, Number x2, Number y2)
 {
     return (y2 - y1) / (x2 - x1)
 }
+Number guess_range(Number x)
+{
+    Text status = ''
+    if x < 100
+    {
+        status = 'x in range(-inf, 100)'
+        if 75 < x
+        {
+            status = 'x in range(75, 100)'
+        }
+        elif 50 < x
+        {
+            status = 'x in range(50, 75)'
+        }
+        else
+        {
+            status = 'x in range(-inf, 50]'
+        }
+    }
+    else
+    {
+        return 'I\'m a number 100 or bigger!!!'
+    }
+    return x
+}
+println(sum_of_squares(distance(2, 2, 1, 1), distance(1, 1, 2, 2)))
+println(sum_of_squares(0, 0, 0, 0))
+println(guess_range(10))

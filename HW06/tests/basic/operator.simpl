@@ -1,17 +1,27 @@
+# boolean
 not True
 not False
-True and True
+True  and True
 False and True
-True and False
+True  and False
 False and True
+
+# comparison
 0 == 0
 0 != 0
 0 <= 0
 0 >= 0
 0 <  0
 0 >  0
+
+# arithmetic
 0 + 0
 0 - 0
 0 * 0
 0 / 0
 0 ^ 0
+
+# assignment
+Number a = 0
+a += 0
+a -= 0
