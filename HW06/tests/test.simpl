@@ -1,5 +1,6 @@
-#'a' + 'b'
-#False - False
-#'a' * 0
-#0 / 'a'
-'a' ^ True
+Number f()
+{
+    return 3
+}
+
+f(4, '2')

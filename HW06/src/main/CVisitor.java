@@ -36,6 +36,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     private Map<String, Integer> ifMemory;
     private Map<String, Supplier<String>> codeEmissionMap;
     private String funcType; // hold function type to validate return statement
+    private ArrayList<FuncInfo> funcList;
 
 
     public CVisitor()
@@ -62,6 +63,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         labelCount = 0;
         condLabelCount = 0;
         funcType = "";
+        funcList = new ArrayList<FuncInfo>();
         CodeEmitter.initialize();
     }
     public List<String> getText()
@@ -273,12 +275,19 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     @Override public TerminalNode visitFunc_def(SimpLParser.Func_defContext ctx)
     {
         funcType = ctx.getChild(0).getText().toUpperCase(); // store function type
+        FuncInfo f = new FuncInfo();
+        f.setFuncType(funcType);
         memory.add(new HashMap<String,Value>());
         memoryLevel++;
         List<TerminalNode> typeNodes = ctx.TYPE(); // first element is the return type
         List<TerminalNode> nameNodes = ctx.NAME();
+        for(int i = 1; i < typeNodes.size(); i++)
+            f.addParamType(ctx.TYPE(i).getText());
+        f.setNumOfParam(typeNodes.size() - 1);
         String returnType = null;
         String name = ctx.NAME().get(0).toString();
+        f.setFuncName(name);
+        funcList.add(f);
         List<String> operandTypes = new ArrayList<String>();
         List<String> operandNames = new ArrayList<String>();
         String functionName = null;
@@ -389,6 +398,33 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         }
         else
         {
+            boolean nameFound = false;
+            boolean paramNumMatch = false;
+            boolean paramTypeMatch = false;
+            for(int i = 0; i < funcList.size(); i++)
+            {
+                if(name.equals(funcList.get(i).getFuncName()))
+                {
+                    nameFound = true;
+                    if(expressions.size() == funcList.get(i).getNumOfParam())
+                    {
+                        paramNumMatch = true;
+                        //add if stmt to check types in param
+                    }
+                }
+            }
+
+            if(!nameFound)
+            {
+                ErrorMsg err = new ErrorMsg();
+                err.throwError(ctx, "Function name \'" + name + "\' is not defined.");
+            }
+            else if(!paramNumMatch)
+            {
+                ErrorMsg err = new ErrorMsg();
+                err.throwError(ctx, "Number of parameter does not match.");
+            }
+
             for (SimpLParser.ExprContext exp : expressions)
             {
                 node = visit(exp);
