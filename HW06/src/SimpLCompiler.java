@@ -13,6 +13,7 @@ import gen.SimpLParser;
 import main.CodeEmitter;
 import main.CVisitor;
 import utils.FileUtils;
+import main.UnderlineListener;
 
 /**
  * Client class for wrapping all the compiler components (lexer/parser/parseTree/symTabs/etc).
@@ -46,6 +47,8 @@ public class SimpLCompiler
         this.lexer = new SimpLLexer(sourceFileStream);
         this.parser = new SimpLParser(new CommonTokenStream(lexer));
         this.parser.addParseListener(new SimpLBaseListener());
+        this.parser.removeErrorListeners(); // remove ConsoleErrorListener
+        this.parser.addErrorListener(new UnderlineListener());  // add our error listener
         this.parseTree = parser.program();
         this.visitor = new CVisitor();
     }

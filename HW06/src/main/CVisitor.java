@@ -35,6 +35,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     private Map<String, Function> functions;
     private Map<String, Integer> ifMemory;
     private Map<String, Supplier<String>> codeEmissionMap;
+    private String funcType; // hold function type to validate return statement
+
 
     public CVisitor()
     {
@@ -59,6 +61,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         localCount = 1;
         labelCount = 0;
         condLabelCount = 0;
+        funcType = "";
         CodeEmitter.initialize();
     }
     public List<String> getText()
@@ -116,8 +119,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitDeclaration(SimpLParser.DeclarationContext ctx)
     {
-        // todo: add type-checking
+        // todo (COMPLETED): add type-checking
         String name = ctx.NAME().toString();
+        String varType = ctx.getChild(0).toString().toUpperCase();
         TerminalNode a = null;
         if(ctx.expr() != null)
             a = visit(ctx.expr());
@@ -131,6 +135,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         {
             val = getOperandValue(token);
             var = new Variable(name, val, val.getType());
+            String valType = var.getCast();
+            // Type checking here. if miss match, throw error in else statement
+            if(!varType.equals(valType))
+            {
+                ErrorMsg errorMsg = new ErrorMsg();
+                errorMsg.throwError(ctx, "type doesn't match. you are trying to assign " + valType + " to " + varType);
+            }
             text.add(CodeEmitter.declareVariable(var, localCount));
             memory.get(memoryLevel).put(name, var);
         }
@@ -152,7 +163,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     @Override public TerminalNode visitAssignment(SimpLParser.AssignmentContext ctx)
     {
         // check if it exists in the memory map
-        // TODO: check validity based on variable cast using .getCast() method
+        // TODO (COMPLETED): check validity based on variable cast using .getCast() method
         String identifier = ctx.NAME().getSymbol().getText();
         Value val = getOperandValue(visit(ctx.expr()).getSymbol());
 
@@ -161,17 +172,21 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         incStackSize(2);
         if (memory.get(memoryLevel).get(identifier) == null)
         {
-            // todo: add error for if identifier exists. if not, it must be declared
-            //throw new Exception("UNDELCARED IDENTIFIER");
+            // todo (COMPLETED): add error for if identifier exists. if not, it must be declared
+            System.err.println("line " + ctx.getStart().getLine() + ": " + "Undeclared Identifier");
+            for(int i = 0; i < ctx.getChildCount(); i++)
+                System.err.print(ctx.getChild(i).getText() + " ");
+            System.err.println();
         }
         Variable var = (Variable) memory.get(memoryLevel).get(identifier);
         if (var.getCast().equals(val.getType()))
             var.setValue(val);
         else
-            {
-                System.out.println("Improper cast!"); // todo: throw error here since different type
-                System.out.println(var.getCast() + " " + val.getType());
-            }
+        {
+            // todo (COMPLETED): throw error here since different type
+            ErrorMsg err = new ErrorMsg();
+            err.throwError(ctx, "Improper cast! you are trying to assign " + val.getType() + " to " + var.getCast());
+        }
 
         memory.get(memoryLevel).put(identifier, var);
         text.add(CodeEmitter.assignVariable(var));
@@ -257,6 +272,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitFunc_def(SimpLParser.Func_defContext ctx)
     {
+        funcType = ctx.getChild(0).getText().toUpperCase(); // store function type
         memory.add(new HashMap<String,Value>());
         memoryLevel++;
         List<TerminalNode> typeNodes = ctx.TYPE(); // first element is the return type
@@ -311,8 +327,25 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     {
         // don't execute expr yet. this would be the return statement
         List<SimpLParser.StatContext> stmts = ctx.stat();
+        Value val = getOperandValue(visit(ctx.expr()).getSymbol());
+
         for (SimpLParser.StatContext stmt : stmts)
             visit(stmt);
+        for(int i = 0; i < ctx.getChildCount(); i++)
+            if(ctx.getChild(i).getText().equals("return"))
+                if(funcType.equals("VOID"))
+                {
+                    ErrorMsg err = new ErrorMsg();
+                    err.throwError(ctx, "Should not have return in Void function");
+                }
+                else if(!val.getType().equals(funcType))
+                {
+                    ErrorMsg err = new ErrorMsg();
+                    err.throwError(ctx, "Returning different type. Expecting " + funcType + " to return.");
+                }
+
+        funcType = ""; // reset function type
+
         if(ctx.expr() != null)
         {
             // deal with return statement here
