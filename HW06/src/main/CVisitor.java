@@ -79,9 +79,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         text.add(CodeEmitter.getLibraryCode("math"));
         text.add(CodeEmitter.main());
 
-        // todo: rename stackSizeLine - it's not clear what it's doing
-        int stackSizeLine = 0;
-        stackSizeLine = text.size();
+        int stackSizeLine = text.size();
         text.add(CodeEmitter.setStack(stackSize) + CodeEmitter.setLocals(localCount));
 
         TerminalNode node = super.visitChildren(ctx);
@@ -109,7 +107,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitDeclaration(SimpLParser.DeclarationContext ctx)
     {
-        // todo (COMPLETED): add type-checking
+        // type checking below
         String name = ctx.NAME().toString();
         String type = ctx.getChild(0).toString().toUpperCase();
         CommonToken token = new CommonToken(visit(ctx.expr()).getSymbol());
@@ -141,9 +139,9 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      * <p>The default implementation returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
-    @Override public TerminalNode visitAssignment(SimpLParser.AssignmentContext ctx) {
+    @Override public TerminalNode visitAssignment(SimpLParser.AssignmentContext ctx)
+    {
         // check if it exists in the memory map
-        // TODO (COMPLETED): check validity based on variable cast using .getCast() method
         String identifier = ctx.NAME().getSymbol().getText();
         Value val = getOperandValue(visit(ctx.expr()).getSymbol());
         int parserType = getParseType(val);
@@ -151,7 +149,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
         if (memory.get(identifier) == null)
         {
-            // todo (COMPLETED): add error for if identifier exists. if not, it must be declared
             System.err.println("line " + ctx.getStart().getLine() + ": " + "Undeclared Identifier");
             for(int i = 0; i < ctx.getChildCount(); i++)
                 System.err.print(ctx.getChild(i).getText() + " ");
@@ -165,7 +162,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 var.setValue(val);
             else
             {
-                // todo (COMPLETED): throw error here since different type
                 ErrorMsg err = new ErrorMsg();
                 err.throwError(ctx, "Improper cast! you are trying to assign " + val.getType() + " to " + var.getCast());
             }
@@ -175,7 +171,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             decStackSize(2);
             return new TerminalNodeImpl(new CommonToken(parserType, getNodeField(val)));
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             e.printStackTrace();
             return null;
         }
@@ -249,7 +246,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitFunc_def(SimpLParser.Func_defContext ctx)
     {
-        funcType = ctx.getChild(0).getText().toUpperCase(); // store function type
+        funcType = ctx.getChild(0).getText().toUpperCase();
         return super.visitChildren(ctx);
     }
     /**
@@ -260,26 +257,29 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitBlock(SimpLParser.BlockContext ctx)
     {
-        // don't execute expr yet. this would be the return statement
+        // don't execute expression yet since this would be the return statement
         List<SimpLParser.StatContext> stmts = ctx.stat();
         Value val = getOperandValue(visit(ctx.expr()).getSymbol());
 
         for (SimpLParser.StatContext stmt : stmts)
             visit(stmt);
 
-        for(int i = 0; i < ctx.getChildCount(); i++)
-            if(ctx.getChild(i).getText().equals("return"))
-                if(funcType.equals("VOID"))
+        for (int i = 0; i < ctx.getChildCount(); i++)
+        {
+            if (ctx.getChild(i).getText().equals("return"))
+            {
+                if (funcType.equals("VOID"))
                 {
                     ErrorMsg err = new ErrorMsg();
                     err.throwError(ctx, "Should not have return in Void function");
                 }
-                else if(!val.getType().equals(funcType))
+                else if (!val.getType().equals(funcType))
                 {
                     ErrorMsg err = new ErrorMsg();
                     err.throwError(ctx, "Returning different type. Expecting " + funcType + " to return.");
                 }
-
+            }
+        }
         funcType = ""; // reset function type
         return new TerminalNodeImpl(new CommonToken(SimpLParser.LITERAL, "block"));
     }
@@ -313,7 +313,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             {
                 node = visit(exp);
                 val = ValueBuilder.getValue(node.getSymbol(), memory);
-                text.add(name.equals("print") ? CodeEmitter.print(val.getType()) : CodeEmitter.println(val.getType()));
+                text.add(name.equals("print")? CodeEmitter.print(val.getType()) : CodeEmitter.println(val.getType()));
             }
         }
         return node;
@@ -350,46 +350,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     private void decStackSize(int sizeDecrease)
     {
         stackSize = (sizeDecrease >= stackSize)? 0 : stackSize - sizeDecrease;
-    }
-
-    private int getParseType(String type)
-    {
-        if (type.equals("NUMBER")) return SimpLParser.NUMBER;
-        else if (type.equals("TEXT")) return SimpLParser.TEXT;
-        else if (type.equals("BOOLEAN")) return SimpLParser.BOOLEAN;
-        // todo: else assume text?
-        return SimpLParser.TEXT;
-    }
-
-    private int getParseType(Value type)
-    {
-        return getParseType(getOperandValue(type).getType());
-    }
-
-    private String getExprCtxType(SimpLParser.ExprContext ctx)
-    {
-        if (ctx.NAME() != null)
-            return "IDENTIFIER";
-        else if (ctx.LITERAL() != null)
-            return "LITERAL";
-        //else if () return "BOOL OPERATION";
-        else if (ctx.ADD() != null || ctx.SUB() != null ||
-                 ctx.DIV() != null || ctx.MUL() != null || ctx.POW() != null)
-            return "ARITHMETIC";
-        else if (ctx.AND() != null || ctx.OR() != null  || ctx.GT() != null || ctx.LT() != null ||
-                 ctx.GTE() != null || ctx.LTE() != null ||
-                 ctx.EQ()  != null || ctx.NEQ() != null)
-            return "BOOL OPERATION";
-        return "TEST";
-    }
-
-    private Boolean checkParens(SimpLParser.ExprContext ctx)
-    {
-        return ctx.LPAREN() == null || ctx.RPAREN() != null;
-    }
-    private Boolean containsParens(SimpLParser.ExprContext ctx)
-    {
-        return ctx.LPAREN() != null || ctx.RPAREN() != null;
     }
 
     private String getCtxOperation(SimpLParser.ExprContext ctx)
@@ -493,5 +453,37 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             case "POW": /* Currently unsupported. */
             default: return null;
         }
+    }
+
+    private int getParseType(String type)
+    {
+        switch (type)
+        {
+            case "NUMBER":  return SimpLParser.NUMBER;
+            case "TEXT":    return SimpLParser.TEXT;
+            case "BOOLEAN": return SimpLParser.BOOLEAN;
+        }
+        // todo: else assume text?
+        return SimpLParser.TEXT;
+    }
+    private int getParseType(Value type)
+    {
+        return getParseType(getOperandValue(type).getType());
+    }
+    private String getExprCtxType(SimpLParser.ExprContext ctx)
+    {
+        if (ctx.NAME() != null)
+            return "IDENTIFIER";
+        else if (ctx.LITERAL() != null)
+            return "LITERAL";
+            //else if () return "BOOL OPERATION";
+        else if (ctx.ADD() != null || ctx.SUB() != null ||
+                ctx.DIV() != null || ctx.MUL() != null || ctx.POW() != null)
+            return "ARITHMETIC";
+        else if (ctx.AND() != null || ctx.OR() != null  || ctx.GT() != null || ctx.LT() != null ||
+                ctx.GTE() != null || ctx.LTE() != null ||
+                ctx.EQ()  != null || ctx.NEQ() != null)
+            return "BOOL OPERATION";
+        return "TEST";
     }
 }
