@@ -124,7 +124,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             if(!type.equals(valType))
             {
                 ErrorMsg errorMsg = new ErrorMsg();
-                errorMsg.throwError(ctx, "type doesn't match");
+                errorMsg.throwError(ctx, "type doesn't match. you are trying to assign " + valType + " to " + type);
             }
 
             text.add(CodeEmitter.declareVariable(var, localCount));
@@ -147,11 +147,14 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         Value val = getOperandValue(visit(ctx.expr()).getSymbol());
         int parserType = getParseType(val);
         incStackSize(2);
-        
+
         if (memory.get(identifier) == null)
         {
             // todo (COMPLETED): add error for if identifier exists. if not, it must be declared
-            System.err.println("Undeclared Identifier");
+            System.err.println("line " + ctx.getStart().getLine() + ": " + "Undeclared Identifier");
+            for(int i = 0; i < ctx.getChildCount(); i++)
+                System.err.print(ctx.getChild(i).getText() + " ");
+            System.err.println();
             throw new RuntimeException();
         }
         try
@@ -160,19 +163,18 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             if (var.getCast().equals(val.getType()))
                 var.setValue(val);
             else
-                throw new Exception("Improper cast!");
-                //System.err.println("Improper cast!"); // todo: throw error here since different type
+            {
+                // todo (COMPLETED): throw error here since different type
+                ErrorMsg err = new ErrorMsg();
+                err.throwError(ctx, "Improper cast! you are trying to assign " + val.getType() + " to " + var.getCast());
+            }
 
             memory.put(identifier, var);
             text.add(CodeEmitter.assignVariable(var));
             decStackSize(2);
             return new TerminalNodeImpl(new CommonToken(parserType, getNodeField(val)));
         }
-        catch (RuntimeException e)
-        {
-            System.err.println("test");
-            return null;
-        } catch (Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }

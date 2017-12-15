@@ -1,4 +1,2 @@
-Text a = 3
-Number
-a = 'test'
-a = 0
+Text a = 'test'
+b = a
