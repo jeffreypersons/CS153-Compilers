@@ -313,7 +313,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             {
                 node = visit(exp);
                 val = ValueBuilder.getValue(node.getSymbol(), memory);
-                text.add(name.equals("print") ? CodeEmitter.print(val.getType()) : CodeEmitter.println(val.getType())); // check if print or println
+                text.add(name.equals("print") ? CodeEmitter.print(val.getType()) : CodeEmitter.println(val.getType()));
             }
         }
         return node;
@@ -407,18 +407,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
     private TerminalNode processExprContext(SimpLParser.ExprContext ctx)
     {
-        // Terribly written, we should come back and review this. Just trying to get some working code in
-        // would be easy to change grammar to encompass symbols by category. e.g. POW, NUL, DIV .. belong to arithmetic_operators
         TerminalNodeImpl node = null;
-        /*if(!checkParens(ctx))
-        {
-            System.out.println("unbalanced parens");    // todo: throw error, parens not balanced
-        }*/
         if (getExprCtxType(ctx).equals("IDENTIFIER"))
         {
             Value val = memory.get(ctx.NAME().getSymbol().getText()); // if undeclared throw error
-            if (val == null)  // todo: throw error, value shouldn't be null
-                return new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, "true"));
+            if (val == null)
+                return null;
             Value operand = (Value) val.getValue();
             text.add(CodeEmitter.putVarStack((Variable) val));
             node = new TerminalNodeImpl(new CommonToken(getParseType(operand), getNodeField(operand)));
