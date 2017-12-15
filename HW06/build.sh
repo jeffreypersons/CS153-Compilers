@@ -46,5 +46,4 @@ test_simpl()
     ./simplr.sh "$(dirname $1)/$(basename $1 .simpl).class"
     printf "\n"
 }
-test_simpl tests/comprehensive/basic_compile1.simpl
-test_simpl tests/comprehensive/basic_compile2.simpl
+test_simpl tests/basic/operator.simpl
