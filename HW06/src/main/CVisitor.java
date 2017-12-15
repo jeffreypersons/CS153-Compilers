@@ -108,7 +108,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
      */
     @Override public TerminalNode visitDeclaration(SimpLParser.DeclarationContext ctx)
     {
-        // todo: add type-checking
+        // todo (COMPLETED): add type-checking
         String name = ctx.NAME().toString();
         String type = ctx.getChild(0).toString().toUpperCase();
         CommonToken token = new CommonToken(visit(ctx.expr()).getSymbol());
@@ -147,16 +147,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         Value val = getOperandValue(visit(ctx.expr()).getSymbol());
         int parserType = getParseType(val);
         incStackSize(2);
-
-        System.out.println("visitAssignment - val:" + val.getType());
-        System.out.println("visitAssignment - ctx:" + ctx);
+        
         if (memory.get(identifier) == null)
         {
-            // todo: add error for if identifier exists. if not, it must be declared
-            //System.err.println("UNDELCARED IDENTIFIER");
-           // throw new RecognitionException();
-            System.out.println("Undeclared Identifier");
-
+            // todo (COMPLETED): add error for if identifier exists. if not, it must be declared
+            System.err.println("Undeclared Identifier");
+            throw new RuntimeException();
         }
         try
         {
