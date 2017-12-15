@@ -1,0 +1,7 @@
+Number a
+a = 1
+a += 'a'  # should fail
+
+Number b
+b = 10
+b -= 'b'  # should fail

@@ -1,6 +1,6 @@
 Number a = 2
 Number b = 25
-Number expectedval = 1
+Number expected_val = 1
 Text string = 'Value of a should be '
 if b > a * 100
 {
@@ -12,9 +12,9 @@ else
     a = 1
     return 1
 }
-print(string, expectedval, ' it should be: ', a)
+print(string, expected_val, ' it should be: ', a)
 
-if(expectedval == a)
+if(expected_val == a)
 {
     println('program is working correctly')
     return 1

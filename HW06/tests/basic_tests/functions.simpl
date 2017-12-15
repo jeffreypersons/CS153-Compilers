@@ -1,4 +1,4 @@
-
+# should work
 Number f()
 {
     return 1

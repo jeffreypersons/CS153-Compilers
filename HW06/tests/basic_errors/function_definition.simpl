@@ -1,6 +1,10 @@
-
 # should throw error since incompatible return types
 Text f()
 {
     return 1
+}
+
+Number f()
+{
+    return 'a'
 }
