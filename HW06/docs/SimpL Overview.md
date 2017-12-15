@@ -1,24 +1,34 @@
 # SimpL: The Simple Programming Language ©
 
+
 ## Overview
 Only single programs are supported, of which consistent of multiple statements,
-each of which are terminated with a line break.
+each of which are terminated with a line break. Any curly braces must be on
+their own separate lines -- no egyptian style braces, sorry!
 
 Statements include function definition, declaration, assignment,
 standalone expression, conditional, and while loop.
 
-Blocks consist of a `{` <0 or more statements> `}`, with the braces on their own
-lines. Blocks are expected following conditionals, function signatures, and
-loops. Again, curly braces MUST be on their own separate lines - this means
-egyptian/K & R style braces are NOT supported, sorry!
-
 Expressions are any mix of enclosed parentheses, literals, identifiers,
-function calls, and operations.
+function calls, and operations. Literals and identifier datatypes are
+limited to `Boolean`, `Number` (internally casted to a double) and `Text`
+(string).
 
-Datatypes currently include `Number` and `Text`.
+Conditionals, loops, and function definitions are supported.
+All of them have the following general structure:
+```
+<token> <expression>
+{
+    <0 or more statements>
+    <optional return statement>
+}
+```
+Note that the above braces and their enclosed statements form a block.
+Thus, blocks follow all function signatures, as well as all while, if,
+else if, else conditions.
 
 
-#### Operators
+## Operators
 Support for parenthetical, arithmetic, boolean, comparison operations
 ```
 -------- Operator Precedence (HI to LO) --------
@@ -34,33 +44,28 @@ Support for parenthetical, arithmetic, boolean, comparison operations
 |   8   |    or      |   logical disjunction   |
 ------------------------------------------------
 ```
+It's important to note that not/and/or is supported only for booleans
 
 
-#### Conditionals
-Here the block is:
-```
-Reca
-```
-(here the block is { `<0 or more statements>`} recall that a block is
-`<0 or more statements>` ending with an optional return):
-Syntax for conditionals is as follows:
+#### Control flow
+
+Syntax for conditionals are as follows:
 ```
 if <expression>
 {
-    <0 or more statements>
+    <any number of statements>
 }
 elif <expression>
 {
-    <0 or more statements>
+    <any number of statements>
 }
 else
 {
-    <0 or more statements>
+    <any number of statements>
 }
 ```
 
-#### Loops
-Syntax for conditionals is as follows:
+Syntax for loops are as follows:
 ```
 while <expression>
 {
