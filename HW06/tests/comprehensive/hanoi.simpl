@@ -1,0 +1,25 @@
+# classic recursive tower of hanoi
+# translated from java from http://www.geeksforgeeks.org/c-program-for-tower-of-hanoi/
+Text TOH(Number a, Text b, Text c, Text d)
+{
+	Text rOne = ''
+	Text rTwo = ''
+	Text t = ''
+	if a == 1
+	{
+		print('Move disk ', a, ' from ', b, ' to ', d)
+		println('')
+	}
+	else
+	{
+		rOne = TOH(a - 1, b, d, c)
+		print('Move disk ', a, ' from ', b, ' to ', d)
+		println('')
+		rTwo = TOH(a - 1, c, b, d)
+	}
+	return 'done'
+}
+
+Number numDisks = 4
+Text result = TOH(numDisks, 'A', 'B', 'C')
+print(result)
