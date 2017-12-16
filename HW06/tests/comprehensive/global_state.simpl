@@ -27,7 +27,7 @@ Number run_away()
     else
     {
         Text message = 'Alright, run away!'
-        attempt_num += 1
+        attempt_num = attempt_num + 1
         return message
     }
 }
