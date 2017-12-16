@@ -15,10 +15,6 @@ import org.antlr.v4.runtime.Token;
 import gen.SimpLBaseVisitor;
 import gen.SimpLParser;
 
-// todo: remove extra checks, and implement error handling in the parsers/lexer classes instead!
-// todo: at the very least, utilize the the convenience token groups from the grammar like BOOLEAN_OPERATIONS etc...
-// todo: add code emitter as a private field...
-
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 {
     private int stackSizeLine;
@@ -139,11 +135,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             var = new Variable(name, val, val.getType());
             String valType = var.getCast();
             // Type checking here. if miss match, throw error in else statement
-            if(!varType.equals(valType))
-            {
-                ErrorMessage errorMessage = new ErrorMessage();
-                errorMessage.throwError(ctx, "type doesn't match. you are trying to assign " + valType + " to " + varType);
-            }
+            if (!varType.equals(valType))
+                ErrorMessages.throwError(ctx, "type doesn't match. you are trying to assign " + valType + " to " + varType);
             text.add(CodeEmitter.declareVariable(var, localCount));
             memory.get(memoryLevel).put(name, var);
         }
@@ -165,7 +158,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     @Override public TerminalNode visitAssignment(SimpLParser.AssignmentContext ctx)
     {
         // check if it exists in the memory map
-        // TODO (COMPLETED): check validity based on variable cast using .getCast() method
         String identifier = ctx.NAME().getSymbol().getText();
         TerminalNode a = visit(ctx.expr());
         if(a != null)
@@ -177,9 +169,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             incStackSize(2);
             if (memory.get(memoryLevel).get(identifier) == null)
             {
-                // todo (COMPLETED): add error for if identifier exists. if not, it must be declared
                 System.err.println("line " + ctx.getStart().getLine() + ": " + "Undeclared Identifier");
-                for(int i = 0; i < ctx.getChildCount(); i++)
+                for (int i = 0; i < ctx.getChildCount(); i++)
                     System.err.print(ctx.getChild(i).getText() + " ");
                 System.err.println();
             }
@@ -188,9 +179,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 var.setValue(val);
             else
             {
-                // todo (COMPLETED): throw error here since different type
-                ErrorMessage err = new ErrorMessage();
-                err.throwError(ctx, "Improper cast! you are trying to assign " + val.getType() + " to " + var.getCast());
+                ErrorMessages.throwError(ctx, "Improper cast! you are trying to assign " + val.getType() + " to " + var.getCast());
             }
 
             memory.get(memoryLevel).put(identifier, var);
@@ -301,16 +290,17 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         List<String> operandNames = new ArrayList<String>();
         String functionName = null;
 
-        for(int x = 0; x < typeNodes.size(); x++)
+        for (int x = 0; x < typeNodes.size(); x++)
         {
-            if(x == 0) returnType = typeNodes.get(x).getSymbol().getText().toUpperCase();
+            if (x == 0) returnType = typeNodes.get(x).getSymbol().getText().toUpperCase();
             else operandTypes.add(typeNodes.get(x).getSymbol().getText().toUpperCase());
         }
 
-        for(int x = 1; x < nameNodes.size(); x++)
+        for (int x = 1; x < nameNodes.size(); x++)
             operandNames.add(nameNodes.get(x).getSymbol().getText());
-        for(int x = 0; x < operandNames.size(); x++)
-            memory.get(memoryLevel).put(operandNames.get(x), new Variable(operandNames.get(x), ValueBuilder.getValue(operandTypes.get(x)), operandTypes.get(x), localCount + x - 1));
+        for (int x = 0; x < operandNames.size(); x++)
+            memory.get(memoryLevel).put(operandNames.get(x),
+                new Variable(operandNames.get(x), ValueBuilder.getValue(operandTypes.get(x)), operandTypes.get(x), localCount + x - 1));
         String declaration = CodeEmitter.functionDeclaration(name, operandTypes, returnType);
 
         functions.put(name, new Function(name, CodeEmitter.functionCall(name, operandTypes, returnType), returnType));
@@ -325,10 +315,10 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         text.add(CodeEmitter.endMethod());
         int postDec = text.size();
 
-        String functionDeclaration = "";
-        for(int x = 0; x < postDec - prevDec; x++) functionDeclaration += text.get(prevDec + x) + "\n";
-        for(int x = 0; x < postDec - prevDec; x++) text.remove(prevDec);
-        text.add(functionInsertLine, functionDeclaration);
+        StringBuilder functionDeclaration = new StringBuilder();
+        for (int x = 0; x < postDec - prevDec; x++) functionDeclaration.append(text.get(prevDec + x)).append("\n");
+        for (int x = 0; x < postDec - prevDec; x++) text.remove(prevDec);
+        text.add(functionInsertLine, functionDeclaration.toString());
         stackSizeLine++;
 
         // create function reference in functions table
@@ -359,13 +349,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 if(ctx.getChild(i).getText().equals("return"))
                     if(funcType.equals("VOID"))
                     {
-                        ErrorMessage err = new ErrorMessage();
-                        err.throwError(ctx, "Should not have return in Void function");
+                        ErrorMessages.throwError(ctx, "Should not have return in Void function");
                     }
                     else if(!val.getType().equals(funcType))
                     {
-                        ErrorMessage err = new ErrorMessage();
-                        err.throwError(ctx, "Returning different type. Expecting " + funcType + " to return " + val.getType());
+                        ErrorMessages.throwError(ctx, "Returning different type. Expecting " + funcType + " to return " + val.getType());
                     }
         }
 
@@ -408,18 +396,17 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         else
         {
             ArrayList<String> typesInParam = new ArrayList<String>();
-            for(int i = 0; i < expressions.size(); i++)
+            for (SimpLParser.ExprContext expression : expressions)
             {
-                String type = expressions.get(i).getChild(0).getText();
-                if(type.matches("\\d(\\.)?\\d*"))
+                String type = expression.getChild(0).getText();
+                if (type.matches("\\d(\\.)?\\d*"))
                     typesInParam.add("NUMBER");
-                else if(type.matches("False | True"))
+                else if (type.matches("False | True"))
                     typesInParam.add("BOOLEAN");
-                else if(type.matches("\'\\w\'"))
+                else if (type.matches("\'\\w\'"))
                     typesInParam.add("TEXT");
-                else if(type.matches("\\w"))
+                else if (type.matches("\\w"))
                     typesInParam.add("IDENTIFIER");
-
             }
 
             //expressions.get(0).getChild(0).getText();
@@ -427,28 +414,25 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             boolean paramNumMatch = false;
             boolean paramTypeMatch = true;
             ArrayList<String> info = null;
-            for(int i = 0; i < funcList.size(); i++)
+            for (FuncInfo aFuncList : funcList)
             {
-                if(name.equals(funcList.get(i).getFuncName()))
+                if (name.equals(aFuncList.getFuncName()))
                 {
                     nameFound = true;
-                    if(expressions.size() == funcList.get(i).getNumOfParam())
+                    if (expressions.size() == aFuncList.getNumOfParam())
                     {
                         paramNumMatch = true;
                         int j = 0;
-                        while(paramTypeMatch && j < funcList.get(i).getParamTypeInfo().size())
+                        while (paramTypeMatch && j < aFuncList.getParamTypeInfo().size())
                         {
-                            info = funcList.get(i).getParamTypeInfo();
-                            if(info != null)
+                            info = aFuncList.getParamTypeInfo();
+                            if (info != null)
                                 try
                                 {
-                                if(!info.get(j).equals(typesInParam.get(j)) &&
-                                        !typesInParam.get(j).equals("IDENTIFIER"))
-                                    paramTypeMatch = false;
-                                }catch(Exception e)
-                                {
-
+                                    if (!info.get(j).equals(typesInParam.get(j)) && !typesInParam.get(j).equals("IDENTIFIER"))
+                                        paramTypeMatch = false;
                                 }
+                                catch (Exception e) {}
                             j++;
                         }
                     }
@@ -457,19 +441,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
             if(!nameFound)
             {
-                ErrorMessage err = new ErrorMessage();
-                err.throwError(ctx, "Function name \'" + name + "\' is not defined.");
+                ErrorMessages.throwError(ctx, "Function name \'" + name + "\' is not defined.");
             }
             else if(!paramNumMatch)
             {
-                ErrorMessage err = new ErrorMessage();
-                err.throwError(ctx, "Number of parameter does not match.");
+                ErrorMessages.throwError(ctx, "Number of parameter does not match.");
             }
-            /*else if(!paramTypeMatch)
-            {
-                ErrorMessage err = new ErrorMessage();
-                err.throwError(ctx, "Type is not matched.");
-            }*/
 
             for (SimpLParser.ExprContext exp : expressions)
             {
@@ -552,15 +529,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         return "TEST";
     }
 
-    private Boolean checkParens(SimpLParser.ExprContext ctx)
-    {
-        return ctx.LPAREN() == null || ctx.RPAREN() != null;
-    }
-    private Boolean containsParens(SimpLParser.ExprContext ctx)
-    {
-        return ctx.LPAREN() != null || ctx.RPAREN() != null;
-    }
-
     private String getCtxOperation(SimpLParser.ExprContext ctx)
     {
         if(ctx == null)
@@ -630,51 +598,38 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             }
             if (getExprCtxType(ctx).equals("ARITHMETIC"))
             {
-                if(!(loperand.getType().equals("NUMBER") && roperand.getType().equals("NUMBER")))
-                {
-                    ErrorMessage err = new ErrorMessage();
-                    err.throwError(ctx, "Invalid operand(s)");
-                }
+                if (!(loperand.getType().equals("NUMBER") && roperand.getType().equals("NUMBER")))
+                    ErrorMessages.throwError(ctx, "Invalid operand(s)");
                 Number result = performOperation((Number) loperand, (Number) roperand, operation);
                 Supplier<String> supFunction = codeEmissionMap.get(operation);
                 if (supFunction == null)
-                    /* todo: invalid operation throw error */;
+                    ;  // maybe throw error here in future
                 else text.add(supFunction.get());
                 node = new TerminalNodeImpl(new CommonToken(getParseType(result), getNodeField(result)));
                 decStackSize(1);
             }
             else if (getExprCtxType(ctx).equals("BOOL OPERATION"))
             {
-                if((operation.equals("EQ") || operation.equals("NEQ")) &&
+                if ((operation.equals("EQ") || operation.equals("NEQ")) &&
                         (!(loperand.getType().equals(roperand.getType()))) &&
                         (!(loperand.getType().equals("IDENTIFIER")) || (roperand.getType().equals("IDENTIFIER"))))
-                {
-                    ErrorMessage err = new ErrorMessage();
-                    err.throwError(ctx, "Invalid Comparision.");
-                }
+                    ErrorMessages.throwError(ctx, "Invalid Comparision.");
 
                 if (loperand.getType().equals("IDENTIFIER"))
                     text.add(CodeEmitter.putVarStack((Variable)loperand));
                 else if (loperand.getType().equals("TEXT") && !operation.equals("EQ") && !operation.equals("NEQ"))
-                {
-                    ErrorMessage err = new ErrorMessage();
-                    err.throwError(ctx, "There is TEXT on left operand. TEXT is not allowed at BOOLEAN expr.");
-                }
+                    ErrorMessages.throwError(ctx, "There is TEXT on left operand. TEXT is not allowed at BOOLEAN expr.");
 
                 if (roperand.getType().equals("IDENTIFIER"))
                     text.add(CodeEmitter.putVarStack((Variable)roperand));
                 else if (loperand.getType().equals("TEXT") && !operation.equals("EQ") && !operation.equals("NEQ"))
-                {
-                    ErrorMessage err = new ErrorMessage();
-                    err.throwError(ctx, "There is TEXT on right operand. TEXT is not allowed at BOOLEAN expr.");
-                }
+                    ErrorMessages.throwError(ctx, "There is TEXT on right operand. TEXT is not allowed at BOOLEAN expr.");
                 text.add(CodeEmitter.booleanOperation(operation.toLowerCase()));
                 node = new TerminalNodeImpl(new CommonToken(SimpLParser.BOOLEAN, operation));
             }
         }
         return node;
     }
-    // todo: replace conditionals/switches with polymorphism in value class (eg like getTextualValue() as replacement)
     private String getNodeField(Value nodeVal)
     {
         Value value = getOperandValue(nodeVal);
