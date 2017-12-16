@@ -1,21 +1,12 @@
-##
-------------------------------- Expected Output -------------------------------
-False
-True
-True
-False
-False
 
-##
-println('boolean')
-println('not True', not True)
-println(not False
-println(True  and True)
-println(False and True)
-println(True  and False)
-println(False and True)
+not True
+not False
+True  and True
+False and True
+True  and False
+False and True
 
-println('comparison')
+# comparison
 0 == 0
 0 != 0
 0 <= 0
@@ -23,14 +14,7 @@ println('comparison')
 0 <  0
 0 >  0
 
-println('arithmetic')
-0 + 0
 0 - 0
 0 * 0
 0 / 0
 0 ^ 0
-
-println('assignment')
-Number a = 0
-Number b
-b = a

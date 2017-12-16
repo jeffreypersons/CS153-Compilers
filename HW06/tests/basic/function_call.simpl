@@ -1,0 +1,14 @@
+# should fail cause invalid num parameters
+Number f()
+{
+    return 3
+}
+
+f(4, 4)
+
+# should fail cause invalid type
+Text g(Text a)
+{
+
+}
+g(4)

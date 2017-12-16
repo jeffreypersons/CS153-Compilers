@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 # various errors of operators
+=======
+>>>>>>> fix-errors
 # boolean
 not 'a'
 not 0
@@ -26,7 +29,14 @@ False - False
 0 / 'a'
 'a' ^ True
 
+<<<<<<< HEAD
 # augmented assignment is not supported
 Number a = 0
 a += 0
 a -= 0
+=======
+# assignment
+Number a = False
+a += 0
+a -= 'a'
+>>>>>>> fix-errors
