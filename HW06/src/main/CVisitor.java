@@ -283,6 +283,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         localCount = 1;
         funcType = ctx.getChild(0).getText().toUpperCase(); // store function type
         FuncInfo f = new FuncInfo();
+
+
         f.setFuncType(funcType);
         memory.add(new HashMap<String,Value>());
         memoryLevel++;
@@ -311,6 +313,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         String declaration = CodeEmitter.functionDeclaration(name, operandTypes, returnType);
 
         //System.out.println("memory looks like: " + memory.get(memoryLevel).toString());
+
+        functions.put(name, new Function(name, CodeEmitter.functionCall(name, operandTypes, returnType), returnType));
 
         int prevDec = text.size();
         text.add(declaration);

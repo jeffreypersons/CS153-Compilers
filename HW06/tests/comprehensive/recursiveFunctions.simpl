@@ -1,0 +1,26 @@
+Number fib(Number sequence)
+{	
+	Number rOne = 0
+	Number rTwo = 0
+	if sequence == 0
+	{
+		return sequence
+	}
+	elif sequence == 1
+	{
+		return sequence
+	}
+	else
+	{
+		sequence = sequence - 1
+		rOne = fib(sequence)
+		sequence = sequence - 1
+		rTwo = fib(sequence)
+		Number result = rOne + rTwo
+		return result
+	}
+}
+
+print('getting fibinacci sequence of 10')
+Number fibi = fib(10)
+println(fibi)

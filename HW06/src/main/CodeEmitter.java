@@ -352,17 +352,6 @@ public class CodeEmitter
 
     public static String functionDeclaration(String name, List<String> operandTypes, String returnType)
     {
-        /*StringBuilder declaration = new StringBuilder(START_FUNCTION + name + "(");
-        // translate operandTypes into equivalnt byte code
-        for(String operandType : operandTypes)
-        {
-            //if(operandType.equals("NUMBER")) declaration.append(valueTypeToBC.get(operandType));
-            //else if(operandType.equals("TEXT")) declaration.append(valueTypeToBC.get(operandType));
-            //else declaration.append(""); // todo: add support for booleans
-            declaration.append(valueTypeToBC.get(operandType.toUpperCase()));
-        }
-        declaration.append(")" + valueTypeToBC.get(returnType.toUpperCase()));
-        return declaration.toString();*/
         return START_FUNCTION + functionCall(name, operandTypes, returnType);
     }
 
