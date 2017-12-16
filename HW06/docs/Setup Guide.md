@@ -1,5 +1,4 @@
-# SimpL ©: Getting Started
-## Setup
+# SimpL ©: Setup Guide
 
 ## Building SimpL Source
 To build SimpL, navigate to the SimpL directory and run:
