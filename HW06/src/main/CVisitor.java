@@ -14,6 +14,7 @@ import org.antlr.v4.runtime.Token;
 
 import gen.SimpLBaseVisitor;
 import gen.SimpLParser;
+import utils.ErrorMessages;
 
 public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 {
