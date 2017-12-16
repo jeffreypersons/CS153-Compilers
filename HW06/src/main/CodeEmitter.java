@@ -2,6 +2,7 @@ package main;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 public class CodeEmitter
 {
@@ -14,7 +15,46 @@ public class CodeEmitter
     private static String programName = "a";
     private static Map<String, String> booleanOperations, ifOperations;
     private static Map<String, Map<String,String>> typeOps;
+    private static Map<String, String> valueTypeToBC; // for converting value into bytecode equivalent. e.g. Number to F
     private static Boolean isInitialized = false;
+
+    public static void initialize()
+    {
+        // construct hashmaps for all boolean and if operations
+        if (isInitialized)
+            return;
+
+        ifOperations = new HashMap<String, String>();
+        booleanOperations = new HashMap<String, String>();
+        typeOps = new HashMap<String, Map<String,String>>();
+        valueTypeToBC = new HashMap<String, String>();
+        String[] types          = {"NUMBER", "TEXT", "BOOLEAN"};
+        String[] load_commands  = {"fload ", "aload ", "iload "};
+        String[] store_commands = {"fstore ", "astore ", "istore "};
+        String[] command_types  = {"store", "load"};
+        String[] ops            = {"GT", "LT", "GTE", "LTE", "EQ", "NEQ", "NOT", "OR", "AND"};
+        String[] if_ops         = {"ifgt", "iflt", "ifgt", "iflt", "ifne", "ifeq", "iconst_1\nisub\niflt"};
+        String[] bool_ops       = {"swap\nfcmpg\niconst_1\niadd", "swap\nfcmpg\niconst_1\nisub", "fcmpg",
+                                   "swap\nfcmpg", "fcmpg", "fcmpg", "ineg", "ior", "iand"};
+        String[] byteCodeTypes = {"F", "Ljava/lang/String;", "I"}; // I for bool?
+
+        Map<String, String> loads;
+        for (int x = 0; x < if_ops.length; x++)
+            ifOperations.put(ops[x], if_ops[x]);
+        for (int x = 0; x < bool_ops.length; x++)
+            booleanOperations.put(ops[x], bool_ops[x]);
+        for (int x = 0; x < types.length; x++)
+        {
+            loads = new HashMap<String, String>();
+            loads.put(command_types[0], store_commands[x]);
+            loads.put(command_types[1], load_commands[x]);
+
+            typeOps.put(types[x], loads);
+
+            valueTypeToBC.put(types[x], byteCodeTypes[x]);
+        }
+        isInitialized = true;
+    }
 
     public static String program(String name)
     {
@@ -50,6 +90,11 @@ public class CodeEmitter
     public static String div()
     {
         return "invokestatic " + CodeEmitter.programName + "/div(FF)F\n";
+    }
+
+    public static String pow()
+    {
+        return "invokestatic " + CodeEmitter.programName + "/pow(FF)F\n";
     }
 
     // todo: change to input()?, and add string parameter as the prompt message like python...?!
@@ -138,40 +183,6 @@ public class CodeEmitter
     {
         String compareType = ifOperations.get(type.toUpperCase());
         return compareType == null? "iflt" : compareType + " " + label.replaceAll(":", "");
-    }
-
-    public static void initialize()
-    {
-        // construct hashmaps for all boolean and if operations
-        if (isInitialized)
-            return;
-
-        ifOperations = new HashMap<String, String>();
-        booleanOperations = new HashMap<String, String>();
-        typeOps = new HashMap<String, Map<String,String>>();
-        String[] types          = {"NUMBER", "TEXT", "BOOLEAN"};
-        String[] load_commands  = {"fload ", "aload ", "iload "};
-        String[] store_commands = {"fstore ", "astore ", "istore "};
-        String[] command_types  = {"store", "load"};
-        String[] ops            = {"GT", "LT", "GTE", "LTE", "EQ", "NEQ", "NOT", "OR", "AND"};
-        String[] if_ops         = {"ifgt", "iflt", "ifgt", "iflt", "ifne", "ifeq", "iconst_1\nisub\niflt"};
-        String[] bool_ops       = {"swap\nfcmpg\niconst_1\niadd", "swap\nfcmpg\niconst_1\nisub", "fcmpg",
-                                   "swap\nfcmpg", "fcmpg", "fcmpg", "ineg", "ior", "iand"};
-
-        Map<String, String> loads;
-        for (int x = 0; x < if_ops.length; x++)
-            ifOperations.put(ops[x], if_ops[x]);
-        for (int x = 0; x < bool_ops.length; x++)
-            booleanOperations.put(ops[x], bool_ops[x]);
-        for (int x = 0; x < types.length; x++)
-        {
-            loads = new HashMap<String, String>();
-            loads.put(command_types[0], store_commands[x]);
-            loads.put(command_types[1], load_commands[x]);
-
-            typeOps.put(types[x], loads);
-        }
-        isInitialized = true;
     }
 
     public static String getLabel(int num)
@@ -297,6 +308,30 @@ public class CodeEmitter
             construct.append("fsub\n");
             construct.append("freturn\n");
             construct.append(END_FUNCTION);
+
+            // create pow code
+            construct.append(START_FUNCTION + "pow(FF)F\n");
+            construct.append(setStack(4));
+            construct.append(setLocals(3));
+            
+            construct.append("ldc 1.0\nfstore_2\n");
+            construct.append("ldc 1.0\n");
+
+            construct.append("LOOP:\n");
+            construct.append("ldc 0.0\nfload_1\n");
+            construct.append("fcmpg\n");
+            construct.append("ifeq END_LOOP\n");
+
+            construct.append("fload_2\nfload_0\n" + CodeEmitter.mul());
+            construct.append("fstore_2\n");
+
+            construct.append("fload_1\nldc 1.0\n");
+            construct.append(CodeEmitter.sub() + "\nfstore_1\n");
+            construct.append("goto LOOP\n");
+            construct.append("END_LOOP:\n");
+            construct.append("pop\nfload_2\n");
+            construct.append("freturn\n");
+            construct.append(END_FUNCTION);
         }
         return construct.toString();
     }
@@ -313,5 +348,51 @@ public class CodeEmitter
         }
         else output = loadConstant((String) value);
         return output;
+    }
+
+    public static String functionDeclaration(String name, List<String> operandTypes, String returnType)
+    {
+        /*StringBuilder declaration = new StringBuilder(START_FUNCTION + name + "(");
+        // translate operandTypes into equivalnt byte code
+        for(String operandType : operandTypes)
+        {
+            //if(operandType.equals("NUMBER")) declaration.append(valueTypeToBC.get(operandType));
+            //else if(operandType.equals("TEXT")) declaration.append(valueTypeToBC.get(operandType));
+            //else declaration.append(""); // todo: add support for booleans
+            declaration.append(valueTypeToBC.get(operandType.toUpperCase()));
+        }
+        declaration.append(")" + valueTypeToBC.get(returnType.toUpperCase()));
+        return declaration.toString();*/
+        return START_FUNCTION + functionCall(name, operandTypes, returnType);
+    }
+
+    public static String functionCall(String name, List<String> operandTypes, String returnType)
+    {
+        StringBuilder call = new StringBuilder(name + "(");
+        String type = null;
+        if(returnType.equals("")) returnType = "V";
+        //if(operandTypes.size() == 0) call.append("V");
+        for(String operandType : operandTypes)
+        {
+            type = valueTypeToBC.get(operandType.toUpperCase());
+            call.append(type);
+        }
+        call.append(")" + valueTypeToBC.get(returnType.toUpperCase()));
+        return call.toString();
+    }
+
+    public static String functionCall(String functionName, Map<String, Function> functionMap)
+    {
+        StringBuilder functionCall = new StringBuilder("invokestatic ");
+        functionCall.append(programName + "/").append(functionMap.get(functionName).getValue());
+        return functionCall.toString();
+    }
+
+    public static String createReturn(String type)
+    {
+        if(type.equals("TEXT")) return "areturn";
+        else if(type.equals("NUMBER")) return "freturn";
+        else if(type.equals("BOOLEAN")) return "ireturn";
+        else return "return";
     }
 }

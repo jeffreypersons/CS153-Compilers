@@ -1,6 +1,7 @@
 package main;
 
 import java.util.Map;
+import java.util.List;
 
 import org.antlr.v4.runtime.Token;
 
@@ -60,9 +61,28 @@ public class ValueBuilder
             return new Number(0);  // todo - do we really want this on error?...
         }
     }
+
+    public static Value getValue(Token token, List<Map<String,Value>> mapList)
+    {
+        return getValue(token, mapList, 0); // pull from global list
+    }
+
+    public static Value getValue(Token token, List<Map<String,Value>> mapList, int level)
+    {
+        return getValue(token, mapList.get(level));
+    }
+
     // todo: add values for primitives
     public static Value getValue(double value)
     {
         return new Number(value);
+    }
+
+    public static Value getValue(String type)
+    {
+        if(type.equals("NUMBER")) return new Number(0);
+        else if(type.equals("TEXT")) return new Text("");
+        else if(type.equals("BOOLEAN")) return new Bool(false);
+        else return new Number(0); // should really throw error here
     }
 }
