@@ -141,8 +141,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             // Type checking here. if miss match, throw error in else statement
             if(!varType.equals(valType))
             {
-                ErrorMsg errorMsg = new ErrorMsg();
-                errorMsg.throwError(ctx, "type doesn't match. you are trying to assign " + valType + " to " + varType);
+                ErrorMessage errorMessage = new ErrorMessage();
+                errorMessage.throwError(ctx, "type doesn't match. you are trying to assign " + valType + " to " + varType);
             }
             text.add(CodeEmitter.declareVariable(var, localCount));
             memory.get(memoryLevel).put(name, var);
@@ -189,7 +189,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             else
             {
                 // todo (COMPLETED): throw error here since different type
-                ErrorMsg err = new ErrorMsg();
+                ErrorMessage err = new ErrorMessage();
                 err.throwError(ctx, "Improper cast! you are trying to assign " + val.getType() + " to " + var.getCast());
             }
 
@@ -359,12 +359,12 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 if(ctx.getChild(i).getText().equals("return"))
                     if(funcType.equals("VOID"))
                     {
-                        ErrorMsg err = new ErrorMsg();
+                        ErrorMessage err = new ErrorMessage();
                         err.throwError(ctx, "Should not have return in Void function");
                     }
                     else if(!val.getType().equals(funcType))
                     {
-                        ErrorMsg err = new ErrorMsg();
+                        ErrorMessage err = new ErrorMessage();
                         err.throwError(ctx, "Returning different type. Expecting " + funcType + " to return " + val.getType());
                     }
         }
@@ -457,17 +457,17 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
             if(!nameFound)
             {
-                ErrorMsg err = new ErrorMsg();
+                ErrorMessage err = new ErrorMessage();
                 err.throwError(ctx, "Function name \'" + name + "\' is not defined.");
             }
             else if(!paramNumMatch)
             {
-                ErrorMsg err = new ErrorMsg();
+                ErrorMessage err = new ErrorMessage();
                 err.throwError(ctx, "Number of parameter does not match.");
             }
             /*else if(!paramTypeMatch)
             {
-                ErrorMsg err = new ErrorMsg();
+                ErrorMessage err = new ErrorMessage();
                 err.throwError(ctx, "Type is not matched.");
             }*/
 
@@ -632,7 +632,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             {
                 if(!(loperand.getType().equals("NUMBER") && roperand.getType().equals("NUMBER")))
                 {
-                    ErrorMsg err = new ErrorMsg();
+                    ErrorMessage err = new ErrorMessage();
                     err.throwError(ctx, "Invalid operand(s)");
                 }
                 Number result = performOperation((Number) loperand, (Number) roperand, operation);
@@ -649,7 +649,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                         (!(loperand.getType().equals(roperand.getType()))) &&
                         (!(loperand.getType().equals("IDENTIFIER")) || (roperand.getType().equals("IDENTIFIER"))))
                 {
-                    ErrorMsg err = new ErrorMsg();
+                    ErrorMessage err = new ErrorMessage();
                     err.throwError(ctx, "Invalid Comparision.");
                 }
 
@@ -657,7 +657,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                     text.add(CodeEmitter.putVarStack((Variable)loperand));
                 else if (loperand.getType().equals("TEXT") && !operation.equals("EQ") && !operation.equals("NEQ"))
                 {
-                    ErrorMsg err = new ErrorMsg();
+                    ErrorMessage err = new ErrorMessage();
                     err.throwError(ctx, "There is TEXT on left operand. TEXT is not allowed at BOOLEAN expr.");
                 }
 
@@ -665,7 +665,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                     text.add(CodeEmitter.putVarStack((Variable)roperand));
                 else if (loperand.getType().equals("TEXT") && !operation.equals("EQ") && !operation.equals("NEQ"))
                 {
-                    ErrorMsg err = new ErrorMsg();
+                    ErrorMessage err = new ErrorMessage();
                     err.throwError(ctx, "There is TEXT on right operand. TEXT is not allowed at BOOLEAN expr.");
                 }
                 text.add(CodeEmitter.booleanOperation(operation.toLowerCase()));
