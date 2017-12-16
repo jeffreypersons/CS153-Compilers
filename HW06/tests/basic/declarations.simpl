@@ -1,0 +1,13 @@
+# should work
+Number a
+Text b
+
+# should work
+Text f()
+{
+    return 'a'
+}
+Number g()
+{
+    return 0
+}
