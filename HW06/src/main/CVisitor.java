@@ -303,18 +303,18 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
 
         for(int x = 0; x < typeNodes.size(); x++)
         {
-            if(x == 0) returnType = typeNodes.get(x).getSymbol().getText();
-            else operandTypes.add(typeNodes.get(x).getSymbol().getText());
+            if(x == 0) returnType = typeNodes.get(x).getSymbol().getText().toUpperCase();
+            else operandTypes.add(typeNodes.get(x).getSymbol().getText().toUpperCase());
         }
+
         for(int x = 1; x < nameNodes.size(); x++)
             operandNames.add(nameNodes.get(x).getSymbol().getText());
         for(int x = 0; x < operandNames.size(); x++)
             memory.get(memoryLevel).put(operandNames.get(x), new Variable(operandNames.get(x), ValueBuilder.getValue(operandTypes.get(x)), operandTypes.get(x), localCount + x - 1));
         String declaration = CodeEmitter.functionDeclaration(name, operandTypes, returnType);
 
-        //System.out.println("memory looks like: " + memory.get(memoryLevel).toString());
-
         functions.put(name, new Function(name, CodeEmitter.functionCall(name, operandTypes, returnType), returnType));
+        localCount += operandNames.size();
 
         int prevDec = text.size();
         text.add(declaration);
@@ -347,11 +347,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     @Override public TerminalNode visitBlock(SimpLParser.BlockContext ctx)
     {
         // don't execute expr yet. this would be the return statement
+        System.out.println(localCount);
         List<SimpLParser.StatContext> stmts = ctx.stat();
 
         for (SimpLParser.StatContext stmt : stmts)
             visit(stmt);
-
         if(ctx.expr() != null)
         {
             Value val = getOperandValue(visit(ctx.expr()).getSymbol());
@@ -409,8 +409,8 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             for (SimpLParser.ExprContext exp : expressions)
             {
                 node = visit(exp);
-                val = ValueBuilder.getValue(node.getSymbol(), memory);
-                text.add(name.equals("print") ? CodeEmitter.print(val.getType()) : CodeEmitter.println(val.getType())); // check if print or println
+                val = ValueBuilder.getValue(node.getSymbol(), memory, memoryLevel);
+                text.add(name.equals("print") ? CodeEmitter.print(val.getType().toUpperCase()) : CodeEmitter.println(val.getType().toUpperCase())); // check if print or println
             }
         }
         else
@@ -420,13 +420,13 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             {
                 String type = expressions.get(i).getChild(0).getText();
                 if(type.matches("\\d(\\.)?\\d*"))
-                    typesInParam.add("Number");
+                    typesInParam.add("NUMBER");
                 else if(type.matches("False | True"))
-                    typesInParam.add("Boolean");
+                    typesInParam.add("BOOLEAN");
                 else if(type.matches("\'\\w\'"))
-                    typesInParam.add("Text");
+                    typesInParam.add("TEXT");
                 else if(type.matches("\\w"))
-                    typesInParam.add("Identifier");
+                    typesInParam.add("IDENTIFIER");
             }
 
             //expressions.get(0).getChild(0).getText();
@@ -588,11 +588,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
         // Terribly written, we should come back and review this. Just trying to get some working code in
         // would be easy to change grammar to encompass symbols by category. e.g. POW, NUL, DIV .. belong to arithmetic_operators
         TerminalNodeImpl node = null;
-        /*if(!checkParens(ctx))
-        {
-            System.out.println("unbalanced parens");    // todo: throw error, parens not balanced
-        }*/
-        System.out.println(getExprCtxType(ctx));
         if (getExprCtxType(ctx).equals("IDENTIFIER"))
         {
             Value val = memory.get(memoryLevel).get(ctx.NAME().getSymbol().getText()); // if undeclared throw error
@@ -640,9 +635,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             {
                 System.out.println("terminal error occured");
             }
-
-            System.out.println(getExprCtxType(ctx));
-
             if (getExprCtxType(ctx).equals("ARITHMETIC"))
             {
                 if(!(loperand.getType().equals("Number") && roperand.getType().equals("Number")))
@@ -650,7 +642,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                     ErrorMsg err = new ErrorMsg();
                     err.throwError(ctx, "Invalid operand(s)");
                 }
-                System.out.println(loperand + " " + roperand);
                 Number result = performOperation((Number) loperand, (Number) roperand, operation);
                 Supplier<String> supFunction = codeEmissionMap.get(operation);
                 if (supFunction == null)
