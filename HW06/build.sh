@@ -62,8 +62,8 @@ test_simpl tests/basic/declaration_errors.simpl
 test_simpl tests/basic/loop_errors.simpl
 test_simpl tests/basic/operator_errors.simpl
 # ----- comprehensive simpl snippets that SHOULD work -----
-test_simpl tests/comprehensive/global_state.simpl
 test_simpl tests/comprehensive/math_functions.simpl
 test_simpl tests/comprehensive/misc.simpl
 test_simpl tests/comprehensive/nested_empty_blocks.simpl
-test_simpl tests/comprehensive/global_state.simpl
+test_simpl tests/comprehensive/newtons_method.simpl
+test_simpl tests/comprehensive/towers_of_hanoi.simpl
