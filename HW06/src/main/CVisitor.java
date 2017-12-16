@@ -347,7 +347,6 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
     @Override public TerminalNode visitBlock(SimpLParser.BlockContext ctx)
     {
         // don't execute expr yet. this would be the return statement
-        System.out.println(localCount);
         List<SimpLParser.StatContext> stmts = ctx.stat();
 
         for (SimpLParser.StatContext stmt : stmts)
@@ -366,18 +365,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                     else if(!val.getType().equals(funcType))
                     {
                         ErrorMsg err = new ErrorMsg();
-                        err.throwError(ctx, "Returning different type. Expecting " + funcType + " to return.");
+                        err.throwError(ctx, "Returning different type. Expecting " + funcType + " to return " + val.getType());
                     }
         }
 
-        funcType = ""; // reset function type
-
-        /*if(ctx.expr() != null)
-        {
-            // deal with return statement here
-            //System.out.println(ctx.expr());
-            visit(ctx.expr());
-        }*/
+        //funcType = ""; // reset function typeS
         return new TerminalNodeImpl(new CommonToken(SimpLParser.LITERAL, "block"));
     }
     /**
@@ -427,6 +419,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                     typesInParam.add("TEXT");
                 else if(type.matches("\\w"))
                     typesInParam.add("IDENTIFIER");
+
             }
 
             //expressions.get(0).getChild(0).getText();
@@ -450,7 +443,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                                 try
                                 {
                                 if(!info.get(j).equals(typesInParam.get(j)) &&
-                                        !typesInParam.get(j).equals("Identifier"))
+                                        !typesInParam.get(j).equals("IDENTIFIER"))
                                     paramTypeMatch = false;
                                 }catch(Exception e)
                                 {
@@ -472,11 +465,11 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
                 ErrorMsg err = new ErrorMsg();
                 err.throwError(ctx, "Number of parameter does not match.");
             }
-            else if(!paramTypeMatch)
+            /*else if(!paramTypeMatch)
             {
                 ErrorMsg err = new ErrorMsg();
                 err.throwError(ctx, "Type is not matched.");
-            }
+            }*/
 
             for (SimpLParser.ExprContext exp : expressions)
             {
@@ -637,7 +630,7 @@ public class CVisitor extends SimpLBaseVisitor<TerminalNode>
             }
             if (getExprCtxType(ctx).equals("ARITHMETIC"))
             {
-                if(!(loperand.getType().equals("Number") && roperand.getType().equals("Number")))
+                if(!(loperand.getType().equals("NUMBER") && roperand.getType().equals("NUMBER")))
                 {
                     ErrorMsg err = new ErrorMsg();
                     err.throwError(ctx, "Invalid operand(s)");
