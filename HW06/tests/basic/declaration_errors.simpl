@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # should throw error since Numeric and (lowercase) text
 Numeric a
 Text b
@@ -7,16 +6,6 @@ Text b
 Text f()
 {
     return 0
-=======
-# should throw error since (lowercase) text and map aren't types
-text a
-Map a
-
-# should throw error since incompatible return types
-Text f()
-{
-    return 1
->>>>>>> fix-errors
 }
 Number g()
 {

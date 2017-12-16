@@ -1,12 +1,21 @@
+##
+------------------------------- Expected Output -------------------------------
+False
+True
+True
+False
+False
 
-not True
-not False
-True  and True
-False and True
-True  and False
-False and True
+##
+println('boolean')
+println('not True', not True)
+println(not False
+println(True  and True)
+println(False and True)
+println(True  and False)
+println(False and True)
 
-# comparison
+println('comparison')
 0 == 0
 0 != 0
 0 <= 0
@@ -14,7 +23,14 @@ False and True
 0 <  0
 0 >  0
 
+println('arithmetic')
+0 + 0
 0 - 0
 0 * 0
 0 / 0
 0 ^ 0
+
+println('assignment')
+Number a = 0
+Number b
+b = a

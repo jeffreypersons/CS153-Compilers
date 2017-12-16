@@ -1,0 +1,58 @@
+#Comprehensive Program
+Number countToNumber(Number a, Number b)
+{
+    while a < b
+    {
+        a = a + 1
+        println(a)
+    }
+    return a
+}
+
+Text basicNumberToString(Number in)
+{
+    if in == 0
+    {
+        return 'Zero'
+    }
+    elif in == 1
+    {
+        return 'One'
+    }
+    else
+    {
+        return 'sorry only 0s and 1s exist'
+    }
+}
+
+# Main Program
+Number t = 0
+Text result
+result = basicNumberToString(t)
+
+print('First number is 0, what is the text representation ', result)
+println('')
+t = 3
+result = basicNumberToString(t)
+
+print('Lets try with the number 3: ', result)
+println('')
+print('lets try adding 1 to our number until it reaches 20 using a while loop')
+t = countToNumber(t, 20)
+
+println(result)
+
+if t == 20
+{
+    result == 'its equal'
+}
+elif t < 20
+{
+    result = 'its less than'
+}
+else
+{
+    result = 'its greater than'
+}
+
+#print(result)

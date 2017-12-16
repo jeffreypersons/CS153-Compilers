@@ -1,6 +1,0 @@
-Number f(Number a, Text b, Number c)
-{
-    return 3
-}
-Number a = 0
-f(4, '2', a)
