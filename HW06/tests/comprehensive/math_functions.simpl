@@ -33,5 +33,5 @@ Text guess_range(Number x)
     }
 }
 println(sum_of_squares(distance(2, 2, 1, 1), distance(1, 1, 2, 2)))
-println(sum_of_squares(0, 0, 0, 0))
+println(sum_of_squares(0, 0))
 println(guess_range(10))
