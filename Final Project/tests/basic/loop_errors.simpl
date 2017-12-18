@@ -1,0 +1,10 @@
+# should throw error since i is undefined
+Number i = 0
+println('Executing while loop: ')
+print('i=', i)
+while i < 5
+{
+    i = k + 1
+    print(', i=', i)
+}
+println()

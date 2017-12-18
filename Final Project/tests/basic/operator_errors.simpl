@@ -1,0 +1,32 @@
+# various errors of operators
+# boolean
+not 'a'
+not 0
+
+not
+not True
+not False
+True  and True
+False and True
+True  and False
+False and True
+
+# comparison
+True == 0
+'ab' != False
+'ab' <= 0
+'ab' >= 0
+0 <  'ab'
+0 >  'ab'
+
+# arithmetic
+'a' + 'b'
+False - False
+'a' * 0
+0 / 'a'
+'a' ^ True
+
+# augmented assignment is not supported
+Number a = 0
+a += 0
+a -= 0

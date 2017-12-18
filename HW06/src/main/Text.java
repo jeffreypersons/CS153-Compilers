@@ -2,33 +2,33 @@ package main;
 
 public class Text implements Value<String>
 {
-    private String value;
+	String value;
+	public Text(String in)
+	{	
+		if(in.length() == 0) in = "";
+		else if(in.charAt(0) == '\'') in = in.substring(1, in.length() - 1);// strip first and last one
+		value = in;
+	}
 
-    public Text()
-    {
-        value = "";
-    }
-    public Text(String value)
-    {
-        setValue(value);
-    }
+	public Text()
+	{
+		value = "";
+	}
 
-    public void setValue(String value)
-    {
-        if (value.length() == 0)
-            this.value = "";
-        else if (value.charAt(0) == '\'')
-            this.value = value.substring(1, value.length() - 1);  // strip first and last one
-        else
-            // todo: add error handling?!
-            this.value = value;
-    }
-    public String getType()
-    {
-        return "TEXT";
-    }
-    public String getValue()
-    {
-        return value;
-    }
+	public void setValue(String in)
+	{
+		if(in.length() == 0) in = "";
+		else if(in.charAt(0) == '\'') in = in.substring(1, in.length() - 1);
+		value = in;
+	}
+
+	public String getType()
+	{
+		return "TEXT";
+	}
+
+	public String getValue()
+	{
+		return value;
+	}
 }
