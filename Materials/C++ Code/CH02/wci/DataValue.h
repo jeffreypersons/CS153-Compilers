@@ -1,0 +1,72 @@
+/**
+ * <h1>DataValue</h1>
+ *
+ * <p>A generic data value.</p>
+ *
+ * <p>Copyright (c) 2017 by Ronald Mak</p>
+ * <p>For instructional purposes only.  No warranties.</p>
+ */
+#ifndef DATAVALUE_H_
+#define DATAVALUE_H_
+
+#include <string>
+
+namespace wci {
+
+using namespace std;
+
+/**
+ * Data value type.
+ */
+enum class ValueType
+{
+    INTEGER, FLOAT, CHAR, BOOLEAN, STRING,
+};
+
+/**
+ * Generic data value.
+ */
+class DataValue
+{
+public:
+    ValueType type;
+    union
+    {
+        int i;
+        float f;
+        char c;
+        bool b;
+        string s;
+    };
+
+    DataValue()              : type((ValueType) -1) {};
+    DataValue(const int i)   : type(ValueType::INTEGER), i(i) {}
+    DataValue(const float f) : type(ValueType::FLOAT),   f(f) {}
+    DataValue(const char c)  : type(ValueType::CHAR),    c(c) {}
+    DataValue(const bool b)  : type(ValueType::BOOLEAN), b(b) {}
+
+    DataValue(const string s) : type(ValueType::STRING)
+    {
+        new (&this->s) string(s);
+    }
+
+    ~DataValue() {}
+
+    string display() const
+    {
+        switch (type)
+        {
+            case ValueType::INTEGER: return to_string(this->i);
+            case ValueType::FLOAT:   return to_string(this->f);
+            case ValueType::CHAR:    return to_string(this->c);
+            case ValueType::BOOLEAN: return to_string(this->b);
+            case ValueType::STRING:  return this->s;
+
+            default: return "";
+        }
+    }
+};
+
+}  // namespace wci
+
+#endif /* DATAVALUE_H_ */

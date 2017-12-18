@@ -1,0 +1,124 @@
+001 PROGRAM newton;
+002 
+003 CONST
+004     epsilon = 1e-6;
+005 
+006 VAR
+007     number : integer;
+008 
+009 FUNCTION root(x : real) : real;
+010     VAR
+011         r : real;
+012 
+013     BEGIN
+014         r := 1;
+015         REPEAT
+016             r := (x/r + r)/2;
+017         UNTIL abs(x/sqr(r) - 1) < epsilon;
+018         root := r;
+019     END;
+020 
+021 PROCEDURE print(n : integer; root : real);
+022     BEGIN
+023         writeln('The square root of ', number:4, ' is ', root:8:4);
+024     END;
+025 
+026 BEGIN
+027     REPEAT
+028         writeln;
+029         write('Enter new number (0 to quit): ');
+030         read(number);
+031 
+032         IF number = 0 THEN BEGIN
+033             print(number, 0.0);
+034         END
+035         ELSE IF number < 0 THEN BEGIN
+036             writeln('*** ERROR:  number < 0');
+037         END
+038         ELSE BEGIN
+039             print(number, root(number));
+040         END
+041     UNTIL number = 0
+042 END.
+
+                  42 source lines.
+                   0 syntax errors.
+                0.09 seconds total parsing time.
+
+>>> At line 26
+>>> Command? break 14;
+>>> Command? break 18;
+>>> Command? go;
+
+Enter new number (0 to quit): 4
+
+>>> Breakpoint at line 14
+>>> Command? stack;
+1: FUNCTION root
+  r: ?
+  x: 4.0
+0: PROGRAM newton
+  root: ?
+  number: 4
+>>> Command? watch r;
+>>> Command? go;
+
+>>> At line 14: r := 1
+
+>>> At line 16: r: 1.0
+
+>>> At line 16: r: 1.0
+
+>>> At line 16: r := 2.5
+
+>>> At line 15: r: 2.5
+
+>>> At line 16: r: 2.5
+
+>>> At line 16: r: 2.5
+
+>>> At line 16: r := 2.05
+
+>>> At line 15: r: 2.05
+
+>>> At line 16: r: 2.05
+
+>>> At line 16: r: 2.05
+
+>>> At line 16: r := 2.0006099
+
+>>> At line 15: r: 2.0006099
+
+>>> At line 16: r: 2.0006099
+
+>>> At line 16: r: 2.0006099
+
+>>> At line 16: r := 2.0
+
+>>> At line 15: r: 2.0
+
+>>> Breakpoint at line 18
+>>> Command? show r;
+2.0
+>>> Command? assign r -88;
+!!! ERROR: Type mismatch.
+>>> Command? assign r -88.8;
+>>> Command? go;
+
+>>> At line 18: r: -88.8
+The square root of    4 is -88.8000
+
+Enter new number (0 to quit): 16
+
+>>> Breakpoint at line 14
+>>> Command? step;
+
+>>> At line 15
+>>> Command? step;
+
+>>> At line 16
+>>> Command? step;
+
+>>> At line 16
+>>> Command? quit;
+Program terminated.

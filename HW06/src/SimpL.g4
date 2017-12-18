@@ -1,9 +1,19 @@
-grammar SimpL;
+/*
+Notes:
+- All curly braces must be on their own line, and all statements must terminate with a newline
+- Earlier the definition, greater the precedence
+- Identifier is defined to avoid name clashes with other keywords
+- It's important to distinguish between the lexer and parser stage. That means things like
+  valid types is NOT to be distinguished here, but rather determined in the parsing stage,
+  instead. This greatly promotes separation of concerns, and simplifies the lexer grammar.
+- ANTLR unfortunately lacks support for negated tokens (eg, we have to do ~('\'') instead of ~QUOTE)
+ */
+grammar simpL;
 
-program : stat*;
-stat
+program : stmt*;
+stmt
     : func_def
-    | conditional
+    | if_stmt
     | while_loop
     | declaration
     | assignment
@@ -18,23 +28,23 @@ assignment
 while_loop
     : 'while' expr block
     ;
-conditional
+if_stmt
     : ('if' expr block)
       ('elif' expr block)*
       ('else' block)?
     ;
 func_def
-    : TYPE NAME LPAREN (TYPE NAME (SEPARATOR TYPE NAME)*)? RPAREN block
+    : 'def' NAME LPAREN (TYPE NAME (SEPARATOR TYPE NAME)*)? RPAREN block
     ;
 // any number of statements enclosed in braces, ending with an optional return
 block
     : EOL LCURL EOL
-          stat*
-          ('return' expr EOL)?
-      RCURL EOL  // no need for EOL here, since statement requires it
+          stmt*
+          ('return' expr)?
+      EOL RCURL EOL
     ;
-// todo: to make the evaluation rules more clear, incorporate ANTLR's syntax for left/right associativity
-// note that left recursion is dealt with successfuly in ANTLR4, as it rewrites the below as unambiguous recursive rules
+// expressions: note that as of version 4.1, ANTLR rewrites the below as unambiguous rules
+// TODO: to make the evaluation rules more clear, incorporate ANTLR syntax for left/right associativity
 expr
     : NAME
     | LITERAL
@@ -58,7 +68,7 @@ NONE          : 'None';
 TEXT          : 'Text';
 NUMBER        : 'Number';
 BOOLEAN       : 'Boolean';
-TEXT_VALUE    : QUOTE (~['\r\n] | '\\\'' | '\\\\')* QUOTE;  // one line text literal, \' and \\ is OK
+TEXT_VALUE    : QUOTE (~('\\'| '\r' | '\n') | '\\\'' | '\\\\')* QUOTE;  // ' and \ must be escaped with \
 NUMBER_VALUE  : DIGIT+ | DIGIT+.DIGIT+;
 BOOLEAN_VALUE : 'true' | 'false';
 
@@ -94,7 +104,6 @@ NAME          : ('_' | LETTER) ('_' | LETTER | DIGIT)*;
 WHITESPACE    : (LINE_COMMENT | [ \t]+) -> skip;
 LINE_COMMENT  : ('#' .*? NEWLINE) -> skip;
 BLOCK_COMMENT : ('##' .*? '##')   -> skip;
-
 // fragments (helper definitions)
 fragment QUOTE     : '\'';
 fragment DIGIT     : '0'..'9';
