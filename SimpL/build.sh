@@ -5,9 +5,9 @@
 # ==============================================================================
 
 # ensure working dir is HW06 and no arguments are given
-if [[ $(basename $(pwd)) != HW06 ]]; then
+if [[ $(basename $(pwd)) != SimpL ]]; then
     echo "**Error processing input for build.sh**"
-    echo "  build.sh can only be run with HW06 as the working directory"
+    echo "  build.sh can only be run with SimpL as the working directory"
     exit 1
 fi
 if [ $# -ne 0 ]; then

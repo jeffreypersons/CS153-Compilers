@@ -4,11 +4,11 @@
 # Example usage: ./simplc.sh tests/basic/operator.simpl
 # ==============================================================================
 
-# ensure working dir is HW06 and single argument is given
+# ensure working dir is SimpL and single argument is given
 source_file=${1}
-if [[ $(basename $(pwd)) != HW06 ]]; then
+if [[ $(basename $(pwd)) != SimpL ]]; then
     echo "**Error processing input for simplc.sh**"
-    echo "  simplc.sh can only be run with HW06 as the working directory"
+    echo "  simplc.sh can only be run with SimpL as the working directory"
     exit 1
 fi
 if [ ${#} -ne 1 ]; then
