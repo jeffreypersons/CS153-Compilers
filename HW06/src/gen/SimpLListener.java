@@ -1,110 +1,111 @@
-// Generated from /mnt/c/Users/jperm/Dropbox/College/SJSU/CS153-Compilers/Assignments/HW06/src/SimpL.g4 by ANTLR 4.7
+// Generated from simpL.g4 by ANTLR 4.7
 package gen;
+
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
  * This interface defines a complete listener for a parse tree produced by
- * {@link SimpLParser}.
+ * {@link simpLParser}.
  */
-public interface SimpLListener extends ParseTreeListener {
+public interface simpLListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#program}.
+	 * Enter a parse tree produced by {@link simpLParser#program}.
 	 * @param ctx the parse tree
 	 */
-	void enterProgram(SimpLParser.ProgramContext ctx);
+	void enterProgram(simpLParser.ProgramContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#program}.
+	 * Exit a parse tree produced by {@link simpLParser#program}.
 	 * @param ctx the parse tree
 	 */
-	void exitProgram(SimpLParser.ProgramContext ctx);
+	void exitProgram(simpLParser.ProgramContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#stat}.
+	 * Enter a parse tree produced by {@link simpLParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterStat(SimpLParser.StatContext ctx);
+	void enterStmt(simpLParser.StmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#stat}.
+	 * Exit a parse tree produced by {@link simpLParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitStat(SimpLParser.StatContext ctx);
+	void exitStmt(simpLParser.StmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#declaration}.
+	 * Enter a parse tree produced by {@link simpLParser#declaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterDeclaration(SimpLParser.DeclarationContext ctx);
+	void enterDeclaration(simpLParser.DeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#declaration}.
+	 * Exit a parse tree produced by {@link simpLParser#declaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitDeclaration(SimpLParser.DeclarationContext ctx);
+	void exitDeclaration(simpLParser.DeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#assignment}.
+	 * Enter a parse tree produced by {@link simpLParser#assignment}.
 	 * @param ctx the parse tree
 	 */
-	void enterAssignment(SimpLParser.AssignmentContext ctx);
+	void enterAssignment(simpLParser.AssignmentContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#assignment}.
+	 * Exit a parse tree produced by {@link simpLParser#assignment}.
 	 * @param ctx the parse tree
 	 */
-	void exitAssignment(SimpLParser.AssignmentContext ctx);
+	void exitAssignment(simpLParser.AssignmentContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#while_loop}.
+	 * Enter a parse tree produced by {@link simpLParser#while_loop}.
 	 * @param ctx the parse tree
 	 */
-	void enterWhile_loop(SimpLParser.While_loopContext ctx);
+	void enterWhile_loop(simpLParser.While_loopContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#while_loop}.
+	 * Exit a parse tree produced by {@link simpLParser#while_loop}.
 	 * @param ctx the parse tree
 	 */
-	void exitWhile_loop(SimpLParser.While_loopContext ctx);
+	void exitWhile_loop(simpLParser.While_loopContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#conditional}.
+	 * Enter a parse tree produced by {@link simpLParser#if_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterConditional(SimpLParser.ConditionalContext ctx);
+	void enterIf_stmt(simpLParser.If_stmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#conditional}.
+	 * Exit a parse tree produced by {@link simpLParser#if_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitConditional(SimpLParser.ConditionalContext ctx);
+	void exitIf_stmt(simpLParser.If_stmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#func_def}.
+	 * Enter a parse tree produced by {@link simpLParser#func_def}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunc_def(SimpLParser.Func_defContext ctx);
+	void enterFunc_def(simpLParser.Func_defContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#func_def}.
+	 * Exit a parse tree produced by {@link simpLParser#func_def}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunc_def(SimpLParser.Func_defContext ctx);
+	void exitFunc_def(simpLParser.Func_defContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#block}.
+	 * Enter a parse tree produced by {@link simpLParser#block}.
 	 * @param ctx the parse tree
 	 */
-	void enterBlock(SimpLParser.BlockContext ctx);
+	void enterBlock(simpLParser.BlockContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#block}.
+	 * Exit a parse tree produced by {@link simpLParser#block}.
 	 * @param ctx the parse tree
 	 */
-	void exitBlock(SimpLParser.BlockContext ctx);
+	void exitBlock(simpLParser.BlockContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#expr}.
+	 * Enter a parse tree produced by {@link simpLParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpr(SimpLParser.ExprContext ctx);
+	void enterExpr(simpLParser.ExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#expr}.
+	 * Exit a parse tree produced by {@link simpLParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpr(SimpLParser.ExprContext ctx);
+	void exitExpr(simpLParser.ExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpLParser#func_call}.
+	 * Enter a parse tree produced by {@link simpLParser#func_call}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunc_call(SimpLParser.Func_callContext ctx);
+	void enterFunc_call(simpLParser.Func_callContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpLParser#func_call}.
+	 * Exit a parse tree produced by {@link simpLParser#func_call}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunc_call(SimpLParser.Func_callContext ctx);
+	void exitFunc_call(simpLParser.Func_callContext ctx);
 }

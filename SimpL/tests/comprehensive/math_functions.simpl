@@ -1,0 +1,37 @@
+Number sum_of_squares(Number a, Number b)
+{
+    return a ^ 2 + b ^ 2
+}
+Number distance(Number x1, Number y1, Number x2, Number y2)
+{
+    return (y2 - y1) / (x2 - x1)
+}
+Text guess_range(Number x)
+{
+    if x < 100
+    {
+        if 75 < x
+        {
+            return 'x in range(75, 100)'
+        }
+        elif 50 < x
+        {
+            return 'x in range(50, 75)'
+        }
+        elif 25 < x
+        {
+            return 'x in range(25, 50)'
+        }
+        else
+        {
+            return 'x in range(-inf, 50]'
+        }
+    }
+    else
+    {
+        return 'I\'m a number 100 or bigger!!!'
+    }
+}
+println(sum_of_squares(distance(2, 2, 1, 1), distance(1, 1, 2, 2)))
+println(sum_of_squares(0, 0))
+println(guess_range(10))

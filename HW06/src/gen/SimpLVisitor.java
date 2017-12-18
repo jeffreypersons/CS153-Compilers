@@ -1,73 +1,74 @@
-// Generated from /mnt/c/Users/jperm/Dropbox/College/SJSU/CS153-Compilers/Assignments/HW06/src/SimpL.g4 by ANTLR 4.7
+// Generated from simpL.g4 by ANTLR 4.7
 package gen;
+
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
  * This interface defines a complete generic visitor for a parse tree produced
- * by {@link SimpLParser}.
+ * by {@link simpLParser}.
  *
  * @param <T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
-public interface SimpLVisitor<T> extends ParseTreeVisitor<T> {
+public interface simpLVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#program}.
+	 * Visit a parse tree produced by {@link simpLParser#program}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProgram(SimpLParser.ProgramContext ctx);
+	T visitProgram(simpLParser.ProgramContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#stat}.
+	 * Visit a parse tree produced by {@link simpLParser#stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStat(SimpLParser.StatContext ctx);
+	T visitStmt(simpLParser.StmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#declaration}.
+	 * Visit a parse tree produced by {@link simpLParser#declaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclaration(SimpLParser.DeclarationContext ctx);
+	T visitDeclaration(simpLParser.DeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#assignment}.
+	 * Visit a parse tree produced by {@link simpLParser#assignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssignment(SimpLParser.AssignmentContext ctx);
+	T visitAssignment(simpLParser.AssignmentContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#while_loop}.
+	 * Visit a parse tree produced by {@link simpLParser#while_loop}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitWhile_loop(SimpLParser.While_loopContext ctx);
+	T visitWhile_loop(simpLParser.While_loopContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#conditional}.
+	 * Visit a parse tree produced by {@link simpLParser#if_stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitConditional(SimpLParser.ConditionalContext ctx);
+	T visitIf_stmt(simpLParser.If_stmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#func_def}.
+	 * Visit a parse tree produced by {@link simpLParser#func_def}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunc_def(SimpLParser.Func_defContext ctx);
+	T visitFunc_def(simpLParser.Func_defContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#block}.
+	 * Visit a parse tree produced by {@link simpLParser#block}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBlock(SimpLParser.BlockContext ctx);
+	T visitBlock(simpLParser.BlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#expr}.
+	 * Visit a parse tree produced by {@link simpLParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpr(SimpLParser.ExprContext ctx);
+	T visitExpr(simpLParser.ExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpLParser#func_call}.
+	 * Visit a parse tree produced by {@link simpLParser#func_call}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunc_call(SimpLParser.Func_callContext ctx);
+	T visitFunc_call(simpLParser.Func_callContext ctx);
 }
