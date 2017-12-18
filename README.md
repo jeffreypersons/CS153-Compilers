@@ -1,6 +1,8 @@
 # HW Assignments for SJSU's CS 153 - Compilers
 _Starring Jeff, Itaru, Ben, and Ki Sung_
 
+For Lectures and Sample Code, see `Materials` directory
+For Final Project, see `SimpL` directory
 
 ## WHAT YOU SHOULD ALWAYS DO
 - Update from the parent branch AND update current branch before you push (or even commit) anything.
