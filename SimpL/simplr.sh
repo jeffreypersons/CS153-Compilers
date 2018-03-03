@@ -4,8 +4,16 @@
 # Example usage: ./simplc.sh tests/basic/operator.class
 # ==============================================================================
 
-# define function for full file extension with leading dot, and get class file path
-get_extension() { echo '.'$(echo $(basename $1) | cut -d '.' -f2-); }
+# define function for full file extension with leading dot
+get_extension()
+{
+    # return empty string if trailing or independent dot, or no dot at all
+    if [[ $(basename $1) != *.* ]] || [[ $(basename $1) == *. ]] || [[ $(basename $1) == . ]]; then
+        echo ""
+    else
+        echo '.'$(echo $(basename $1) | cut -d '.' -f2-);
+    fi
+}
 
 # ensure working dir is SimpL and no arguments are given
 class_file=${1}
